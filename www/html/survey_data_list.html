@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+
+  <link rel="stylesheet" href="../components/loader.css">
+  <link rel="stylesheet" href="../components/materialize/dist/css/materialize.min.css">
+  <link rel="stylesheet" href="../css/iconfont/material-icons.css">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+  <nav class="header">
+    <div class="nav-wrapper"> <a href="#" class="brand-logo center"> <i
+          class="material-icons title-icon">nature_people</i>伐採調査アプリ</a>
+      <ul>
+        <li id="survey-data-register-link"></li>
+      </ul>
+      <ul class="right">
+        <li>
+          <a class="waves-effect waves-light sidenav-trigger" href="#" data-target="side-out">
+            <i class="material-icons right">menu</i>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Sidenav -->
+  <ul id="side-out" class="sidenav">
+    <li id="survey-data-list-link"></li>
+    <li id="survey-data-history-list-link"></li>
+    <li><a class="waves-effect waves-light modal-trigger" href="#modal1"><i class="material-icons">exit_to_app</i>ログアウト</a></li>
+  </ul>
+
+  <!-- Modal Structure -->
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <p>ログアウトします。よろしいでしょうか？</p>
+    </div>
+    <div class="modal-footer">
+      <a href="javascript:logout();" class="modal-close waves-effect waves-green btn normal-button">ログアウトする</a>
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">閉じる</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <table class="striped centered highlight table-list-sytle">
+      <thead id="survey-data-list-title">
+      </thead>
+      <tbody id="survey-data-list-item">
+      </tbody>
+    </table>
+  </div>
+
+  <script src="../components/jquery/dist/jquery.min.js"></script>
+  <script src="../components/loader.js"></script>
+  <script src="../js/common.js"></script>
+  <script src="../js/survey_data_common.js"></script>
+  <script src="../js/survey_data_list.js"></script>
+  <script src="../js/models/survry_data.js"></script>
+  <script src="../js/models/survry.js"></script>
+
+</body>
+
+</html>
