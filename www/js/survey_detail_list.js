@@ -26,6 +26,9 @@ document.addEventListener("deviceready", async function () {
         }
     }
     surveyDetailItem.append(texts);
+
+    // サイドナビゲーションリンク作成
+    createContactSidenavLink(2, surveyId, "");
 });
 
 /**

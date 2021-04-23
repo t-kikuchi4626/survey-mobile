@@ -6,9 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="Content-Security-Policy"
     content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
-
+  <meta name="format-detection" content="telephone=no">
   <link rel="stylesheet" href="../components/loader.css">
-  <link rel="stylesheet" href="../components/materialize/dist/css/materialize.min.css">
   <link rel="stylesheet" href="../css/iconfont/material-icons.css">
   <link rel="stylesheet" href="../css/style.css">
 
@@ -16,11 +15,12 @@
 
 <body>
 
+  <!-- navigation -->
   <nav class="header">
     <div class="nav-wrapper"> <a href="#" class="brand-logo center"> <i
           class="material-icons title-icon">nature_people</i>伐採調査アプリ</a>
       <ul>
-        <li><a href="./survey_list.html"><i class="material-icons">arrow_back_ios</i></a></li>
+        <li id="transition-view-link"></li>
       </ul>
       <ul class="right">
         <li>
@@ -34,7 +34,6 @@
 
   <!-- Sidenav -->
   <ul id="side-out" class="sidenav">
-    <li id="contact-list-link"></li>
     <li><a class="waves-effect waves-light modal-trigger" href="#modal1"><i class="material-icons">exit_to_app</i>ログアウト</a></li>
   </ul>
 
@@ -51,40 +50,23 @@
 
   <div class="container">
     <div class="row">
-      <div class="col s12"><span class="ml-4">調査対象の所在地一覧を表示します。</span>
+      <div class="col s12">
+        <span class="ml-4">問合せを一覧で表示します。</span>
       </div>
     </div>
 
-    <div class="row">
-      <ul class="collapsible">
-        <li>
-          <div class="collapsible-header"><i class="material-icons title-icon">description</i><span
-              id="survey-name"></span></div>
-          <div class="collapsible-body"><span>
-              業務委託期間（着手日）：<span id="business-period-from"></span><br>
-              業務委託期間（完了日）：<span id="business-period-to"></span><br>
-              センター：<span id="center-id"></span><br>
-              調査会社：<span id="survey-company-id"></span><br>
-              備考：<span id="note"></span><br>
-              最終更新日：<span id="modified-date"></span>
-            </span>
-          </div>
-        </li>
-      </ul>
+    <div class="row" style="text-align: right;">
+      <a onclick="" class="btn waves-effect waves-light btn-large normal-button mb-2">
+        <i class="material-icons left">send</i>問合せする
+      </a>
     </div>
 
-    <div id="survey-detail-item">
+    <div id="contact-item">
     </div>
-
-  </div>
-
-  <script src="../components/jquery/dist/jquery.min.js"></script>
-  <script src="../components/loader.js"></script>
-  <script src="../js/common.js"></script>
-  <script src="../js/survey_detail_list.js"></script>
-  <script src="../js/models/survry_detail.js"></script>
-  <script src="../js/models/survry.js"></script>
-
 </body>
+<script src="../components/jquery/dist/jquery.min.js"></script>
+<script src="../components/loader.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/contact_list.js"></script>
 
 </html>

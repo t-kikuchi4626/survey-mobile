@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+
+    <link rel="stylesheet" href="../components/loader.css">
+    <link rel="stylesheet" href="../css/iconfont/material-icons.css">
+    <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+    <nav class="header">
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo center">
+                <i class="material-icons title-icon">nature_people</i>伐採調査アプリ
+            </a>
+            <ul>
+                <li><a href="javascript:history.back();"><i class="material-icons">arrow_back_ios</i></a></li>
+            </ul>
+            <ul class="right">
+                <li>
+                    <a class="waves-effect waves-light sidenav-trigger" href="#" data-target="side-out">
+                        <i class="material-icons right">menu</i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Sidenav -->
+    <ul id="side-out" class="sidenav">
+        <li id="contact-list-link"></li>
+        <li><a class="menu waves-effect waves-light modal-trigger" href="#modal1"><i class="material-icons">exit_to_app</i>ログアウト</a></li>
+    </ul>
+
+  <!-- Modal Structure -->
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <p>ログアウトします。よろしいでしょうか？</p>
+    </div>
+    <div class="modal-footer">
+      <a href="javascript:logout();" class="modal-close waves-effect waves-green btn normal-button">ログアウトする</a>
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">閉じる</a>
+    </div>
+  </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <span class="ml-4">伐採調査システムをご利用いただきありがとうございます。何かお困りごとや問合せなどありましたら、下記フォームよりご連絡ください。</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div id="survey-area" class="col s12">
+                <form>
+                    <div>
+                        <div class="row m-3 mt-1">
+                            <div class="card" style="margin: 0 0 0 0;">
+                                <div class="card-content">
+                                    <div class="row bottom-0">
+                                        <div class="input-field col s10 bottom-0">
+                                            <small class="active contactNameLabel">件名</small>
+                                            <input id="contact-name" name="contactName" type="text"
+                                                class="contactName contact-input" maxlength="100"
+                                                onchange="updateInputTextArea(this.form.contactName, 'contact_name', true)">
+                                        </div>
+                                        <div class="input-field col s2 bottom-0"></div>
+                                    </div>
+                                    <span id="contact_name_required" class="error message-text" style="display:none">
+                                        <i class="material-icons">error_outline</i>この項目は必須入力です。
+                                    </span>
+
+                                    <div class="row bottom-0">
+                                        <div class="input-field col s6 bottom-0">
+                                            <small class="active userNameLabel">氏名（任意）</small>
+                                            <input id="user-name" name="userName" type="text"
+                                                class="userName contact-input" maxlength="800">
+                                        </div>
+                                        <div class="input-field col s6 bottom-0"></div>
+                                    </div>
+
+                                    <div class="row bottom-0">
+                                        <div class="input-field col s2 bottom-0">
+                                            <small for="contact-class" class="active">問合せ区分</small>
+                                            <select id="contact-class" name="contactClass">
+                                                <option value="question" selected>質問</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-field col s4 bottom-0">
+                                            <small for="contact-function" class="active">問合せ画面</small>
+                                            <select id="contact-function" name="contactFunction">
+                                                <option value="調査交渉業務一覧" selected>調査交渉業務一覧</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-field col s6 bottom-0"></div>
+                                    </div>
+
+                                    <div class="row bottom-0">
+                                        <div class="input-field col s11 bottom-0">
+                                            <small for="contact-message" class="active">問合せ内容</small>
+                                            <input id="contact-message" type="text" name="contactMessage" class="contactMessage contact-input"
+                                                onchange="updateInputTextArea(this.form.contactMessage, 'contact_message', true)">
+                                        </div>
+                                        <div class="input-field col s1 bottom-0"></div>
+                                    </div>
+                                    <span id="contact_message_required" class="error message-text" style="display:none">
+                                        <i class="material-icons">error_outline</i>この項目は必須入力です。
+                                    </span>
+
+                                    <div id="contact-answer-field" class="row bottom-0">
+                                        <div class="input-field col s11 bottom-0">
+                                            <small for="contact-answer" class="active">問合せ回答</small>
+                                            <input id="contact-answer" type="text" name="contactAnswer" class="contactAnswer contact-input">
+                                        </div>
+                                        <div class="input-field col s1 bottom-0"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <p style="text-align: left; float: left;">
+                                <a onclick="" class="btn waves-effect waves-light btn-large normal-button blue-grey red">
+                                    <i class="material-icons left">send</i>問合せ内容送信
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../components/jquery/dist/jquery.min.js"></script>
+    <script src="../components/loader.js"></script>
+    <script src="../js/common.js"></script>
+    <script src="../js/contact.js"></script>
+</body>
+
+</html>

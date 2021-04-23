@@ -6,10 +6,14 @@ document.addEventListener("deviceready", function () {
   if (obj.user != null) {
     surveyCompanyId = obj.user.survey_company_id;
   }
+
   showSurveyList();
   showSynchronizeResult();
   $('.modal').modal();
   instance = M.Modal.getInstance('#synchronizeError');
+
+  // サイドナビゲーションリンク作成
+  createContactSidenavLink(1, "", "");
 });
 
 /**

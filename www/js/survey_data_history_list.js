@@ -30,6 +30,7 @@ async function initialize() {
     createRegisterLink(surveyId, surveyDetailId);
     // サイドナビゲーションリンク作成
     createSidenavLink(surveyId, surveyDetailId);
+    createContactSidenavLink(4, surveyId, surveyDetailId);
     // 樹種ボタン取得
     var survey = await fetchSurveyById(surveyId);
     // 樹種ボタン設定

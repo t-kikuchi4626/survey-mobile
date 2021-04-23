@@ -17,6 +17,7 @@ document.addEventListener("deviceready", async function () {
 
     // サイドナビゲーションリンク作成
     createSidenavLink(surveyId, surveyDetailId);
+    createContactSidenavLink(3, surveyId, surveyDetailId);
 
     var survey = await fetchSurveyById(surveyId);
 

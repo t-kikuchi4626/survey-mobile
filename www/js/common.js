@@ -115,3 +115,36 @@ function getNowDate() {
 function convertSpace(target) {
     return target == null ? '' : target;
 }
+
+/**
+ * 問合せサイドナビゲーションのリンク作成
+ * @param {number} id 遷移元番号
+ * @param {string} surveyId 調査ID
+ * @param {string} surveyDetailId 調査明細ID
+ */
+function createContactSidenavLink(id, surveyId, surveyDetailId) {
+    // 問合せ一覧画面遷移タグ作成
+    var contactListLink = $('#contact-list-link');
+    var linkText = '';
+    switch (id) {
+        case 1:
+            // 調査業務一覧より表示
+            linkText = '<a href="../html/contact_list.html?' + id + '"><i class="material-icons">send</i>問合せ</a>';
+            break;
+        case 2:
+            // 所在地一覧より表示
+            linkText = '<a href="../html/contact_list.html?' + id + '&' + surveyId + '"><i class="material-icons">send</i>問合せ</a>';
+            break;
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+            // 毎木調査登録より表示
+            // 伐採木データ履歴一覧より表示
+            // 伐採木一覧より表示
+            // 小径木登録より表示
+            linkText = '<a href="../html/contact_list.html?' + id + '&' + surveyId + '&' + surveyDetailId + '"><i class="material-icons">send</i>問合せ</a>';
+            break;
+    }
+    contactListLink.append(linkText);
+}

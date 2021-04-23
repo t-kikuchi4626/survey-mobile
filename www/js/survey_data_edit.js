@@ -12,6 +12,9 @@ document.addEventListener("deviceready", async function () {
     surveyId = param[0];
     surveyDetailId = param[1];
 
+    // サイドナビゲーションリンク作成
+    createContactSidenavLink(6, surveyId, surveyDetailId);
+
     // 初期表示
     initView();
 });
