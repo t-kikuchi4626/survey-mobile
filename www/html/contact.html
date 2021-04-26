@@ -86,25 +86,50 @@
                                     </div>
 
                                     <div class="row bottom-0">
-                                        <div class="input-field col s2 bottom-0">
-                                            <small for="contact-class" class="active">問合せ区分</small>
-                                            <select id="contact-class" name="contactClass">
-                                                <option value="question" selected>質問</option>
-                                            </select>
-                                        </div>
                                         <div class="input-field col s4 bottom-0">
-                                            <small for="contact-function" class="active">問合せ画面</small>
-                                            <select id="contact-function" name="contactFunction">
-                                                <option value="調査交渉業務一覧" selected>調査交渉業務一覧</option>
+                                            <small for="contact-class" class="active">問合せ区分</small>
+                                            <select id="contact-class" class="contact-input" name="contactClass" style="display: block;">
+                                                <option value="question" selected>質問</option>
+                                                <option value="fault">障害</option>
+                                                <option value="request">要望</option>
+                                                <option value="nice">いいね！</option>
+                                                <option value="other">その他</option>
                                             </select>
                                         </div>
-                                        <div class="input-field col s6 bottom-0"></div>
+                                        <div class="input-field col s6 bottom-0">
+                                            <small for="contact-function" class="active">問合せ画面</small>
+                                            <select id="contact-function" class="contact-input" name="contactFunction" style="display: block;">
+                                                <option value="調査交渉業務一覧" selected>調査交渉業務一覧</option>
+                                                <option value="調査業務新規登録">調査業務新規登録</option>
+                                                <option value="調査業務変更">調査業務変更</option>
+                                                <option value="調査所在地一覧">調査所在地一覧</option>
+                                                <option value="調査所在地新規登録">調査所在地新規登録</option>
+                                                <option value="調査所在地変更">調査所在地変更</option>
+                                                <option value="小径木調査一覧">小径木調査一覧</option>
+                                                <option value="伐採木調査一覧">伐採木調査一覧</option>
+                                                <option value="伐採木データダウンロード履歴一覧">伐採木データダウンロード履歴一覧</option>
+                                                <option value="アカウント一覧">アカウント一覧</option>
+                                                <option value="アカウント新規登録">アカウント新規登録</option>
+                                                <option value="アカウント変更">アカウント変更</option>
+                                                <option value="マスタデータ管理">マスタデータ管理</option>
+                                                <option value="単価マスタ一覧">単価マスタ一覧</option>
+                                                <option value="単価マスタ管理">単価マスタ管理</option>
+                                                <option value="調査業務一覧">調査業務一覧</option>
+                                                <option value="所在地一覧">所在地一覧</option>
+                                                <option value="毎木調査登録">毎木調査登録</option>
+                                                <option value="伐採木データ履歴一覧">伐採木データ履歴一覧</option>
+                                                <option value="伐採木一覧">伐採木一覧</option>
+                                                <option value="小径木登録">小径木登録</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-field col s2 bottom-0"></div>
                                     </div>
 
                                     <div class="row bottom-0">
                                         <div class="input-field col s11 bottom-0">
                                             <small for="contact-message" class="active">問合せ内容</small>
                                             <input id="contact-message" type="text" name="contactMessage" class="contactMessage contact-input"
+                                                placeholder="例：調査業務の変更ができないのですが、どのように操作する必要があるのか教えてください。"
                                                 onchange="updateInputTextArea(this.form.contactMessage, 'contact_message', true)">
                                         </div>
                                         <div class="input-field col s1 bottom-0"></div>
@@ -127,7 +152,7 @@
                     <div class="row">
                         <div class="col s12">
                             <p style="text-align: left; float: left;">
-                                <a onclick="" class="btn waves-effect waves-light btn-large normal-button blue-grey red">
+                                <a id="register" onclick="javascript:save()" class="btn waves-effect waves-light btn-large normal-button blue-grey red">
                                     <i class="material-icons left">send</i>問合せ内容送信
                                 </a>
                             </p>
@@ -135,6 +160,23 @@
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <div id="contactError" class="modal">
+        <div class="modal-content">
+          <div>
+            <b class="error">問合せ取得および登録処理中にエラーが発生しました。</b>
+          </div>
+          <div>
+            <b>【エラー】</b><span id="error"></span>
+          </div>
+          <div>
+            <b>【詳細】　</b><span id="errorMessage"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat">閉じる</a>
         </div>
     </div>
 

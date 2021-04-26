@@ -56,12 +56,29 @@
     </div>
 
     <div class="row" style="text-align: right;">
-      <a onclick="" class="btn waves-effect waves-light btn-large normal-button mb-2">
+      <a onclick="javascript:edit()" class="btn waves-effect waves-light btn-large normal-button mb-2">
         <i class="material-icons left">send</i>問合せする
       </a>
     </div>
 
     <div id="contact-item">
+    </div>
+
+    <div id="contactError" class="modal">
+      <div class="modal-content">
+        <div>
+          <b class="error">問合せ一覧取得処理中にエラーが発生しました。</b>
+        </div>
+        <div>
+          <b>【エラー】</b><span id="error"></span>
+        </div>
+        <div>
+          <b>【詳細】　</b><span id="errorMessage"></span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">閉じる</a>
+      </div>
     </div>
 </body>
 <script src="../components/jquery/dist/jquery.min.js"></script>
