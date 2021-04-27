@@ -95,18 +95,21 @@ function showContactList() {
           else if (contact.status === "pending") {
             contactStatus = "保留";
           }
-          texts += '<div class="col s12 m7">';
+          texts += '<div class="row">';
           texts += '<div class="card horizontal">';
           texts += '<div class="card-stacked">';
           texts += '<div class="card-content">';
-          texts += '問合せ区分：' + contactClass;
-          texts += '<br>';
+          texts += '<div class="col s12 m6">';
           texts += '件名：<a href="../html/contact.html?' + contact.id + '&' + transitionId + '&' + surveyId + '&' + surveyDetailId + '">';
           texts += convertSpace(contact.contact_name) + '</a>';
           texts += '<br>';
+          texts += '問合せ区分：' + contactClass;
+          texts += '</div>';
+          texts += '<div class="col s12 m6">';
           texts += '問合せ状態：' + contactStatus;
           texts += '<br>';
           texts += '問合せ日時：' + contact.created_date;
+          texts += '</div>';
           texts += '</div>';
           texts += '</div>';
           texts += '</div>';
