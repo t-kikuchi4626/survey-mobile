@@ -1,3 +1,31 @@
+// 問合せ画面名
+const contactFunctionNameList = [
+    "調査交渉業務一覧",
+    "調査業務新規登録",
+    "調査業務変更",
+    "地権者データダウンロード履歴",
+    "調査所在地一覧",
+    "調査所在地新規登録",
+    "調査所在地変更",
+    "小径木調査一覧",
+    "小径木調査変更",
+    "伐採木調査一覧",
+    "伐採木調査変更",
+    "伐採木データダウンロード履歴一覧",
+    "アカウント一覧",
+    "アカウント新規登録",
+    "アカウント変更",
+    "マスタデータ管理",
+    "単価マスタ一覧",
+    "単価マスタ管理",
+    "調査業務一覧",
+    "所在地一覧",
+    "毎木調査登録",
+    "伐採木データ履歴一覧",
+    "伐採木一覧",
+    "小径木登録"
+];
+
 // 遷移元画面ID
 var transitionId = 0;
 // 調査ID
@@ -41,6 +69,11 @@ document.addEventListener("deviceready", async function () {
             break;
     }
 
+    // 問合せ一覧画面遷移タグ作成
+    var contactListLink = $('#contact-list-link');
+    var contactListLinkText = '<a href="../html/contact_list.html?' + transitionId + '&' + surveyId + '&' + surveyDetailId + '&0"><i class="material-icons">arrow_back_ios</i></a>';
+    contactListLink.append(contactListLinkText);
+
     // 初期表示
     initView(contactId, functionName);
 });
@@ -74,15 +107,18 @@ function setInitContact(functionName) {
     $('#user-name').prop("disabled", false);
     // 問合せ区分
     $('#contact-class').val("question");
+    $('#contact-class').prop("disabled", false);
     // 問合せ画面
+    setContactFunctionOption();
     $('#contact-function').val(functionName);
+    $('#contact-function').prop("disabled", false);
     // 問合せ内容
     $('#contact-message').val("");
     $('#contact-message').prop("disabled", false);
     // 問合せ回答非表示
     $('#contact-answer-field').hide();
-    // 問合せ内容送信ボタン使用可
-    $('#register').css("pointer-events", "auto");
+    // 問合せ状態非表示
+    $('#contact-status-field').hide();
 }
 
 /**
@@ -122,22 +158,42 @@ function setTargetContact(contactId) {
             $('#user-name').prop("disabled", true);
             // 問合せ区分
             $('#contact-class').val(contactInfo.contact_class);
+            $('#contact-class').prop("disabled", true);
             // 問合せ画面
+            setContactFunctionOption();
             $('#contact-function').val(contactInfo.contact_function);
+            $('#contact-function').prop("disabled", true);
             // 問合せ内容
             $('#contact-message').val(contactInfo.contact_message);
             $('#contact-message').prop("disabled", true);
+            // 問合せ内容説明文非表示
+            $('#contact-message-description').hide();
             // 問合せ回答
             $('#contact-answer').val(contactInfo.contact_answer);
             $('#contact-answer').prop("disabled", true);
-            // 問合せ内容送信ボタン使用不可
-            $('#register').css("pointer-events", "none");
+            // 問合せ状態
+            $('#' + contactInfo.status).prop("checked", true);
+            $('#unsupported').prop("disabled", true);
+            $('#in_supported').prop("disabled", true);
+            $('#resolved').prop("disabled", true);
+            $('#pending').prop("disabled", true);
+            // 問合せ内容送信ボタン非表示
+            $('#register-field').hide();
         })
         .fail(async (jqXHR, textStatus, errorThrown) => {
             var jsonData = JSON.stringify(jqXHR);
             var responseData = JSON.parse(jsonData);
             errorProcessByGetContact(responseData);
         })
+}
+
+/**
+ * 問合せ画面の選択項目設定
+ */
+function setContactFunctionOption() {
+    contactFunctionNameList.forEach(function(contactFunctionName) {
+        $('#contact-function').append($('<option>').html(contactFunctionName).val(contactFunctionName));
+    });
 }
 
 /**

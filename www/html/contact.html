@@ -20,7 +20,7 @@
                 <i class="material-icons title-icon">nature_people</i>伐採調査アプリ
             </a>
             <ul>
-                <li><a href="javascript:history.back();"><i class="material-icons">arrow_back_ios</i></a></li>
+                <li id="contact-list-link"></li>
             </ul>
             <ul class="right">
                 <li>
@@ -67,7 +67,7 @@
                                         <div class="input-field col s10 bottom-0">
                                             <small class="active contactNameLabel">件名</small>
                                             <input id="contact-name" name="contactName" type="text"
-                                                class="contactName contact-input" maxlength="100"
+                                                class="contactName" maxlength="100"
                                                 onchange="updateInputTextArea(this.form.contactName, 'contact_name', true)">
                                         </div>
                                         <div class="input-field col s2 bottom-0"></div>
@@ -80,7 +80,7 @@
                                         <div class="input-field col s6 bottom-0">
                                             <small class="active userNameLabel">氏名（任意）</small>
                                             <input id="user-name" name="userName" type="text"
-                                                class="userName contact-input" maxlength="800">
+                                                class="userName" maxlength="800">
                                         </div>
                                         <div class="input-field col s6 bottom-0"></div>
                                     </div>
@@ -88,7 +88,7 @@
                                     <div class="row bottom-0">
                                         <div class="input-field col s4 bottom-0">
                                             <small for="contact-class" class="active">問合せ区分</small>
-                                            <select id="contact-class" class="contact-input" name="contactClass" style="display: block;">
+                                            <select id="contact-class" name="contactClass" style="display: block;">
                                                 <option value="question" selected>質問</option>
                                                 <option value="fault">障害</option>
                                                 <option value="request">要望</option>
@@ -98,28 +98,7 @@
                                         </div>
                                         <div class="input-field col s6 bottom-0">
                                             <small for="contact-function" class="active">問合せ画面</small>
-                                            <select id="contact-function" class="contact-input" name="contactFunction" style="display: block;">
-                                                <option value="調査交渉業務一覧" selected>調査交渉業務一覧</option>
-                                                <option value="調査業務新規登録">調査業務新規登録</option>
-                                                <option value="調査業務変更">調査業務変更</option>
-                                                <option value="調査所在地一覧">調査所在地一覧</option>
-                                                <option value="調査所在地新規登録">調査所在地新規登録</option>
-                                                <option value="調査所在地変更">調査所在地変更</option>
-                                                <option value="小径木調査一覧">小径木調査一覧</option>
-                                                <option value="伐採木調査一覧">伐採木調査一覧</option>
-                                                <option value="伐採木データダウンロード履歴一覧">伐採木データダウンロード履歴一覧</option>
-                                                <option value="アカウント一覧">アカウント一覧</option>
-                                                <option value="アカウント新規登録">アカウント新規登録</option>
-                                                <option value="アカウント変更">アカウント変更</option>
-                                                <option value="マスタデータ管理">マスタデータ管理</option>
-                                                <option value="単価マスタ一覧">単価マスタ一覧</option>
-                                                <option value="単価マスタ管理">単価マスタ管理</option>
-                                                <option value="調査業務一覧">調査業務一覧</option>
-                                                <option value="所在地一覧">所在地一覧</option>
-                                                <option value="毎木調査登録">毎木調査登録</option>
-                                                <option value="伐採木データ履歴一覧">伐採木データ履歴一覧</option>
-                                                <option value="伐採木一覧">伐採木一覧</option>
-                                                <option value="小径木登録">小径木登録</option>
+                                            <select id="contact-function" name="contactFunction" style="display: block;">
                                             </select>
                                         </div>
                                         <div class="input-field col s2 bottom-0"></div>
@@ -128,9 +107,12 @@
                                     <div class="row bottom-0">
                                         <div class="input-field col s11 bottom-0">
                                             <small for="contact-message" class="active">問合せ内容</small>
-                                            <input id="contact-message" type="text" name="contactMessage" class="contactMessage contact-input"
-                                                placeholder="例：調査業務の変更ができないのですが、どのように操作する必要があるのか教えてください。"
-                                                onchange="updateInputTextArea(this.form.contactMessage, 'contact_message', true)">
+                                            <textarea id="contact-message" name="contactMessage"
+                                                class="materialize-textarea contactMessage"
+                                                onchange="updateInputTextArea(this.form.contactMessage, 'contact_message', true)"></textarea>
+                                            <small id="contact-message-description" for="contact-message-placeholder" class="active">
+                                                例：調査業務の変更ができないのですが、どのように操作する必要があるのか教えてください。
+                                            </small>
                                         </div>
                                         <div class="input-field col s1 bottom-0"></div>
                                     </div>
@@ -141,18 +123,45 @@
                                     <div id="contact-answer-field" class="row bottom-0">
                                         <div class="input-field col s11 bottom-0">
                                             <small for="contact-answer" class="active">問合せ回答</small>
-                                            <input id="contact-answer" type="text" name="contactAnswer" class="contactAnswer contact-input">
+                                            <textarea id="contact-answer" name="contactAnswer"
+                                                class="materialize-textarea contactAnswer"></textarea>
                                         </div>
                                         <div class="input-field col s1 bottom-0"></div>
+                                    </div>
+
+                                    <div id="contact-status-field" class="row bottom-0">
+                                        <div class="input-field col s12 bottom-0">
+                                            <div class="inline-block">
+                                                <small for="status" class="active">問合せ状態</small>
+                                                <div class="row ml-3" style="margin-left: 20px;">
+                                                    <label class="mx-2 mr-4">
+                                                        <input id="unsupported" name="status" type="radio" value="unsupported" />
+                                                        <span>未対応</span>
+                                                    </label>
+                                                    <label class="mx-2 mr-4">
+                                                        <input id="in_supported" name="status" type="radio" value="in_supported" />
+                                                        <span>対応中</span>
+                                                    </label>
+                                                    <label class="mx-2 mr-4">
+                                                        <input id="resolved" name="status" type="radio" value="resolved" />
+                                                        <span>解決済</span>
+                                                    </label>
+                                                    <label class="mx-2 mr-4">
+                                                        <input id="pending" name="status" type="radio" value="pending" />
+                                                        <span>保留</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div id="register-field" class="row">
                         <div class="col s12">
-                            <p style="text-align: left; float: left;">
-                                <a id="register" onclick="javascript:save()" class="btn waves-effect waves-light btn-large normal-button blue-grey red">
+                            <p style="text-align: left; float: right;">
+                                <a onclick="javascript:save()" class="btn waves-effect waves-light btn-large normal-button blue-grey red">
                                     <i class="material-icons left">send</i>問合せ内容送信
                                 </a>
                             </p>

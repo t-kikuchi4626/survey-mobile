@@ -12,6 +12,11 @@ document.addEventListener("deviceready", async function () {
     surveyId = param[0];
     surveyDetailId = param[1];
 
+    // 所在地一覧遷移タグ作成
+    var surveyDetailListLink = $('#survey-detail-list-link');
+    var detailListLinkText = '<a href="../html/survey_detail_list.html?' + surveyId + '"><i class="material-icons">arrow_back_ios</i></a>';
+    surveyDetailListLink.append(detailListLinkText);
+
     // サイドナビゲーションリンク作成
     createContactSidenavLink(6, surveyId, surveyDetailId);
 
