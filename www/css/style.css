@@ -200,6 +200,10 @@ a.btn-link-circle {
     .sticky-table-wrapper {
       height: 600px !important;
     }
+
+    nav a.sidenav-trigger {
+      display: block !important;
+    }
 }
 
 /* iPad縦 */
