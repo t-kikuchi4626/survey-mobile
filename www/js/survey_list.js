@@ -1,6 +1,12 @@
 var surveyCompanyId = null;
 var instance = null;
-document.addEventListener("deviceready", function () {
+const STATUS = [
+  "processing",
+  "finish",
+  "error"
+]
+
+document.addEventListener("deviceready", async function () {
   var item = localStorage.getItem(KEY);
   var obj = JSON.parse(item);
   if (obj.user != null) {
@@ -11,6 +17,16 @@ document.addEventListener("deviceready", function () {
   showSynchronizeResult();
   $('.modal').modal();
   instance = M.Modal.getInstance('#synchronizeError');
+
+  // 同期処理の実行ボタンの活性・非活性を設定
+  let latestSynchronizeResult = await fetchLastSynchronizeResultByCompanyId(surveyCompanyId);
+  let status = STATUS.finish;
+  if (latestSynchronizeResult.rows.length > 0) {
+    status = latestSynchronizeResult.rows.item(0).status;
+  }
+  if (status === STATUS[0]) {
+    $('#synchronize-button').prop('disabled', true);
+  }
 
   // サイドナビゲーションリンク作成
   createContactSidenavLink(1, "", "");
@@ -73,9 +89,9 @@ async function synchronize() {
 */
 async function generateSynchronizeData() {
   $('#modalLocation').modal('open');
-  
+
   // 同期処理結果テーブルを「処理中」で作成する
-  let synchronizeResult = await insertSynchronizeResult(['processing', '', fetchUserId()]);
+  let synchronizeResult = await insertSynchronizeResult([surveyCompanyId, 'processing', '', fetchUserId()]);
 
   var surveyArray = [];
   var surveyDetailArray = [];
@@ -84,12 +100,12 @@ async function generateSynchronizeData() {
 
   var surveyList = await fetchSurveyIdAndModifiedDate(surveyCompanyId);
   if (surveyList.rows.length > 0) {
-    
+
     let surveyIdList = [];
     let surveyDetailIdList = [];
 
-    surveyArray, surveyIdList = await fetchForSynchronizeSurvey(surveyList);
-    surveyDetailArray, surveyDetailIdList = await fetchForSynchronizeSurveyDetail(surveyIdList);
+    [surveyArray, surveyIdList] = await fetchForSynchronizeSurvey(surveyList);
+    [surveyDetailArray, surveyDetailIdList] = await fetchForSynchronizeSurveyDetail(surveyIdList);
     surveyAreaArray = await fetchForSynchronizeSurveyArea(surveyDetailIdList);
 
     // 伐採木データを4000件ずつサーバへリクエストする
@@ -161,14 +177,11 @@ async function synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArra
       let param = [synchronizeResultInsertId, responseData.synchronizeHistory.id, 'processing', '', fetchUserId()]
       await createSynchronizeResultDetail(param);
 
-      // 伐採木と小径木は同期フラグをtrueへ変更する
-      // 同期処理の確認結果を取得せずに同期処理を実行した場合、サーバ側へ二重で登録されるのを防ぐために同期処理実行済みのフラグを追加
-      let surveyDataIdList = surveyDataArray.map(surveyData => surveyData.id);
-      await updateSurveyDataIsSynchronize(surveyDataIdList);
-
       $('#modalLocation').modal({ close: true });
       $('#synchronize').modal('open');
       showSynchronizeResult();
+
+      $('#synchronize-button').prop('disabled', true);
 
     })
     .fail(async (jqXHR, textStatus, errorThrown) => {
@@ -200,7 +213,7 @@ async function requestSynchronizeResult() {
 
   $('#modalLocation').modal('open');
 
-  let latestSynchronizeResult = await fetchLastSynchronizeResult();
+  let latestSynchronizeResult = await fetchLastSynchronizeResultByCompanyId(surveyCompanyId);
   let synchronizeResultDetail = null;
   if (latestSynchronizeResult.rows.length > 0) {
     synchronizeResultDetail = await fetchAllSynchronizeResultDetail(latestSynchronizeResult.rows.item(0).id);
@@ -235,9 +248,19 @@ async function requestSynchronizeResult() {
       }
     })
       .done(async (data) => {
+
+        if (data.length === 0) {
+          $('#modalLocation').modal('close');
+          return alert("正常に同期処理が終了しませんでした。再度同期処理を実行してください。");
+        }
+
         var jsonData = JSON.stringify(data);
         var responseData = JSON.parse(jsonData);
- 
+        if (responseData.synchronizeWebToMobile.status === STATUS[0]) {
+          $('#modalLocation').modal('close');
+          return alert("現在同期処理実行中です。しばらくしてから再度確認ボタンを押してください。");
+        }
+
         // 同期処理結果を更新する
         await synchronizeWebToMobile(JSON.parse(responseData.synchronizeWebToMobile.synchronizeToMobile));
         let synchronizeResultParam = [
@@ -247,14 +270,20 @@ async function requestSynchronizeResult() {
           responseData.synchronizeWebToMobile.id
         ]
         await updateSynchronizeResultDetail(synchronizeResultParam);
-        await updateSynchronizeResultStatus();
-        showSynchronizeResult();
+        let [status, error] = await updateSynchronizeResultStatus();
+        $('#modalLocation').modal({ close: true });
+
+        if (status === STATUS[2]) {
+          showErrorModal(status, error);
+          $('#synchronizeError').modal('open');
+        } else {
+          await showSynchronizeResult();
+          $('#synchronize-request').modal('open');
+        }
 
         // 同期処理結果を画面表示
         await showSurveyList();
-        $('#modalLocation').modal({ close: true });
-        $('#synchronize-request').modal('open');
-        showSynchronizeResult();
+        $('#synchronize-button').prop('disabled', false);
 
       })
       .fail(async (jqXHR, textStatus, errorThrown) => {
@@ -268,8 +297,8 @@ async function requestSynchronizeResult() {
 /**
  * 同期処理結果をモーダルに反映する
  */
- async function showSynchronizeResult() {
-  var result = await fetchLastSynchronizeResult();
+async function showSynchronizeResult() {
+  var result = await fetchLastSynchronizeResultByCompanyId(surveyCompanyId);
   if (result.rows.length > 0) {
     $("#synchronizeStatus").html(conversionSynchronizeResultForDisplay(result.rows.item(0).status));
     $("#synchronizeMessage").html(result.rows.item(0).message);
@@ -283,42 +312,42 @@ async function requestSynchronizeResult() {
 async function updateSynchronizeResultStatus() {
   // 同期処理がすべて完了している場合、synchronize_result.statusをfinishにする。
   // 1件でもerrorがあればsynchronize_result.statusをerrorにする。
-  let latestSynchronizeResult = await fetchLastSynchronizeResult();
+  let latestSynchronizeResult = await fetchLastSynchronizeResultByCompanyId(surveyCompanyId);
   let synchronizeResultDetail = await fetchDetailBySynchronizeResultId(latestSynchronizeResult.rows.item(0).id);
-  let status = 'finish';
+  let status = STATUS[1];
   let error = '';
-  for (var i = 0; i <  synchronizeResultDetail.rows.length; i++) {
-    if (synchronizeResultDetail.rows.item(i).status == 'error') {
-      status = 'error';
+  for (var i = 0; i < synchronizeResultDetail.rows.length; i++) {
+    if (synchronizeResultDetail.rows.item(i).status == STATUS[2]) {
+      status = STATUS[2];
       error = '同期処理に失敗しました。再度同期処理を試してください。同じ現象が発生する場合は管理者へお問い合わせください。';
       break;
-    } else if (synchronizeResultDetail.rows.item(i).status == 'processing') {
-      status = 'processing'
+    } else if (synchronizeResultDetail.rows.item(i).status == STATUS[0]) {
+      status = STATUS[0]
     }
   }
   await updateSynchronizeResult([status, error, fetchUserId(), latestSynchronizeResult.rows.item(0).id]);
-  return;
+  return [status, error];
 }
 
 /**
  * 同期処理用の調査業務データ取得
  * @returns surveyList
  */
- async function fetchForSynchronizeSurvey(surveyList) {
+async function fetchForSynchronizeSurvey(surveyList) {
   let surveyArray = [];
   let surveyIdList = [];
   for (var x = 0; x < surveyList.rows.length; x++) {
     surveyArray.push(surveyList.rows.item(0));
     surveyIdList.push(surveyList.rows.item(0).id);
   }
-  return surveyArray, surveyIdList;
+  return [surveyArray, surveyIdList];
 }
 
 /**
  * 同期処理用の所在地データ取得
  * @returns surveyIdList
  */
- async function fetchForSynchronizeSurveyDetail(surveyIdList) {
+async function fetchForSynchronizeSurveyDetail(surveyIdList) {
   let surveyDetailArray = [];
   let surveyDetailIdList = [];
   if (surveyIdList.length > 0) {
@@ -328,14 +357,14 @@ async function updateSynchronizeResultStatus() {
       surveyDetailIdList.push(surveyDetailList.rows.item(i).id);
     }
   }
-  return surveyDetailArray, surveyDetailIdList;
+  return [surveyDetailArray, surveyDetailIdList];
 }
 
 /**
  * 同期処理用の小径木データ取得
  * @returns surveyDetailIdList
  */
- async function fetchForSynchronizeSurveyArea(surveyDetailIdList) {
+async function fetchForSynchronizeSurveyArea(surveyDetailIdList) {
   var surveyAreaArray = [];
   if (surveyDetailIdList.length > 0) {
     var surveyAreaList = await fetchSurveyAreaAll(surveyDetailIdList);
@@ -366,12 +395,22 @@ async function errorProcess(responseData) {
   }
 
   // 同期処理結果へエラー情報を更新する
-  let latestSynchronizeResult = await fetchLastSynchronizeResult();
+  let latestSynchronizeResult = await fetchLastSynchronizeResultByCompanyId(surveyCompanyId);
   await updateSynchronizeResult(['error', error, fetchUserId(), latestSynchronizeResult.rows.item(0)]);
   await showSurveyList();
   await showSynchronizeResult();
+
   $('#modalLocation').modal({ close: true });
 
+  showErrorModal(error, message);
+}
+
+/**
+ * エラーモーダル表示
+ * @param {*} error エラー
+ * @param {*} message メッセージ
+ */
+function showErrorModal(error, message) {
   $('#error').text(error);
   $('#errorMessage').text(message);
   $('#synchronizeError').modal('open');

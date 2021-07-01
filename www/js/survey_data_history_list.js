@@ -59,9 +59,41 @@ async function setPage() {
       var pageCount = Math.ceil(allSurveyDataHistoryList.rows.length / 50);
       setPagination(pageCount);
     }
+    // 伐採時の備考ごとの集計値設定
+    await setSurveyDataNote();
+
     // 伐採木データ情報の設定
     setSurveyDataHistoryList(surveyDataHistoryList);
     $('.sticky-table-wrapper').scrollTop(0);
+}
+
+/**
+ * 伐採時の備考ごとに集計し、画面へ設定
+ */
+async function setSurveyDataNote() {
+  var needRopeList = await fetchNeedRope(surveyDetailId);
+  $('#need-rope-count').text(needRopeList.rows.length);
+
+  var needWireList = await fetchNeedWire(surveyDetailId);
+  $('#need-wire-count').text(needWireList.rows.length);
+
+  var needCutMiddleList = await fetchNeedCutMiddle(surveyDetailId);
+  $('#need-cut-middle-count').text(needCutMiddleList.rows.length);
+
+  var notNeedCutMiddleList = await fetchNotNeedCutMiddle(surveyDetailId);
+  $('#not-need-cut-middle-count').text(notNeedCutMiddleList.rows.length);
+
+  var isDangerTreeList = await fetchIsDangerTree(surveyDetailId);
+  $('#is-danger-tree-count').text(isDangerTreeList.rows.length);
+
+  var needNeedCutBranchList = await fetchNeedCutBranch(surveyDetailId);
+  $('#need-cut-branch-count').text(needNeedCutBranchList.rows.length);
+  
+  var needCutDivideList = await fetchNeedCutDivide(surveyDetailId);
+  $('#need-cut-divide-count').text(needCutDivideList.rows.length);
+
+  var needCollectList = await fetchNeedCollect(surveyDetailId);
+  $('#need-collect-count').text(needCollectList.rows.length);
 }
 
 /**

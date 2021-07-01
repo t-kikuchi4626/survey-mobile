@@ -63,6 +63,7 @@ function insertSurveyData(param) {
     var sql = 'INSERT INTO survey_data (' +
         'survey_detail_id, ' +
         'is_synchronize, ' +
+        'identify_code, ' +
         'name, ' +
         'color, ' +
         'word, ' +
@@ -83,7 +84,7 @@ function insertSurveyData(param) {
         'created_by, ' +
         'modified_date,' +
         'created_date)' +
-        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'), DATETIME(\'now\', \'localtime\'))';
+        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'), DATETIME(\'now\', \'localtime\'))';
 
     database.transaction(function (transaction) {
         transaction.executeSql(sql, param);
@@ -376,6 +377,134 @@ function fetchAllSurveyDataHistoryList(surveyDetailId) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
+            });
+        });
+    });
+}
+
+/**
+ * 所在地IDをもとに伐採ロープありのデータを取得
+ * @param 所在地ID 
+ */
+function fetchNeedRope(surveyDetailId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' AND need_rope = \'true\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
+            });
+        });
+    });
+}
+
+/**
+ * 所在地IDをもとに伐採ワイヤーありのデータを取得
+ * @param 所在地ID 
+ */
+function fetchNeedWire(surveyDetailId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' AND need_wire = \'true\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
+            });
+        });
+    });
+}
+
+/**
+ * 所在地IDをもとに中断切りロープありのデータを取得
+ * @param 所在地ID 
+ */
+function fetchNeedCutMiddle(surveyDetailId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' AND need_cut_middle = \'true\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
+            });
+        });
+    });
+}
+
+/**
+ * 所在地IDをもとに中断切りロープなしのデータを取得
+ * @param 所在地ID 
+ */
+function fetchNotNeedCutMiddle(surveyDetailId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' AND not_need_cut_middle = \'true\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
+            });
+        });
+    });
+}
+
+/**
+ * 所在地IDをもとに危険木のデータを取得
+ * @param 所在地ID 
+ */
+function fetchIsDangerTree(surveyDetailId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' AND is_danger_tree = \'true\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
+            });
+        });
+    });
+}
+
+/**
+ * 所在地IDをもとに枝払いありのデータを取得
+ * @param 所在地ID 
+ */
+function fetchNeedCutBranch(surveyDetailId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' AND need_cut_branch = \'true\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
+            });
+        });
+    });
+}
+
+/**
+ * 所在地IDをもとに玉切りありのデータを取得
+ * @param 所在地ID 
+ */
+function fetchNeedCutDivide(surveyDetailId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' AND need_cut_divide = \'true\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
+            });
+        });
+    });
+}
+
+/**
+ * 所在地IDをもとに集積ありのデータを取得
+ * @param 所在地ID 
+ */
+function fetchNeedCollect(surveyDetailId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' AND need_collect = \'true\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));

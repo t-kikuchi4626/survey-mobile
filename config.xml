@@ -19,7 +19,6 @@
   <preference name="BackupWebStorage" value="cloud"/>
   <preference name="FadeSplashScreenDuration" value="250"/>
   <preference name="KeyboardDisplayRequiresUserAction" value="true"/>
-  <preference name="MediaPlaybackRequiresUserAction" value="false"/>
   <preference name="SuppressesIncrementalRendering" value="false"/>
   <preference name="TopActivityIndicator" value="gray"/>
   <preference name="GapBetweenPages" value="0"/>
@@ -66,6 +65,8 @@
         <string>en</string>
       </array>
     </config-file>
+    <preference name="scheme" value="monaca-app"/>
+    <preference name="hostname" value="localhost"/>
   </platform>
   <platform name="android">
     <icon density="ldpi" src="/res/android/icon/ldpi.png"/>
@@ -80,16 +81,7 @@
     <splash density="port-xhdpi" src="/res/android/screen/splash-port-xhdpi.9.png"/>
     <splash density="port-xxhdpi" src="/res/android/screen/splash-port-xxhdpi.9.png"/>
     <splash density="port-xxxhdpi" src="/res/android/screen/splash-port-xxxhdpi.9.png"/>
-  </platform>
-  <platform name="windows">
-    <icon src="/res/winrt/icon/package_logo_winrt.png" target="StoreLogo"/>
-    <icon src="/res/winrt/icon/app_logo_winrt.png" target="Square150x150Logo"/>
-    <icon src="/res/winrt/icon/app_small_logo_winrt.png" target="Square30x30Logo"/>
-    <icon src="/res/winrt/icon/app_tile_wide_logo_winrt.png" target="Wide315x150Logo"/>
-    <splash height="300" src="/res/winrt/screen/app_splash_screen_winrt.png" width="620"/>
-  </platform>
-  <platform name="chrome">
-    <icon height="128" src="/platforms/chrome/icon.png" width="128"/>
+    <splash src="/res/android/screen/splash-mdpi.png" density="mdpi"/>
   </platform>
   <preference name="WindowsStorePublisherName" value="My Name"/>
   <preference name="WindowsStoreIdentityName" value="111eda60-a14e-3895-32f8-fe3540bf4ccc"/>
@@ -106,11 +98,19 @@
     <string>need to photo library access to save pictures there</string>
   </edit-config>
   <plugin name="cordova-plugin-device" spec="~2.0.1"/>
-  <preference name="ios-XCBuildConfiguration-TARGETED_DEVICE_FAMILY" value="1,2"/>
   <preference name="AutoHideSplashScreen" value="true"/>
   <preference name="FadeSplashScreen" value="true"/>
   <preference name="ShowSplashScreenSpinner" value="false"/>
   <access origin="*"/>
   <preference name="DisallowOverscroll" value="true"/>
   <preference name="EnableViewportScale" value="false"/>
+  <platform name="electron">
+    <icon src="/res/electron/icon/icon_electron_512.png" width="512" height="512"/>
+    <preference name="SplashScreenWidth" value="620"/>
+    <preference name="SplashScreenHeight" value="300"/>
+    <preference name="ShowSplashScreen" value="false"/>
+    <splash src="/res/electron/screen/electron_splash_image.png" width="620" height="300"/>
+  </platform>
+  <preference name="MediaTypesRequiringUserActionForPlayback" value="false"/>
+  <preference name="target-device" value="universal"/>
 </widget>

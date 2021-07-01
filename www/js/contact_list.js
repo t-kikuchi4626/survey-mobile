@@ -184,7 +184,7 @@ function createBackLink() {
       break;
     case 3:
       // 毎木調査登録へ遷移
-      backLinkText = '<a href="../html/survey_data_register.html?' + surveyId + '&' + surveyDetailId + '"><i class="material-icons">arrow_back_ios</i></a>';
+      backLinkText = '<a href="../html/survey_data_edit.html?' + surveyId + '&' + surveyDetailId + '"><i class="material-icons">arrow_back_ios</i></a>';
       break;
     case 4:
       // 伐採木データ履歴一覧へ遷移
@@ -196,7 +196,7 @@ function createBackLink() {
       break;
     case 6:
       // 小径木登録へ遷移
-      backLinkText = '<a href="../html/survey_data_edit.html?' + surveyId + '&' + surveyDetailId + '"><i class="material-icons">arrow_back_ios</i></a>';
+      backLinkText = '<a href="../html/survey_area_edit.html?' + surveyId + '&' + surveyDetailId + '"><i class="material-icons">arrow_back_ios</i></a>';
   }
   backLink.append(backLinkText);
 }

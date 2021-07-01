@@ -63,6 +63,7 @@ function insertSurveyArea(param) {
     var sql = 'INSERT INTO survey_area (' +
         'survey_detail_id, ' +
         'is_synchronize, ' +
+        'identify_code, ' +
         'tree_type, ' +
         'trimming_area_value, ' +
         'trimming_tree_area_value, ' +
@@ -76,7 +77,7 @@ function insertSurveyArea(param) {
         'created_by, ' +
         'modified_date,' +
         'created_date)' +
-        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'),DATETIME(\'now\', \'localtime\'))';
+        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'),DATETIME(\'now\', \'localtime\'))';
 
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {

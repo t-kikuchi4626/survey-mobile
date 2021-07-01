@@ -53,14 +53,14 @@
       </div>
     </div>
     <div class="row center">
-      <a onclick="synchronize()" class="btn waves-effect waves-light btn-large normal-button mb-2">
-        <i class="material-icons left">update</i>データを同期する
-      </a>
+      <button onclick="synchronize()" id="synchronize-button" class="btn waves-effect waves-light btn-large normal-button mb-2">
+        <i class="material-icons left">cloud_upload</i>同期処理を開始する
+      </button>
     </div>
     <div class="row center">
-      <a onclick="confirmSynchronize()" class="btn waves-effect waves-light btn-large normal-button mb-2">
-        <i class="material-icons left">update</i>同期結果を確認する
-      </a>
+      <button onclick="confirmSynchronize()" id="confirmSynchronize" class="btn waves-effect waves-light btn-large normal-button mb-2">
+        <i class="material-icons left">cloud_download</i>同期処理結果を確認する
+      </button>
     </div>
 
     <div class="row center">

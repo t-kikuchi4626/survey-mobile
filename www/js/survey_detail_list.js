@@ -73,10 +73,10 @@ function setSurveyDetail(texts, surveyDetail) {
     texts += '</div>';
     texts += '<div class="col s12 m4">';
     texts += '<div style="margin-bottom: 2rem; margin:5px" class="mobile-btn-block">';
-    texts += '<a href="../html/survey_data_register.html?' + surveyId + '&' + surveyDetail.id + '" class="btn normal-button mobile-btn">伐採木登録</a>';
+    texts += '<a href="../html/survey_data_edit.html?' + surveyId + '&' + surveyDetail.id + '" class="btn normal-button mobile-btn">伐採木登録</a>';
     texts += '</div>';
     texts += '<div class="mobile-btn-block" style="margin:5px">';
-    texts += '<a href="../html/survey_data_edit.html?' + surveyId + '&' + surveyDetail.id + '" class="btn normal-button mobile-btn">小径木登録</a>';
+    texts += '<a href="../html/survey_area_edit.html?' + surveyId + '&' + surveyDetail.id + '" class="btn normal-button mobile-btn">小径木登録</a>';
     texts += '</div>';
     texts += '</div>';
     texts += '</div>';

@@ -3,7 +3,9 @@ var KEY = 'session';
 var appPass = '#t2IOj4rVl2lQ%_$7)7pXeoGE/Jg#0&0-/$X-Suojg)!21RCLel#4Q%322BtS148';
 // var path = 'https://nw-tohoku-epco-tree-survey-app.com:8443/';
 // var path = 'http://survey-develop.japanwest.cloudapp.azure.com:80/';
-var path = 'http://develop-survey.japaneast.cloudapp.azure.com:8443/';
+var path = 'https://develop-survey.japaneast.cloudapp.azure.com:8443/';
+// var path = 'http://172.21.144.1:8443/';
+// var path = 'http://192.168.3.140:8443/';
 
 var instances = null;
 
@@ -148,3 +150,20 @@ function createContactSidenavLink(id, surveyId, surveyDetailId) {
     }
     contactListLink.append(linkText);
 }
+
+/**
+ * 識別コード生成
+ * @param uuid 端末番号
+ * @returns uuid + 現在日時分秒ミリ秒 + ランダムな文字列10桁
+ */
+ function generateIdentifyCode(uuid) {
+    var date = new Date();
+    var now = date.getFullYear() 
+            + ("00" + (date.getMonth() + 1)).slice(-2) 
+            + ("00" + date.getDate()).slice(-2) 
+            + ('0' + date.getHours()).slice(-2) 
+            + ('0' + date.getMinutes()).slice(-2) 
+            + ('0' + date.getSeconds()).slice(-2);
+    var random =  Math.random().toString(36).slice(-25);
+    return uuid + now + random;
+  }
