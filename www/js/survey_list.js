@@ -1,12 +1,4 @@
 var instance = null;
-<<<<<<< HEAD
-=======
-const STATUS = [
-  "processing",
-  "finish",
-  "error"
-]
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
 
 document.addEventListener("deviceready", async function () {
   var item = localStorage.getItem(KEY);
@@ -243,16 +235,11 @@ async function generateWebEditModeOffData() {
 async function generateSynchronizeData(isWebEditMode) {
   $('#modalLocation').modal('open');
 
-<<<<<<< HEAD
   let synchronizeResult = [];
   if (!isWebEditMode) {
     // 同期処理結果テーブルを「処理中」で作成する
     synchronizeResult = await insertSynchronizeResult([surveyCompanyId, 'processing', '', fetchUserId()]);
   }
-=======
-  // 同期処理結果テーブルを「処理中」で作成する
-  let synchronizeResult = await insertSynchronizeResult([surveyCompanyId, 'processing', '', fetchUserId()]);
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
 
   var surveyArray = [];
   var surveyDetailArray = [];
@@ -332,7 +319,6 @@ async function synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArra
       var jsonData = JSON.stringify(data);
       var responseData = JSON.parse(jsonData);
 
-<<<<<<< HEAD
       if (synchronizeResultInsertId != 0) {
         let param = [synchronizeResultInsertId, responseData.synchronizeHistory.id, 'processing', '', fetchUserId()]
         await createSynchronizeResultDetail(param);
@@ -341,18 +327,6 @@ async function synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArra
 
       $('#modalLocation').modal({ close: true });
       $('#synchronize').modal('open');
-=======
-      // 同期処理結果詳細を登録
-      let param = [synchronizeResultInsertId, responseData.synchronizeHistory.id, 'processing', '', fetchUserId()]
-      await createSynchronizeResultDetail(param);
-
-      $('#modalLocation').modal({ close: true });
-      $('#synchronize').modal('open');
-      showSynchronizeResult();
-
-      $('#synchronize-button').prop('disabled', true);
-
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
     })
     .fail(async (jqXHR, textStatus, errorThrown) => {
       var jsonData = JSON.stringify(jqXHR);
@@ -384,12 +358,8 @@ async function requestSynchronizeResult() {
   $('#modalLocation').modal('open');
 
   let latestSynchronizeResult = await fetchLastSynchronizeResultByCompanyId(surveyCompanyId);
-<<<<<<< HEAD
   let synchronizeResultDetailList = null;
   let latestSynchronizeResultId = latestSynchronizeResult.rows.item(0).id;
-=======
-  let synchronizeResultDetail = null;
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
   if (latestSynchronizeResult.rows.length > 0) {
     synchronizeResultDetailList = await fetchAllSynchronizeResultDetail(latestSynchronizeResult.rows.item(0).id);
   }
@@ -450,7 +420,6 @@ async function requestSynchronizeResult() {
         let ResponseDataTmp = responseData.synchronizeWebToMobile[i];
         await synchronizeWebToMobile(JSON.parse(ResponseDataTmp.synchronizeToMobile));
       }
-<<<<<<< HEAD
       $('#synchronize-request').modal('open');
     }
 
@@ -477,53 +446,6 @@ function isStatusFinish(synchronizeWebToMobile) {
       isFinish = false;
       break;
     }
-=======
-    })
-      .done(async (data) => {
-
-        if (data.length === 0) {
-          $('#modalLocation').modal('close');
-          return alert("正常に同期処理が終了しませんでした。再度同期処理を実行してください。");
-        }
-
-        var jsonData = JSON.stringify(data);
-        var responseData = JSON.parse(jsonData);
-        if (responseData.synchronizeWebToMobile.status === STATUS[0]) {
-          $('#modalLocation').modal('close');
-          return alert("現在同期処理実行中です。しばらくしてから再度確認ボタンを押してください。");
-        }
-
-        // 同期処理結果を更新する
-        await synchronizeWebToMobile(JSON.parse(responseData.synchronizeWebToMobile.synchronizeToMobile));
-        let synchronizeResultParam = [
-          responseData.synchronizeWebToMobile.status,
-          responseData.synchronizeWebToMobile.errorMessage,
-          fetchUserId(),
-          responseData.synchronizeWebToMobile.id
-        ]
-        await updateSynchronizeResultDetail(synchronizeResultParam);
-        let [status, error] = await updateSynchronizeResultStatus();
-        $('#modalLocation').modal({ close: true });
-
-        if (status === STATUS[2]) {
-          showErrorModal(status, error);
-          $('#synchronizeError').modal('open');
-        } else {
-          await showSynchronizeResult();
-          $('#synchronize-request').modal('open');
-        }
-
-        // 同期処理結果を画面表示
-        await showSurveyList();
-        $('#synchronize-button').prop('disabled', false);
-
-      })
-      .fail(async (jqXHR, textStatus, errorThrown) => {
-        var jsonData = JSON.stringify(jqXHR);
-        var responseData = JSON.parse(jsonData);
-        errorProcess(responseData);
-      })
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
   }
   return isFinish;
 }
@@ -554,11 +476,7 @@ async function updateSynchronizeResultDetail(synchronizeWebToMobile) {
 /**
  * 同期処理結果をモーダルに反映する
  */
-<<<<<<< HEAD
 async function applySynchronizeResult() {
-=======
-async function showSynchronizeResult() {
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
   var result = await fetchLastSynchronizeResultByCompanyId(surveyCompanyId);
   if (result.rows.length > 0) {
     $("#synchronizeStatus").html(conversionSynchronizeResultForDisplay(result.rows.item(0).status));
@@ -575,7 +493,6 @@ async function showSynchronizeResult() {
 async function updateSynchronizeResultStatus(status, latestSynchronizeResultId) {
   // 同期処理がすべて完了している場合、synchronize_result.statusをfinishにする。
   // 1件でもerrorがあればsynchronize_result.statusをerrorにする。
-<<<<<<< HEAD
   let error = '';
   if (status === STATUS.error) {
     status = STATUS.error;
@@ -583,23 +500,6 @@ async function updateSynchronizeResultStatus(status, latestSynchronizeResultId) 
   }
   await updateSynchronizeResult([status, error, fetchUserId(), latestSynchronizeResultId]);
   return error;
-=======
-  let latestSynchronizeResult = await fetchLastSynchronizeResultByCompanyId(surveyCompanyId);
-  let synchronizeResultDetail = await fetchDetailBySynchronizeResultId(latestSynchronizeResult.rows.item(0).id);
-  let status = STATUS[1];
-  let error = '';
-  for (var i = 0; i < synchronizeResultDetail.rows.length; i++) {
-    if (synchronizeResultDetail.rows.item(i).status == STATUS[2]) {
-      status = STATUS[2];
-      error = '同期処理に失敗しました。再度同期処理を試してください。同じ現象が発生する場合は管理者へお問い合わせください。';
-      break;
-    } else if (synchronizeResultDetail.rows.item(i).status == STATUS[0]) {
-      status = STATUS[0]
-    }
-  }
-  await updateSynchronizeResult([status, error, fetchUserId(), latestSynchronizeResult.rows.item(0).id]);
-  return [status, error];
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
 }
 
 /**
@@ -671,20 +571,12 @@ async function errorProcess(responseData) {
   let latestSynchronizeResult = await fetchLastSynchronizeResultByCompanyId(surveyCompanyId);
   await updateSynchronizeResult(['error', error, fetchUserId(), latestSynchronizeResult.rows.item(0)]);
   await showSurveyList();
-<<<<<<< HEAD
   await applySynchronizeResult();
-=======
-  await showSynchronizeResult();
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
 
   $('#modalLocation').modal({ close: true });
   applyErrorModal(error, message);
   $('#synchronizeError').modal('open');
 
-<<<<<<< HEAD
-=======
-  showErrorModal(error, message);
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
 }
 
 /**
@@ -692,11 +584,7 @@ async function errorProcess(responseData) {
  * @param {*} error エラー
  * @param {*} message メッセージ
  */
-<<<<<<< HEAD
 function applyErrorModal(error, message) {
-=======
-function showErrorModal(error, message) {
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
   $('#error').text(error);
   $('#errorMessage').text(message);
 }

@@ -62,13 +62,8 @@ function fetchSurveyDataBySurveyDetailId(surveyDetailId) {
 function insertSurveyData(param) {
     var sql = 'INSERT INTO survey_data (' +
         'survey_detail_id, ' +
-<<<<<<< HEAD
         'identify_code, ' +
         'survey_company_id, ' +
-=======
-        'is_synchronize, ' +
-        'identify_code, ' +
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
         'name, ' +
         'color, ' +
         'word, ' +
@@ -90,11 +85,7 @@ function insertSurveyData(param) {
         'created_by, ' +
         'modified_date,' +
         'created_date)' +
-<<<<<<< HEAD
         'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'), DATETIME(\'now\', \'localtime\'))';
-=======
-        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'), DATETIME(\'now\', \'localtime\'))';
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
 
     database.transaction(function (transaction) {
         transaction.executeSql(sql, param);

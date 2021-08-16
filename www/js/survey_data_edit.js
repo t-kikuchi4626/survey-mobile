@@ -12,7 +12,7 @@ document.addEventListener("deviceready", async function () {
     surveyId = param[0];
     surveyDetailId = param[1];
     uuid = device.uuid;
-    
+
     // 所在地一覧遷移タグ作成
     var surveyDetailListLink = $('#survey-detail-list-link');
     var detailListLinkText = '<a href="../html/survey_detail_list.html?' + surveyId + '"><i class="material-icons">arrow_back_ios</i></a>';
@@ -21,28 +21,15 @@ document.addEventListener("deviceready", async function () {
     // サイドナビゲーションリンク作成
     createSidenavLink(surveyId, surveyDetailId);
     createContactSidenavLink(3, surveyId, surveyDetailId);
-<<<<<<< HEAD
-    
+
     var survey = await fetchSurveyById(surveyId);
 
     var treeTypeValue = convertSpace(survey.rows.item(0).tree_type_value);
     var specialTree = convertSpace(survey.rows.item(0).special_tree);
     setTreeTypeButton(treeTypeValue, specialTree, "survey-data-tree-type-modal");
-    
+
     initializeForm();
     await controlEditScreen();
-=======
-
-    var survey = await fetchSurveyById(surveyId);
-
-    var treeTypeValue = convertSpace(survey.rows.item(0).tree_type_value);
-    var specialTree = convertSpace(survey.rows.item(0).special_tree);
-    setTreeTypeButton(treeTypeValue, specialTree, "survey-data-tree-type-modal");
-
-    initializeForm();
-
-    uuid = device.uuid;
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
 });
 
 /**
@@ -211,7 +198,6 @@ $(".survey-data-need-wire").on('touchstart', function () {
     } else {
         $("#survey-data-need-wire").addClass('hidden');
         $('input[name="survey-data-need-wire"]').val(false);
-<<<<<<< HEAD
     }
 });
 
@@ -238,41 +224,10 @@ $(".survey-data-not-need-cut-middle").on('touchstart', function () {
     } else {
         $("#survey-data-not-need-cut-middle").addClass('hidden');
         $('input[name="survey-data-not-need-cut-middle"]').val(false);
-=======
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
     }
 });
 
 /**
-<<<<<<< HEAD
-=======
- * 伐採時の備考（中断切りロープ有り）設定
- */
-$(".survey-data-need-cut-middle").on('touchstart', function () {
-    if ($("#survey-data-need-cut-middle").hasClass('hidden')) {
-        $("#survey-data-need-cut-middle").removeClass('hidden');
-        $('input[name="survey-data-need-cut-middle"]').val(true);
-    } else {
-        $("#survey-data-need-cut-middle").addClass('hidden');
-        $('input[name="survey-data-need-cut-middle"]').val(false);
-    }
-});
-
-/**
- * 伐採時の備考（中断切りロープ無し）設定
- */
-$(".survey-data-not-need-cut-middle").on('touchstart', function () {
-    if ($("#survey-data-not-need-cut-middle").hasClass('hidden')) {
-        $("#survey-data-not-need-cut-middle").removeClass('hidden');
-        $('input[name="survey-data-not-need-cut-middle"]').val(true);
-    } else {
-        $("#survey-data-not-need-cut-middle").addClass('hidden');
-        $('input[name="survey-data-not-need-cut-middle"]').val(false);
-    }
-});
-
-/**
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
  * 伐採時の備考（危険木）設定
  */
 $(".survey-data-is-denger-tree").on('touchstart', function () {
@@ -475,13 +430,8 @@ function validate() {
 async function createSurveyData() {
     var param = [
         surveyDetailId,
-<<<<<<< HEAD
         generateIdentifyCode(uuid),
         surveyCompanyId,
-=======
-        false,
-        generateIdentifyCode(uuid),
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
         $('#name-modal').val(),
         $('#color').val(),
         $('#word').val(),
@@ -498,10 +448,7 @@ async function createSurveyData() {
         $('input[name="survey-data-need-collect"]').val(),
         $('#note-modal').val(),
         false,
-<<<<<<< HEAD
         'off',
-=======
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
         fetchUserId(),
         fetchUserId()
     ];

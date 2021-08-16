@@ -7,25 +7,16 @@ function executeQuery(tx) {
     // tx.executeSql('DROP TABLE survey_data');
     // tx.executeSql('DROP TABLE survey');
     // tx.executeSql('DROP TABLE survey_detail');
-<<<<<<< HEAD
     // tx.executeSql('DROP TABLE synchronize_result');
     // tx.executeSql('DROP TABLE synchronize_result_detail');
     // tx.executeSql('DROP TABLE web_edit_mode');
-=======
-    //     tx.executeSql('DROP TABLE synchronize_result');
-    //     tx.executeSql('DROP TABLE synchronize_result_detail');
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
     tx.executeSql(createSurveyTable);
     tx.executeSql(createSurveySetailTable);
     tx.executeSql(createSurveyAreaTable);
     tx.executeSql(createSurveyDataTable);
     tx.executeSql(createsSnchronizeResultTable);
     tx.executeSql(createsSnchronizeResultDetailTable);
-<<<<<<< HEAD
     tx.executeSql(createsWebEditModeTable);
-=======
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
-
     // for (var i = 0; i < 10; i++) {
     //   tx.executeSql('INSERT INTO survey_data (is_synchronize, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch, need_cut_divide, need_collect, is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [false, '赤', 'AA', i, 1070, 'ひのき', 50, true, true, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
     // }
@@ -80,14 +71,8 @@ var createSurveySetailTable = 'CREATE TABLE IF NOT EXISTS survey_detail ' +
 
 var createSurveyAreaTable = 'CREATE TABLE IF NOT EXISTS survey_area ' +
     '(id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
-<<<<<<< HEAD
     'survey_company_id INTEGER, ' +
     'identify_code TEXT,' +
-=======
-    'cloud_survey_area_id INTEGER, ' +
-    'identify_code TEXT,' +
-    'is_synchronize BOOLEAN, ' +
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
     'survey_detail_id INTEGER, ' +
     'tree_type TEXT, ' +
     'trimming_area_value TEXT, ' +
@@ -106,15 +91,8 @@ var createSurveyAreaTable = 'CREATE TABLE IF NOT EXISTS survey_area ' +
 
 var createSurveyDataTable = 'CREATE TABLE IF NOT EXISTS survey_data ' +
     '(id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
-<<<<<<< HEAD
     'survey_company_id INTEGER, ' +
     'identify_code TEXT,' +
-=======
-    'cloud_survey_data_id INTEGER, ' +
-    'identify_code TEXT,' +
-    'is_synchronize BOOLEAN, ' +
-    'name TEXT,' +
->>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
     'color TEXT,' +
     'word TEXT,' +
     'number INTEGER,' +
