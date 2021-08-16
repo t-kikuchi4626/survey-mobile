@@ -44,13 +44,13 @@ function updateSynchronizeResult(SynchronizeResult) {
 }
 
 /**
- * 最新の同期処理結果を取得する
- * @param {*} SynchronizeResult 
+ * 企業IDを元に、最新の同期処理結果を取得する
+ * @param {*} companyId 企業ID
  */
-function fetchLastSynchronizeResult() {
+function fetchLastSynchronizeResultByCompanyId(companyId) {
     return new Promise(function (resolve) {
         database.transaction(async function (transaction) {
-        transaction.executeSql(selectLastSynchronizeResultSql(), [], function (ignored, resultSet) {
+        transaction.executeSql(selectLastSynchronizeResultSql(), [companyId], function (ignored, resultSet) {
             resolve(resultSet);
         })
         }, function (error) {
@@ -70,17 +70,18 @@ function updateSynchronizeResultSql() {
 
 function insertSynchronizeResultSql() {
     return 'INSERT INTO synchronize_result (' +
+        'company_id, ' +
         'status, ' +
         'message, ' +
         'modified_by, ' +
         'modified_date) ' +
-        'VALUES (?,?,?,DATETIME(\'now\', \'localtime\')) ';
+        'VALUES (?,?,?,?,DATETIME(\'now\', \'localtime\')) ';
 }
 
 /**
  * 最新の同期処理結果取得SQL
  */
 function selectLastSynchronizeResultSql() {
-    return 'SELECT * FROM synchronize_result ORDER BY id DESC';
+    return 'SELECT * FROM synchronize_result WHERE company_id = ? ORDER BY id DESC';
 }
   

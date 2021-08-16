@@ -62,7 +62,8 @@ function fetchSurveyDataBySurveyDetailId(surveyDetailId) {
 function insertSurveyData(param) {
     var sql = 'INSERT INTO survey_data (' +
         'survey_detail_id, ' +
-        'is_synchronize, ' +
+        'identify_code, ' +
+        'survey_company_id, ' +
         'name, ' +
         'color, ' +
         'word, ' +
@@ -79,11 +80,12 @@ function insertSurveyData(param) {
         'need_collect, ' +
         'note, ' +
         'is_delete, ' +
+        'web_edit_mode,' +
         'modified_by, ' +
         'created_by, ' +
         'modified_date,' +
         'created_date)' +
-        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'), DATETIME(\'now\', \'localtime\'))';
+        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'), DATETIME(\'now\', \'localtime\'))';
 
     database.transaction(function (transaction) {
         transaction.executeSql(sql, param);
@@ -168,6 +170,23 @@ function updateSurveyData(id, inputdata, column) {
 }
 
 /**
+ * 伐採木のWeb編集モードを全件更新
+ * @param Web編集モード
+ * @param 調査会社ID
+ */
+ function updateWebEditModeSurveyDataByCompanyId(webEditMode, companyId) {
+    database.transaction(function (transaction) {
+        var sql = 'UPDATE survey_data SET web_edit_mode = ?,' +
+            'modified_by = ?, ' +
+            'modified_date = DATETIME(\'now\', \'localtime\') ' +
+            'WHERE survey_company_id = ?';
+        transaction.executeSql(sql, [webEditMode, fetchUserId(), companyId]);
+    }, function (error) {
+        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+    });
+}
+
+/**
  * 伐採木IDをもとに削除フラグを立てる
  * @param 伐採木ID
  */
@@ -180,9 +199,9 @@ function deleteSurveyDataById(id) {
     });
 }
 
-// 伐採木データのクラウド側IDを更新（同期処理）
-function updateSurveyDataCloudId(transaction, surveyData) {
-    var sql = generateSurveyDataUpdateSql();
+// 伐採木データを更新（同期処理）
+function updateSurveyDataOfSynchronize(transaction, surveyData) {
+    var sql = generateSurveyDataByIdentifyCodeSQL();
     transaction.executeSql(sql, surveyData);
 }
 
@@ -190,7 +209,6 @@ function updateSurveyDataCloudId(transaction, surveyData) {
 function updateSurveyDataIsSynchronize(surveyDataIdList) {
     database.transaction(function (transaction) {
         var sql = 'UPDATE survey_data SET ' +
-            'is_synchronize = \'true\', ' +
             'modified_by = ?, ' +
             'modified_date = DATETIME(\'now\', \'localtime\') ' +
             'WHERE id in (' + surveyDataIdList + ')';
@@ -211,9 +229,20 @@ function deleteSurveyDataByDetailId(transaction, surveyDetailIdList) {
     transaction.executeSql(generateSurveyDataDeleteSql(placeholder), surveyDetailIdList);
 }
 
+// uuidリストを元に伐採木削除（同期処理）
+function deleteSurveyDataByIdentifyCodes(transaction, IdentifyCodes) {
+    // 削除IDの数だけプレースホルダを増やす
+    var placeholderTmp = '';
+    IdentifyCodes.forEach(function () {
+        placeholderTmp += '?, ';
+    })
+    var placeholder = placeholderTmp.slice(0, -2);
+    transaction.executeSql('DELETE FROM survey_data WHERE identify_code IN (' + placeholder + ') ', IdentifyCodes);
+}
+
 /**
  * 伐採木削除フラグがtrueのデータを削除（同期処理）
- * @param {*} transaction 
+ * @param {*} transaction
  */
 function deleteSurveyDataIsDetele(transaction, surveyDetailIdList) {
     // 削除IDの数だけプレースホルダを増やす
@@ -415,3 +444,28 @@ function updateSurveyDataById(param) {
         alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
     });
 }
+
+/**
+ * identifyCodeをもとに伐採木を更新するSQL
+ */
+ function generateSurveyDataByIdentifyCodeSQL() {
+    return 'UPDATE survey_data SET ' +
+        'color = ?, ' +
+        'word = ?, ' +
+        'number = ?, ' +
+        'survey_data_tree_type = ?, ' +
+        'tree_measured_value = ?, ' +
+        'need_rope = ?, ' +
+        'need_wire = ?, ' +
+        'need_cut_middle = ?, ' +
+        'not_need_cut_middle = ?, ' +
+        'is_danger_tree = ?, ' +
+        'need_cut_branch = ?, ' +
+        'need_cut_divide = ?, ' +
+        'need_collect = ?, ' +
+        'note = ?, ' +
+        'name = ?, ' +
+        'modified_by = ?, ' +
+        'modified_date = ? ' +
+        'WHERE identify_code = ? ';
+ }

@@ -18,7 +18,7 @@
   <!-- navigation -->
   <nav class="header">
     <div class="nav-wrapper">
-      <a href="#" class="brand-logo center"> <i class="material-icons title-icon">nature_people</i>伐採調査アプリ</a>
+      <a href="#" class="brand-logo center"><i class="material-icons title-icon">nature_people</i>kiko-rin</a>
       <ul class="right">
         <li>
           <a class="waves-effect waves-light sidenav-trigger" href="#" data-target="side-out">
@@ -46,21 +46,31 @@
     </div>
   </div>
 
+  <div style="background:rgba(0,0,0,0.8); color: white;" class="center web-edit-message">
+    <span class="ml-4" style="margin: 10px;display: inline-block;">Webで編集中のため、登録・更新処理はできません。</span>
+  </div>
+
   <div class="container">
+
     <div class="row">
       <div class="col s12">
         <span class="ml-4">現在依頼されている調査業務を一覧で表示します。</span>
       </div>
     </div>
     <div class="row center">
-      <a onclick="synchronize()" class="btn waves-effect waves-light btn-large normal-button mb-2">
-        <i class="material-icons left">update</i>データを同期する
-      </a>
+      <button onclick="synchronize()" id="synchronize-button" class="btn waves-effect waves-light btn-large normal-button mb-2 web-edit-mode">
+        <i class="material-icons left">cloud_upload</i>同期処理を開始する
+      </button>
     </div>
     <div class="row center">
-      <a onclick="confirmSynchronize()" class="btn waves-effect waves-light btn-large normal-button mb-2">
-        <i class="material-icons left">update</i>同期結果を確認する
-      </a>
+      <button onclick="confirmSynchronize()" id="confirmSynchronize" class="btn waves-effect waves-light btn-large normal-button mb-2 web-edit-mode">
+        <i class="material-icons left">cloud_download</i>同期処理結果を確認する
+      </button>
+    </div>
+    <div class="row center">
+      <button onclick="openWebEditModal()" class="btn waves-effect waves-light btn-large normal-button mb-2 red darken-4">
+        <i class="material-icons left">lock_outline</i>Web編集モードを管理
+      </button>
     </div>
 
     <div class="row center">
@@ -76,6 +86,35 @@
         <p>東北電力のデータベースとデータを送受信しています…<br>※この処理は数分かかることがあります。</p>
         <div class="progress">
           <div class="indeterminate"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="webEditModal" class="modal">
+      <div class="modal-content">
+        <div>
+          <b>Web編集モードを切替える際には、自動的に同期処理を実行します。</b>
+        </div>
+        <div>
+          <p>
+            <label>
+              <input name="web-edit-mode" type="radio" value="on" checked />
+              <span><i class="material-icons left">lock_open</i>編集モードON</span>
+            </label>
+          </p>
+          <p>
+            <label>
+              <input name="web-edit-mode" type="radio" value="off" />
+              <span><i class="material-icons left">lock_outline</i>編集モードOFF</span>
+            </label>
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row center">
+          <button onclick="switchWebEditMode()" id="web-edit-button" class="btn waves-effect waves-light btn-large normal-button mb-2 red darken-4">
+            <i class="material-icons left">lock_outline</i>編集モードを切替える
+          </button>
         </div>
       </div>
     </div>
@@ -141,7 +180,22 @@
         <a href="#!" class="modal-close waves-effect waves-green btn-flat">閉じる</a>
       </div>
     </div>
-    
+
+    <div id="synchronize-success" class="modal">
+      <div class="modal-content">
+        <div>
+          <b class="success">同期処理成功</b>
+        </div>
+        <div>
+          <b>この端末は既に同期済みです。再度同期処理を実行うるには「同期処理を開始する」ボタンで同期処理を実行してください。</b>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">閉じる</a>
+      </div>
+    </div>
+
+
 
 </body>
 <script src="../components/jquery/dist/jquery.min.js"></script>
@@ -155,5 +209,6 @@
 <script src="../js/models/survry_area.js"></script>
 <script src="../js/models/synchronizeResult.js"></script>
 <script src="../js/models/synchronizeResultDetail.js"></script>
+<script src="../js/models/web_edit_mode.js"></script>
 
 </html>

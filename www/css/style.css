@@ -254,6 +254,7 @@ a.btn-link-circle {
 
 .normal-button {
   background-color: #122344;
+  font-size: 20px !important;
 }
 
 .normal-button:hover {
@@ -599,4 +600,8 @@ a.btn-small-font-size {
 
 .pagination li.active {
   background-color: #122344 !important;
+}
+
+.edit-link {
+  pointer-events: none !important;
 }

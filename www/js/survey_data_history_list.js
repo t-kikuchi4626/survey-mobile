@@ -15,11 +15,12 @@ var isEdit = false;
 // 現在のページ数
 var currentPage = 1;
 
-document.addEventListener("deviceready", function () {
+document.addEventListener("deviceready", async function () {
     var param = location.search.substring(1).split("&");
     surveyId = param[0];
     surveyDetailId = param[1];
-    initialize();
+    await initialize();
+    await controlEditScreen();
 });
 
 /**
@@ -38,7 +39,7 @@ async function initialize() {
     var specialTree = convertSpace(survey.rows.item(0).special_tree);
     setTreeTypeButton(treeTypeValue, specialTree, "survey-data-tree-type-modal");
     // 伐採木履歴データの設定
-    setPage();
+    await setPage();
 }
 
 /**
@@ -136,7 +137,7 @@ function setPagination(pageCount) {
     $('#survey-data-header').css('display', 'none');
     pagination += '<ul class="pagination" style="text-align: right;">';
     pagination += '<li class="waves-effect">';
-    pagination += `<a onclick="handlePage(1)"><i class="material-icons">chevron_left</i></a>`;
+    pagination += `<a onclick="handlePage(1)" class="enter"><i class="material-icons">chevron_left</i></a>`;
     pagination += '</li>';
 
       let i = 1;
@@ -148,13 +149,13 @@ function setPagination(pageCount) {
           pagination += `<li class="active"><a href="#!">${i}</a></li>`;
         } else {
           pagination += '<li class="waves-effect">';
-          pagination += `<a onclick="handlePage(${i})">${i}</a>`
+          pagination += `<a onclick="handlePage(${i})" class="enter">${i}</a>`
           pagination += '</li>';
         }
         if (i == (Number(currentPage) + 4)) { break; }
       }
     pagination += '<li class="waves-effect">';
-    pagination += `<a onclick="handlePage(${pageCount})"><i class="material-icons">chevron_right</i></a>`;
+    pagination += `<a onclick="handlePage(${pageCount})" class="enter"><i class="material-icons">chevron_right</i></a>`;
     pagination += '</li>';
     pagination += '</ul>';
   } else {
@@ -224,11 +225,11 @@ function setDisplayHistoryData(surveyData) {
     );
     // 編集反映
     tagInfo += '<td id="cell-edit-' + surveyData.id + '" class="border-style">';
-    tagInfo += '<a onclick="changeEdit(this.id);" id="' + surveyData.id + '" class="">';
+    tagInfo += '<a onclick="changeEdit(this.id);" id="' + surveyData.id + '" class="enter">';
     tagInfo += '<span id="button-name-' + surveyData.id + '"><i class="material-icons tiny">check_circle</i></span></td>';
     // 削除
     tagInfo += '<td id="cell-delete-' + surveyData.id + '" class="border-style">';
-    tagInfo += '<a class="modal-trigger" id="delete-' + surveyData.id + '" href="#delete-target-modal" onclick="setDeleteId(' + surveyData.id + ');">';
+    tagInfo += '<a class="modal-trigger enter" id="delete-' + surveyData.id + '" href="#delete-target-modal" onclick="setDeleteId(' + surveyData.id + ');">';
     tagInfo += '<span id="button-delete-name-' + surveyData.id + '"><i class="material-icons tiny">delete</i></span></td>';
     tagInfo += '</tr>';
 

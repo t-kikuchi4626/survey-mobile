@@ -3,9 +3,17 @@ var KEY = 'session';
 var appPass = '#t2IOj4rVl2lQ%_$7)7pXeoGE/Jg#0&0-/$X-Suojg)!21RCLel#4Q%322BtS148';
 // var path = 'https://nw-tohoku-epco-tree-survey-app.com:8443/';
 // var path = 'http://survey-develop.japanwest.cloudapp.azure.com:80/';
-var path = 'http://develop-survey.japaneast.cloudapp.azure.com:8443/';
+// var path = 'https://develop-survey.japaneast.cloudapp.azure.com:8443/';
+// var path = 'http://172.21.144.1:8443/';
+var path = 'http://192.168.3.140:8443/';
+var surveyCompanyId = null;
 
 var instances = null;
+const STATUS = {
+    processing : "processing",
+    finish: "finish",
+    error: "error"
+}
 
 $(document).ready(function () {
     $('.collapsible').collapsible();
@@ -86,11 +94,11 @@ function conversionStatusForDisplay(status) {
  */
 function conversionSynchronizeResultForDisplay(result) {
     var statusForDisplay = ''
-    if ('finish' == result) {
+    if (STATUS.finish == result) {
         statusForDisplay = '成功';
-    } else if ('error' == result) {
+    } else if (STATUS.error == result) {
         statusForDisplay = '失敗';
-    } else if ('processing' == result) {
+    } else if (STATUS.processing == result) {
         statusForDisplay = '処理中';
     }
     return statusForDisplay;
@@ -147,4 +155,44 @@ function createContactSidenavLink(id, surveyId, surveyDetailId) {
             break;
     }
     contactListLink.append(linkText);
+}
+
+/**
+ * 識別コード生成
+ * @param uuid 端末番号
+ * @returns uuid + 現在日時分秒ミリ秒 + ランダムな文字列10桁
+ */
+ function generateIdentifyCode(uuid) {
+    var date = new Date();
+    var now = date.getFullYear() 
+            + ("00" + (date.getMonth() + 1)).slice(-2) 
+            + ("00" + date.getDate()).slice(-2) 
+            + ('0' + date.getHours()).slice(-2) 
+            + ('0' + date.getMinutes()).slice(-2) 
+            + ('0' + date.getSeconds()).slice(-2);
+    var random =  Math.random().toString(36).slice(-25);
+    return uuid + now + random;
+  }
+
+  
+/**
+ * web編集モードより、画面のROCK状態を制御する
+ */
+async function controlEditScreen() {
+    var item = localStorage.getItem(KEY);
+    var obj = JSON.parse(item);
+    if (obj.user != null) {
+      surveyCompanyId = obj.user.survey_company_id;
+    }
+    const webEditMode = await fetchWebEditModeByCompanyId(surveyCompanyId);
+    if (webEditMode.rows.length > 0 && webEditMode.rows.item(0).web_edit_mode === 'on') {
+      $('.web-edit-mode').prop("disabled", true);
+      $('.input-area').prop("disabled", true);
+      $('.enter').addClass('edit-link');
+      $('.create-button').addClass('edit-link');
+      $('.web-edit-message').show();
+    } else {
+      $('.web-edit-mode').prop("disabled", false);
+      $('.web-edit-message').hide();
+    }
 }

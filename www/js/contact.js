@@ -1,30 +1,16 @@
+$(document).ready(function(){
+    $('select').formSelect();
+});
+
 // 問合せ画面名
-const contactFunctionNameList = [
-    "調査交渉業務一覧",
-    "調査業務新規登録",
-    "調査業務変更",
-    "地権者データダウンロード履歴",
-    "調査所在地一覧",
-    "調査所在地新規登録",
-    "調査所在地変更",
-    "小径木調査一覧",
-    "小径木調査変更",
-    "伐採木調査一覧",
-    "伐採木調査変更",
-    "伐採木データダウンロード履歴一覧",
-    "アカウント一覧",
-    "アカウント新規登録",
-    "アカウント変更",
-    "マスタデータ管理",
-    "単価マスタ一覧",
-    "単価マスタ管理",
-    "調査業務一覧",
-    "所在地一覧",
-    "毎木調査登録",
-    "伐採木データ履歴一覧",
-    "伐採木一覧",
-    "小径木登録"
-];
+const contactFunctionNameList = {
+    "survey-list": "調査業務一覧" ,
+    "survey-detail-list": "所在地一覧",
+    "survey-data-edit": "毎木調査登録",
+    "survey-data-history": "伐採木データ履歴一覧",
+    "survey-data-list": "伐採木一覧",
+    "survey-area-edit": "小径木登録"
+};
 
 // 遷移元画面ID
 var transitionId = 0;
@@ -34,6 +20,7 @@ var surveyId = "";
 var surveyDetailId = "";
 
 document.addEventListener("deviceready", async function () {
+
     var param = location.search.substring(1).split("&");
     let contactId = param[0];
 
@@ -50,22 +37,22 @@ document.addEventListener("deviceready", async function () {
     var functionName = "";
     switch (transitionId) {
         case 1:
-            functionName = "調査業務一覧";
+            functionName = "survey-list";
             break;
         case 2:
-            functionName = "所在地一覧";
+            functionName = "survey-detail-list";
             break;
         case 3:
-            functionName = "毎木調査登録";
+            functionName = "survey-data-edit";
             break;
         case 4:
-            functionName = "伐採木データ履歴一覧";
+            functionName = "survey-data-history";
             break;
         case 5:
-            functionName = "伐採木一覧";
+            functionName = "survey-data-list";
             break;
         case 6:
-            functionName = "小径木登録";
+            functionName = "survey-area-edit";
             break;
     }
 
@@ -109,9 +96,9 @@ function setInitContact(functionName) {
     $('#contact-class').val("question");
     $('#contact-class').prop("disabled", false);
     // 問合せ画面
-    setContactFunctionOption();
+    // setContactFunctionOption();
     $('#contact-function').val(functionName);
-    $('#contact-function').prop("disabled", false);
+    $(`#contact-function option[value='${functionName}']`).prop("selected", true);
     // 問合せ内容
     $('#contact-message').val("");
     $('#contact-message').prop("disabled", false);
@@ -160,9 +147,9 @@ function setTargetContact(contactId) {
             $('#contact-class').val(contactInfo.contact_class);
             $('#contact-class').prop("disabled", true);
             // 問合せ画面
-            setContactFunctionOption();
+            // setContactFunctionOption();
             $('#contact-function').val(contactInfo.contact_function);
-            $('#contact-function').prop("disabled", true);
+            $(`#contact-function option[value='${contactInfo.contact_function}']`).prop("selected", true);
             // 問合せ内容
             $('#contact-message').val(contactInfo.contact_message);
             $('#contact-message').prop("disabled", true);
@@ -179,6 +166,8 @@ function setTargetContact(contactId) {
             $('#pending').prop("disabled", true);
             // 問合せ内容送信ボタン非表示
             $('#register-field').hide();
+            // select 属性をdisabledへ設定
+            $('select').prop("disabled", true);
         })
         .fail(async (jqXHR, textStatus, errorThrown) => {
             var jsonData = JSON.stringify(jqXHR);
@@ -192,6 +181,7 @@ function setTargetContact(contactId) {
  */
 function setContactFunctionOption() {
     contactFunctionNameList.forEach(function(contactFunctionName) {
+        console.log(contactFunctionName)
         $('#contact-function').append($('<option>').html(contactFunctionName).val(contactFunctionName));
     });
 }
@@ -209,7 +199,7 @@ function save() {
             contact_name: $('#contact-name').val(),
             user_name: $('#user-name').val(),
             contact_class: $('#contact-class').val(),
-            contact_function: $('#contact-function').val(),
+            contact_function: contactFunctionNameList.get($('#contact-function').val()),
             contact_message: $('#contact-message').val(),
             status: "unsupported",
             userId: fetchUserId()

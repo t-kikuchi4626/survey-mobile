@@ -19,7 +19,7 @@ function createSynchronizeResultDetail(param) {
  * 同期処理詳細結果を更新する
  * @param {*} SynchronizeResult 
  */
-function updateSynchronizeResultDetail(param) {
+function updateSynchronizeResultDetailById(param) {
   
   return new Promise(function (resolve) {
     database.transaction(async function (transaction) {

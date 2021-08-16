@@ -2,6 +2,7 @@
 var totalInfo = {};
 
 document.addEventListener("deviceready", async function () {
+    await controlEditScreen();
     var param = location.search.substring(1).split("&");
     var surveyId = param[0];
     var surveyDetailId = param[1];

@@ -6,7 +6,7 @@ document.addEventListener("deviceready", async function () {
     surveyId = location.search.substring(1);
     var survey = await fetchSurveyById(surveyId);
     setSurvey(survey.rows.item(0));
-
+    
     var surveyDetailItem = $('#survey-detail-item');
     var surveyDetailList = await fetchSurveyDetailBySurveyId(surveyId);
     var texts = '';
@@ -20,15 +20,17 @@ document.addEventListener("deviceready", async function () {
         texts += '</div>';
         texts += '</div>';
         texts += '</div>';
-      } else {
+    } else {
         for (var i = 0; i < surveyDetailList.rows.length; i++) {
             texts = setSurveyDetail(texts, surveyDetailList.rows.item(i));
         }
     }
     surveyDetailItem.append(texts);
-
+    
     // サイドナビゲーションリンク作成
     createContactSidenavLink(2, surveyId, "");
+    
+    await controlEditScreen();
 });
 
 /**
@@ -73,10 +75,10 @@ function setSurveyDetail(texts, surveyDetail) {
     texts += '</div>';
     texts += '<div class="col s12 m4">';
     texts += '<div style="margin-bottom: 2rem; margin:5px" class="mobile-btn-block">';
-    texts += '<a href="../html/survey_data_register.html?' + surveyId + '&' + surveyDetail.id + '" class="btn normal-button mobile-btn">伐採木登録</a>';
+    texts += '<a href="../html/survey_data_edit.html?' + surveyId + '&' + surveyDetail.id + '" class="btn normal-button mobile-btn">伐採木登録</a>';
     texts += '</div>';
     texts += '<div class="mobile-btn-block" style="margin:5px">';
-    texts += '<a href="../html/survey_data_edit.html?' + surveyId + '&' + surveyDetail.id + '" class="btn normal-button mobile-btn">小径木登録</a>';
+    texts += '<a href="../html/survey_area_edit.html?' + surveyId + '&' + surveyDetail.id + '" class="btn normal-button mobile-btn">小径木登録</a>';
     texts += '</div>';
     texts += '</div>';
     texts += '</div>';

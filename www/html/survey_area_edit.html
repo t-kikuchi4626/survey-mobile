@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+
+    <link rel="stylesheet" href="../components/loader.css">
+    <link rel="stylesheet" href="../css/iconfont/material-icons.css">
+    <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+    <nav class="header">
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo center">
+                <i class="material-icons title-icon">nature_people</i>kiko-rin
+            </a>
+            <ul>
+                <li id="survey-detail-list-link"></li>
+            </ul>
+            <ul class="right">
+                <li>
+                    <a class="waves-effect waves-light sidenav-trigger" href="#" data-target="side-out">
+                        <i class="material-icons right">menu</i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Sidenav -->
+    <ul id="side-out" class="sidenav">
+        <li id="contact-list-link"></li>
+        <li><a class="menu waves-effect waves-light modal-trigger" href="#modal1"><i class="material-icons">exit_to_app</i>ログアウト</a></li>
+    </ul>
+
+  <!-- Modal Structure -->
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <p>ログアウトします。よろしいでしょうか？</p>
+    </div>
+    <div class="modal-footer">
+      <a href="javascript:logout();" class="modal-close waves-effect waves-green btn normal-button">ログアウトする</a>
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">閉じる</a>
+    </div>
+  </div>
+
+  <div style="background:rgba(0,0,0,0.8); color: white;" class="center web-edit-message">
+    <span class="ml-4" style="margin: 10px;display: inline-block;">Webで編集中のため、登録・更新処理はできません。</span>
+  </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <span class="ml-4">小径木を入力するページです。</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div id="survey-area" class="col s12">
+                <form>
+                    <div>
+                        <div class="row m-3 mt-1">
+                            <div class="card" style="margin: 0 0 0 0;">
+                                <div class="card-content">
+                                    <div class="row bottom-0">
+                                        <div class="input-field col s6 bottom-0">
+                                            <small class="active surveyAreaTreeTypeLabel black-text">樹種</small>
+                                            <input id="survey-area-tree-type" name="surveyAreaTreeType" type="text"
+                                                class="surveyAreaTreeType input-area web-edit-mode" maxlength="100"
+                                                onchange="updateInputTextArea(this.form.surveyAreaTreeType, 'tree_type', true, false)">
+                                        </div>
+                                        <div class="input-field col s6 bottom-0"></div>
+                                    </div>
+                                    <span id="tree_type_required" class="error message-text" style="display:none">
+                                        <i class="material-icons">error_outline</i>この項目は必須入力です。</span>
+                                    <div class="row">
+                                        <div class="input-field col s12" id="tree-type-list">
+                                        </div>
+                                    </div>
+
+                                    <div class="row bottom-0">
+                                        <div class="input-field col s4 bottom-0">
+                                            <small for="trimming-area-value" class="active black-text">伐採面積(㎡)</small>
+                                            <input id="trimming-area-value" type="text" pattern="\d*" name="trimmingAreaValue"
+                                                onkeyup="calculation(this.form.trimmingAreaValue, this.form);" class="web-edit-mode">
+                                        </div>
+                                        <div class="input-field col s4 bottom-0">
+                                            <small for="trimming-tree-count" class="active black-text">用材本数(本)</small>
+                                            <input id="trimming-tree-count" type="text" pattern="\d*" name="trimmingTreeCount"
+                                                readonly>
+                                        </div>
+                                        <div class="input-field col s4 bottom-0">
+                                            <small for="trimming-tree-area-value"
+                                                class="active black-text">用材面積(㎡/本)</small>
+                                            <input id="trimming-tree-area-value" type="text" pattern="\d*" name="trimmingTreeAreaValue"
+                                                onkeyup="calculation(this.form.trimmingTreeAreaValue, this.form)" class="web-edit-mode">
+                                        </div>
+                                    </div>
+                                    <span id="target_area_required" class="error message-text" style="display:none">
+                                        <i class="material-icons">error_outline</i>この項目は必須入力です。</span>
+                                    <span id="target_area_number" class="error message-text" style="display:none">
+                                        <i class="material-icons">error_outline</i>半角数値で入力してください。</span>
+
+                                    <div class="row bottom-0">
+                                        <div class="input-field col s4 bottom-0">
+                                            <small for="target-area-value" class="active black-text">補償面積(㎡)</small>
+                                            <input id="target-area-value" type="text" pattern="\d*" name="targetAreaValue" readonly>
+                                        </div>
+                                        <div class="input-field col s4 bottom-0">
+                                            <small for="target-area-value-ten"
+                                                class="active black-text">補償面積(10㎡)</small>
+                                            <input id="target-area-value-ten" type="text" pattern="\d*" name="targetAreaValueTen" readonly>
+                                        </div>
+                                        <div class="input-field col s4 bottom-0"></div>
+                                    </div>
+                                    <span class="message-text" style="margin-bottom: 40px;">
+                                        <span>※補償面積(㎡) = 伐採面積(㎡) - (用材本数(本) × 用材面積(㎡/本))</span>
+                                    </span>
+                                    <div class="row">
+                                        <label class="col s6">
+                                            <input id="need-collect-is-four-measured" class="with-gap web-edit-mode" name="len" value="needCollectIsNotFourMeasured" type="radio"  />
+                                            <span>集積あり/4cm未満</span>
+                                        </label>
+                                        <label class="col s6">
+                                             <input class="with-gap web-edit-mode" id="need-collect-is-not-four-measured" name="len" value="needCollectIsFourMeasured" type="radio"/>
+                                            <span>集積あり/4cm以上</span>
+                                        </label>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col s6">
+                                            <input class="with-gap web-edit-mode" id="not-need-collect-is-four-measured" name="len" value="notNeedCollectIsNotFourMeasured" type="radio"/>
+                                            <span>集積なし/4cm未満</span>
+                                        </label>
+                                        <label class="col s6">
+                                            <input class="with-gap web-edit-mode" id="not-need-collect-is-not-four-measured" name="len" value="notNeedCollectIsFourMeasured" type="radio"/>
+                                            <span>集積なし/4cm以上</span>
+                                        </label>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <p style="text-align: left;float: left;">
+                                <a href="#delete-modal"
+                                    class="modal-trigger waves-effect waves-light btn-large blue-grey darken-2 enter">
+                                    <i class="material-icons">delete</i>
+                                </a>
+                            </p>
+                            <p style="text-align: right;">
+                                <a onclick="javascript:createEditSurveyArea();"
+                                    class="waves-effect waves-light btn-large blue-grey red enter">登録</a>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="delete-modal" class="modal">
+        <div class="modal-content">
+            <p>削除してよろしいでしょうか？</p>
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:deleteSurveyArea();"
+                class="modal-close waves-effect waves-green btn normal-button btn-large">はい</a>
+            <a href="#!" class="modal-close waves-effect waves-green btn normal-button btn-large">いいえ</a>
+        </div>
+    </div>
+
+    <script src="../components/jquery/dist/jquery.min.js"></script>
+    <script src="../components/loader.js"></script>
+    <script src="../js/common.js"></script>
+    <script src="../js/survey_data_common.js"></script>
+    <script src="../js/survey_area_edit.js"></script>
+    <script src="../js/models/survry_detail.js"></script>
+    <script src="../js/models/survry.js"></script>
+    <script src="../js/models/survry_data.js"></script>
+    <script src="../js/models/survry_area.js"></script>
+    <script src="../js/models/web_edit_mode.js"></script>
+</body>
+
+</html>

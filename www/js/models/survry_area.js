@@ -62,7 +62,8 @@ function fetchSurveyAreaBySurveyDetailId(surveyDetailId) {
 function insertSurveyArea(param) {
     var sql = 'INSERT INTO survey_area (' +
         'survey_detail_id, ' +
-        'is_synchronize, ' +
+        'identify_code, ' +
+        'survey_company_id, ' +
         'tree_type, ' +
         'trimming_area_value, ' +
         'trimming_tree_area_value, ' +
@@ -72,11 +73,12 @@ function insertSurveyArea(param) {
         'need_collect, ' +
         'is_four_measured, ' +
         'is_delete, ' +
+        'web_edit_mode,' +
         'modified_by, ' +
         'created_by, ' +
         'modified_date,' +
         'created_date)' +
-        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'),DATETIME(\'now\', \'localtime\'))';
+        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'),DATETIME(\'now\', \'localtime\'))';
 
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
@@ -89,6 +91,23 @@ function insertSurveyArea(param) {
                 });
             });
         });
+    });
+}
+
+/**
+ * 小径木のWeb編集モードを全件更新
+ * @param Web編集モード
+ * @param 調査会社ID
+ */
+ function updateWebEditModeSurveyAreaByCompanyId(webEditMode, companyId) {
+    database.transaction(function (transaction) {
+        var sql = 'UPDATE survey_area SET web_edit_mode = ?,' +
+            'modified_by = ?, ' +
+            'modified_date = DATETIME(\'now\', \'localtime\') ' +
+            'WHERE survey_company_id = ?';
+        transaction.executeSql(sql, [webEditMode, fetchUserId(), companyId]);
+    }, function (error) {
+        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
     });
 }
 
@@ -138,9 +157,20 @@ function deleteSurveyAreaIsDetele(transaction, surveyDetailIdList) {
     transaction.executeSql('DELETE FROM survey_area WHERE is_delete = ? AND survey_detail_id NOT IN (' + placeholder + ') ', surveyDetailIdList);
 }
 
-// 小径木データ新規登録（同期処理）
-function updateSurveyAreaCloudId(transaction, surveyArea) {
-    var sql = generateSurveyAreaUpdateSql();
+// uuidリストを元に小径木削除（同期処理）
+function deleteSurveyAreaByIdentifyCodes(transaction, IdentifyCodes) {
+    // 削除IDの数だけプレースホルダを増やす
+    var placeholderTmp = '';
+    IdentifyCodes.forEach(function () {
+        placeholderTmp += '?, ';
+    })
+    var placeholder = placeholderTmp.slice(0, -2);
+    transaction.executeSql('DELETE FROM survey_area WHERE identify_code IN (' + placeholder + ') ', IdentifyCodes);
+}
+
+// 小径木データを更新（同期処理）
+function updateSurveyAreaOfSynchronize(transaction, surveyArea) {
+    var sql = generateSurveyAreaByIdentifyCodeSQL();
     transaction.executeSql(sql, surveyArea);
 }
 
@@ -153,12 +183,6 @@ function deleteSurveyAreaByDetailId(transaction, surveyDetailIdList) {
     })
     var placeholder = placeholderTmp.slice(0, -2);
     transaction.executeSql(generateSurveyAreaDeleteSql(placeholder), surveyDetailIdList);
-}
-
-function generateSurveyAreaUpdateSql() {
-    return 'update survey_area SET ' +
-        'cloud_survey_area_id =? ' +
-        'WHERE id = ? ';
 }
 
 function generateSurveyAreaDeleteSql(placeholder) {
@@ -205,3 +229,21 @@ function updateSurveyArea(param) {
             alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
     });
 }
+
+/**
+ * identifyCodeをもとに伐採木を更新するSQL
+ */
+ function generateSurveyAreaByIdentifyCodeSQL() {
+    return 'UPDATE survey_area SET ' +
+        'tree_type = ?, ' +
+        'trimming_area_value = ?, ' +
+        'trimming_tree_area_value = ?, ' +
+        'trimming_tree_count = ?, ' +
+        'target_area_value = ?, ' +
+        'target_area_value_ten = ?, ' +
+        'need_collect = ?, ' +
+        'is_four_measured = ?, ' +
+        'modified_by = ?, ' +
+        'modified_date = ? ' +
+        'WHERE identify_code = ? ';
+ }
