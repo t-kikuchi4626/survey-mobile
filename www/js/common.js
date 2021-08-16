@@ -3,10 +3,16 @@ var KEY = 'session';
 var appPass = '#t2IOj4rVl2lQ%_$7)7pXeoGE/Jg#0&0-/$X-Suojg)!21RCLel#4Q%322BtS148';
 // var path = 'https://nw-tohoku-epco-tree-survey-app.com:8443/';
 // var path = 'http://survey-develop.japanwest.cloudapp.azure.com:80/';
+<<<<<<< HEAD
 // var path = 'https://develop-survey.japaneast.cloudapp.azure.com:8443/';
 // var path = 'http://172.21.144.1:8443/';
 var path = 'http://192.168.3.140:8443/';
 var surveyCompanyId = null;
+=======
+var path = 'https://develop-survey.japaneast.cloudapp.azure.com:8443/';
+// var path = 'http://172.21.144.1:8443/';
+// var path = 'http://192.168.3.140:8443/';
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
 
 var instances = null;
 const STATUS = {
@@ -173,6 +179,7 @@ function createContactSidenavLink(id, surveyId, surveyDetailId) {
     var random =  Math.random().toString(36).slice(-25);
     return uuid + now + random;
   }
+<<<<<<< HEAD
 
   
 /**
@@ -196,3 +203,5 @@ async function controlEditScreen() {
       $('.web-edit-message').hide();
     }
 }
+=======
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b

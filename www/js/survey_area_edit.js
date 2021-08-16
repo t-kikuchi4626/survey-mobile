@@ -13,12 +13,17 @@ document.addEventListener("deviceready", async function () {
     var param = location.search.substring(1).split("&");
     surveyId = param[0];
     surveyDetailId = param[1];
+<<<<<<< HEAD
     uuid = device.uuid;
     
+=======
+
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
     // 所在地一覧遷移タグ作成
     var surveyDetailListLink = $('#survey-detail-list-link');
     var detailListLinkText = '<a href="../html/survey_detail_list.html?' + surveyId + '"><i class="material-icons">arrow_back_ios</i></a>';
     surveyDetailListLink.append(detailListLinkText);
+<<<<<<< HEAD
     
     // サイドナビゲーションリンク作成
     createContactSidenavLink(6, surveyId, surveyDetailId);
@@ -27,6 +32,16 @@ document.addEventListener("deviceready", async function () {
     initView();
     
     await controlEditScreen();
+=======
+
+    // サイドナビゲーションリンク作成
+    createContactSidenavLink(6, surveyId, surveyDetailId);
+
+    // 初期表示
+    initView();
+    
+    uuid = device.uuid;
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
 });
 
 /**
@@ -134,8 +149,13 @@ async function createEditSurveyArea() {
             // 登録項目
             var param = [
                 surveyDetailId,
+<<<<<<< HEAD
                 generateIdentifyCode(uuid),
                 surveyCompanyId,
+=======
+                false,
+                generateIdentifyCode(uuid),
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
                 $('#survey-area-tree-type').val(),
                 $('#trimming-area-value').val(),
                 $('#trimming-tree-area-value').val(),
@@ -145,7 +165,10 @@ async function createEditSurveyArea() {
                 needCollect,
                 isFourMeasured,
                 false,
+<<<<<<< HEAD
                 'off',
+=======
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
                 fetchUserId(),
                 fetchUserId()
             ];

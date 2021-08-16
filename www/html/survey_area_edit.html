@@ -17,7 +17,11 @@
     <nav class="header">
         <div class="nav-wrapper">
             <a href="#" class="brand-logo center">
+<<<<<<< HEAD
                 <i class="material-icons title-icon">nature_people</i>kiko-rin
+=======
+                <i class="material-icons title-icon">nature_people</i>伐採調査アプリ
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
             </a>
             <ul>
                 <li id="survey-detail-list-link"></li>
@@ -49,10 +53,13 @@
     </div>
   </div>
 
+<<<<<<< HEAD
   <div style="background:rgba(0,0,0,0.8); color: white;" class="center web-edit-message">
     <span class="ml-4" style="margin: 10px;display: inline-block;">Webで編集中のため、登録・更新処理はできません。</span>
   </div>
 
+=======
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
     <div class="container">
         <div class="row">
             <div class="col s12">
@@ -71,7 +78,11 @@
                                         <div class="input-field col s6 bottom-0">
                                             <small class="active surveyAreaTreeTypeLabel black-text">樹種</small>
                                             <input id="survey-area-tree-type" name="surveyAreaTreeType" type="text"
+<<<<<<< HEAD
                                                 class="surveyAreaTreeType input-area web-edit-mode" maxlength="100"
+=======
+                                                class="surveyAreaTreeType" maxlength="100"
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
                                                 onchange="updateInputTextArea(this.form.surveyAreaTreeType, 'tree_type', true, false)">
                                         </div>
                                         <div class="input-field col s6 bottom-0"></div>
@@ -87,7 +98,11 @@
                                         <div class="input-field col s4 bottom-0">
                                             <small for="trimming-area-value" class="active black-text">伐採面積(㎡)</small>
                                             <input id="trimming-area-value" type="text" pattern="\d*" name="trimmingAreaValue"
+<<<<<<< HEAD
                                                 onkeyup="calculation(this.form.trimmingAreaValue, this.form);" class="web-edit-mode">
+=======
+                                                onkeyup="calculation(this.form.trimmingAreaValue, this.form);">
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
                                         </div>
                                         <div class="input-field col s4 bottom-0">
                                             <small for="trimming-tree-count" class="active black-text">用材本数(本)</small>
@@ -98,7 +113,11 @@
                                             <small for="trimming-tree-area-value"
                                                 class="active black-text">用材面積(㎡/本)</small>
                                             <input id="trimming-tree-area-value" type="text" pattern="\d*" name="trimmingTreeAreaValue"
+<<<<<<< HEAD
                                                 onkeyup="calculation(this.form.trimmingTreeAreaValue, this.form)" class="web-edit-mode">
+=======
+                                                onkeyup="calculation(this.form.trimmingTreeAreaValue, this.form)">
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
                                         </div>
                                     </div>
                                     <span id="target_area_required" class="error message-text" style="display:none">
@@ -123,21 +142,37 @@
                                     </span>
                                     <div class="row">
                                         <label class="col s6">
+<<<<<<< HEAD
                                             <input id="need-collect-is-four-measured" class="with-gap web-edit-mode" name="len" value="needCollectIsNotFourMeasured" type="radio"  />
                                             <span>集積あり/4cm未満</span>
                                         </label>
                                         <label class="col s6">
                                              <input class="with-gap web-edit-mode" id="need-collect-is-not-four-measured" name="len" value="needCollectIsFourMeasured" type="radio"/>
+=======
+                                            <input id="need-collect-is-four-measured" class="with-gap" name="len" value="needCollectIsNotFourMeasured" type="radio"  />
+                                            <span>集積あり/4cm未満</span>
+                                        </label>
+                                        <label class="col s6">
+                                             <input class="with-gap" id="need-collect-is-not-four-measured" name="len" value="needCollectIsFourMeasured" type="radio"/>
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
                                             <span>集積あり/4cm以上</span>
                                         </label>
                                     </div>
                                     <div class="row">
                                         <label class="col s6">
+<<<<<<< HEAD
                                             <input class="with-gap web-edit-mode" id="not-need-collect-is-four-measured" name="len" value="notNeedCollectIsNotFourMeasured" type="radio"/>
                                             <span>集積なし/4cm未満</span>
                                         </label>
                                         <label class="col s6">
                                             <input class="with-gap web-edit-mode" id="not-need-collect-is-not-four-measured" name="len" value="notNeedCollectIsFourMeasured" type="radio"/>
+=======
+                                            <input class="with-gap" id="not-need-collect-is-four-measured" name="len" value="notNeedCollectIsNotFourMeasured" type="radio"/>
+                                            <span>集積なし/4cm未満</span>
+                                        </label>
+                                        <label class="col s6">
+                                            <input class="with-gap" id="not-need-collect-is-not-four-measured" name="len" value="notNeedCollectIsFourMeasured" type="radio"/>
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
                                             <span>集積なし/4cm以上</span>
                                         </label>
                                     </div>
@@ -150,13 +185,21 @@
                         <div class="col s12">
                             <p style="text-align: left;float: left;">
                                 <a href="#delete-modal"
+<<<<<<< HEAD
                                     class="modal-trigger waves-effect waves-light btn-large blue-grey darken-2 enter">
+=======
+                                    class="modal-trigger waves-effect waves-light btn-large blue-grey darken-2">
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
                                     <i class="material-icons">delete</i>
                                 </a>
                             </p>
                             <p style="text-align: right;">
                                 <a onclick="javascript:createEditSurveyArea();"
+<<<<<<< HEAD
                                     class="waves-effect waves-light btn-large blue-grey red enter">登録</a>
+=======
+                                    class="waves-effect waves-light btn-large blue-grey red">登録</a>
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
                             </p>
                         </div>
                     </div>
@@ -186,7 +229,10 @@
     <script src="../js/models/survry.js"></script>
     <script src="../js/models/survry_data.js"></script>
     <script src="../js/models/survry_area.js"></script>
+<<<<<<< HEAD
     <script src="../js/models/web_edit_mode.js"></script>
+=======
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
 </body>
 
 </html>

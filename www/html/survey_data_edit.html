@@ -18,7 +18,11 @@
 
   <nav class="header">
     <div class="nav-wrapper"> <a href="#" class="brand-logo center"> <i
+<<<<<<< HEAD
           class="material-icons title-icon">nature_people</i>kiko-rin</a>
+=======
+          class="material-icons title-icon">nature_people</i>伐採調査アプリ</a>
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
       <ul>
         <li id="survey-detail-list-link"></li>
       </ul>
@@ -51,12 +55,16 @@
     </div>
   </div>
 
+<<<<<<< HEAD
   <div style="background:rgba(0,0,0,0.8); color: white;" class="center web-edit-message">
     <span class="ml-4" style="margin: 10px;display: inline-block;">Webで編集中のため、登録・更新処理はできません。</span>
   </div>
   
   <div class="container main">
     
+=======
+  <div class="container main">
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
     <div class="row center bottom-0">
       <div class="col s12 display-number-word">
         現在の登録本数は<b><span id="survey-data-count" class="display-number"></span></b>本です。
@@ -92,7 +100,11 @@
             class="material-icons">clear</i></a>
         <a id="tree-measured-value-0"
           class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter">０</a>
+<<<<<<< HEAD
         <a onclick="createEditSurveyData();" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size create-button"><i
+=======
+        <a onclick="createEditSurveyData();" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size"><i
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
             class="material-icons">done</i></a>
         <audio id="submit" src="../sound/submit4.mp3" hidden></audio>
         <audio id="error" src="../sound/error.mp3" hidden></audio>
@@ -123,6 +135,7 @@
         <div class="col s6 display-fixed link-font-size">
           <a class="modal-trigger btn btn-orange btn-link-circle btn-shadow enter" href="#tree-type-target-modal"><i class="material-icons create-btn">create</i></a>
           樹種：<span id="survey-data-tree-type"></span>
+<<<<<<< HEAD
         </div>
         <div class="col s6 display-fixed link-font-size">
           <a class="modal-trigger btn btn-orange btn-link-circle btn-shadow enter" href="#name-target-modal"><i class="material-icons create-btn">create</i></a>
@@ -213,6 +226,98 @@
       </div>
   </div>
 
+=======
+        </div>
+        <div class="col s6 display-fixed link-font-size">
+          <a class="modal-trigger btn btn-orange btn-link-circle btn-shadow enter" href="#name-target-modal"><i class="material-icons create-btn">create</i></a>
+          担当者：<span id="name" name="name"></span>
+        </div>
+      </div>
+    </div>
+
+    <table class="centered">
+      <thead>
+        <tr>
+          <th class="border-style survey-note">伐採ロ有</th>
+          <th class="border-style survey-note">伐採ワ有</th>
+          <th class="border-style survey-note">中断ロ有</th>
+          <th class="border-style survey-note">中断ロ無</th>
+          <th class="border-style survey-note">危険木有</th>
+          <th class="border-style survey-note">枝払い有</th>
+          <th class="border-style survey-note">玉切り有</th>
+          <th class="border-style survey-note">集積有</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <td class="border-style survey-data-need-rope enter">
+          <span id="survey-data-need-rope" class="hidden"><i class="material-icons">check</i></span>
+          <input type="hidden" name="survey-data-need-rope" value="false" />
+        </td>
+        <td class="border-style survey-data-need-wire enter">
+          <span id="survey-data-need-wire" class="hidden"><i class="material-icons">check</i></span>
+          <input type="hidden" name="survey-data-need-wire" value="false" />
+        </td>
+        <td class="border-style survey-data-need-cut-middle enter">
+          <span id="survey-data-need-cut-middle" class="hidden"><i class="material-icons">check</i></span>
+          <input type="hidden" name="survey-data-need-cut-middle" value="false" />
+        </td>
+        <td class="border-style survey-data-not-need-cut-middle enter">
+          <span id="survey-data-not-need-cut-middle" class="hidden"><i class="material-icons">check</i></span>
+          <input type="hidden" name="survey-data-not-need-cut-middle" value="false" />
+        </td>
+        <td class="border-style survey-data-is-denger-tree enter">
+          <span id="survey-data-is-denger-tree" class="hidden"><i class="material-icons">check</i></span>
+          <input type="hidden" name="survey-data-is-denger-tree" value="false" />
+        </td>
+        <td class="border-style survey-data-need-cut-branch enter">
+          <span id="survey-data-need-cut-branch" class="hidden"><i class="material-icons">check</i></span>
+          <input type="hidden" name="survey-data-need-cut-branch" value="false" />
+        </td>
+        <td class="border-style survey-data-need-cut-divide enter">
+          <span id="survey-data-need-cut-divide" class="hidden"><i class="material-icons">check</i></span>
+          <input type="hidden" name="survey-data-need-cut-divide" value="false" />
+        </td>
+        <td class="border-style survey-data-need-collect enter">
+          <span id="survey-data-need-collect" class="hidden"><i class="material-icons">check</i></span>
+          <input type="hidden" name="survey-data-need-collect" value="false" />
+        </td>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal Structure -->
+  <div id="number-target-modal" class="modal modal-fixed-footer">
+      <div class="modal-content">
+        <h6>ナンバリングを入力してください。</h6>
+        <div class="row bottom-0">
+          <div class="input-field col s8 bottom-0 modal-input">
+            <input id="color" name="color" type="text" class="color" maxlength="5" placeholder="色">
+          </div>
+        </div>
+        <div class="row bottom-0">
+          <div class="input-field col s8 bottom-0 modal-input">
+            <input id="word" name="word" type="text" class="word" maxlength="2" placeholder="文字">
+          </div>
+        </div>
+        <div class="row bottom-0">
+          <div class="input-field col s8 bottom-0 modal-input">
+            <input id="number" name="number" type="text" class="number" maxlength="4" value="1" placeholder="連番"
+              onchange="updateInputTextArea(this, 'number', true, true)">
+          </div>
+        </div>
+        <span id="number_required" class="error message-text" style="display:none"><i
+            class="material-icons">error_outline</i>この項目は必須入力です。</span>
+        <span id="number_number" class="error message-text" style="display:none"><i
+            class="material-icons">error_outline</i>半角数値で入力してください。</span>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:setNo();" class="modal-close waves-effect waves-green btn normal-button enter mobile-btn">確定</a>
+      </div>
+  </div>
+
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
   <div id="tree-type-target-modal" class="modal modal-fixed-footer">
       <div class="modal-content">
         <h6>樹種を選択してください。</h6>
@@ -272,7 +377,10 @@
   <script src="../js/models/survry_data.js"></script>
   <script src="../js/models/survry_area.js"></script>
   <script src="../js/models/survry.js"></script>
+<<<<<<< HEAD
   <script src="../js/models/web_edit_mode.js"></script>
+=======
+>>>>>>> 467d9649774011991af2fb170efdaf9124dc9d1b
 
 </body>
 
