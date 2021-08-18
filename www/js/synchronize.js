@@ -102,7 +102,6 @@ async function synchronizeWebToMobile(data) {
             }
 
             // 伐採木データを削除
-            alert(deleteSurveyDataList);
             if (deleteSurveyDataList != null) {
                 await deleteSurveyDataByIdentifyCodes(transaction, deleteSurveyDataList);
             }
@@ -238,7 +237,6 @@ function convertSurveyDataList(list) {
         ]
         surveyDataList.push(param)
     });
-    alert(JSON.stringify(surveyDataList))
 
     return surveyDataList;
 }

@@ -7,6 +7,7 @@
 
 
 /*** <End:jQuery LoadJs:"components/jquery/dist/js/jquery.min.js"> ***/
+
 /*** <Start:materialize> ***/
 /*** <Start:materialize LoadJs:"components/materialize/dist/js/materialize.min.js"> ***/
 /*!
@@ -87,6 +88,88 @@ var _get=function t(e,i,n){null===e&&(e=Function.prototype);var s=Object.getOwnP
 /*** <End:monaca-cordova-loader> ***/
 
 /*** <Start:monaca-core-utils> ***/
+/*** <Start:monaca-core-utils LoadJs:"components/monaca-core-utils/monaca-core-utils.js"> ***/
+/**
+ * Monaca Core Utility Library
+ * This library requires cordova.js
+ *
+ * @version 2.1.0
+ * @author  Asial Corporation
+ */
+window.monaca = window.monaca || {};
+
+(function() {
+    /*
+     * monaca api queue.
+     */
+    monaca.apiQueue = monaca.apiQueue || {};
+    monaca.apiQueue.paramsArray = [];
+    monaca.apiQueue.exec = function(a,b,c,d,e){
+        if (!monaca.isDeviceReady) {
+            monaca.apiQueue.paramsArray.push([a,b,c,d,e]);
+        } else {
+            window.cordova.exec(a,b,c,d,e);
+        }
+    };
+    monaca.apiQueue.next = function(){
+        var params = monaca.apiQueue.paramsArray.shift();
+        if (params) {
+            window.cordova.exec(
+                function(r) {
+                  if (typeof params[0] === 'function') params[0](r);
+                  monaca.apiQueue.next();
+                },
+                function(r) {
+                  if (typeof params[1] === 'function') params[1](r);
+                  monaca.apiQueue.next();
+                },
+                params[2],
+                params[3],
+                params[4]
+            );
+        }
+    };
+
+    monaca.isDeviceReady = monaca.isDeviceReady || false;
+    document.addEventListener('deviceready', function(){
+        window.monaca.isDeviceReady = true;
+        monaca.apiQueue.next();
+    }, false);
+
+    /**
+     * Check User-Agent
+     */
+    var isAndroid = !!(navigator.userAgent.match(/Android/i));
+    var isIOS     = !!(
+        (navigator.userAgent.match(/iPhone|iPad|iPod/i))
+        || (navigator.userAgent.match(/Macintosh; Intel Mac OS X/i) && location.protocol.match(/^https?:/) === null) // iOS 13.0 iPad 9.7 inch
+    );
+    monaca.isAndroid = isAndroid;
+    monaca.isIOS     = isIOS;
+
+    /**
+     * Obtain style property
+     */
+    monaca.retrieveUIStyle = function() {
+        var argsArray = [].slice.apply(arguments);
+        monaca.apiQueue.exec(arguments[arguments.length-1], null, "mobi.monaca.nativecomponent", "retrieve", argsArray);
+    };
+
+    /**
+     * Update style property
+     */
+    monaca.updateUIStyle = function(id, name, value) {
+        if (typeof id == "string") {
+            var argsArray = [].slice.apply(arguments);
+            monaca.apiQueue.exec(null, null, "mobi.monaca.nativecomponent", "update", argsArray);
+        } else {
+            for (var i = 0; i < id.length; i++) {
+                monaca.apiQueue.exec(null, null, "mobi.monaca.nativecomponent", "update", [id[i], name, value]);
+            }
+        }
+    };
+
+    if (isAndroid) {
         monaca.retrieveUIStyle = function(id, name, success, failure) {
             monaca.apiQueue.exec(
                 function(style) { success(style[name]); } || function() { },

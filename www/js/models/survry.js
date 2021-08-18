@@ -56,8 +56,8 @@ function insertSurvey(transaction, survey) {
     try {
         var sql = generateSurveyInsertSql();
         transaction.executeSql(sql, survey);
-    } catch (e) {
-        alert(e.message)
+    } catch (error) {
+        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
     }
 }
 
