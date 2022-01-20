@@ -50,10 +50,13 @@ function validateNumber(inputdata, column) {
  * 樹種ボタン押下時、入力欄に樹種名を設定
  * @param 樹種入力欄ID
  * @param 設定する樹種名
+ * @param 樹種ボタンのID
  */
 function inputTreeType(id, val) {
     $(id).val(val);
     $(id).change();
+    $('.tree-select-btn').addClass("not-select");
+    $('#' + val).removeClass("not-select");
 }
 
 /**
@@ -66,12 +69,12 @@ function setTreeTypeButton(treeTypes, specialTree, input) {
     if (treeTypes) {
         var arrayTreeTypes = treeTypes.split(',');
         for (let i in arrayTreeTypes) {
-            var html = '<a href="javascript:inputTreeType(\'#' + input + '\', \'' + arrayTreeTypes[i] + '\')" class="waves-effect waves-green btn normal-button enter mobile-btn tree-btn">' + arrayTreeTypes[i] + '</a>';
+            var html = `<a id="${arrayTreeTypes[i]}" href="javascript:inputTreeType('#${input}', '${arrayTreeTypes[i]}')" class="tree-select-btn waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">${arrayTreeTypes[i]}</a>`;
             $('#tree-type-list').append(html);
         }
     }
     if (specialTree) {
-        var html = '<a href="javascript:inputTreeType(\'#' + input + '\', \'' + specialTree + '\')" class="waves-effect waves-green btn normal-button enter mobile-btn" tree-btn>' + specialTree + '</a>';
+        var html = `<a id="${arrayTreeTypes[i]}" href="javascript:inputTreeType('#${input}', '${specialTree}')" class="tree-select-btn waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">${specialTree}</a>`;
         $('#tree-type-list').append(html);
     }
 }

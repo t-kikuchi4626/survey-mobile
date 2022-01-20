@@ -28,16 +28,17 @@ html {
   text-overflow: ellipsis;
 }
 
+.btn:hover, .btn-large:hover, .btn-small:hover {
+  background-color: #122344;
+}
+
 a.btn-ten-key-font-size {
   font-size: 40px;
 }
 
 a.btn-circle {
-  border-radius: 50%;
-  line-height: 60px;
-  width: 60px;
-  height: 60px;
-  padding: 0;
+  background: #122344;
+  color: #fff;
 }
 
 a.btn-link-circle {
@@ -46,7 +47,12 @@ a.btn-link-circle {
   width: 28px;
   height: 28px;
   padding: 0;
-  font-size: 0.8em !important;
+  font-size: 0.5em !important;
+  background-color: #122344 !important;
+}
+
+.btn-link-circle:hover {
+  background-color: #122344;
 }
 
 .main {
@@ -55,18 +61,27 @@ a.btn-link-circle {
   padding-top: 2% !important;
 }
 
+.btn-edit {
+  overflow-x: scroll;
+}
+
+.scroll-table {
+  overflow: auto;
+  white-space: nowrap;
+}
+
 /* iPhone */
 @media screen and (max-width: 767px) {
   a.btn-ten-key-font-size {
-    font-size: 30px;
+    font-size: 35px;
   }
 
-  .modal-input>input[type=text] {
+  .mobile-input {
     font-size: 18px!important;
   }
 
   .mobile-btn {
-    font-size: 18px!important;
+    font-size: 13px!important;
   }
 
   .mobile-btn-block {
@@ -77,9 +92,9 @@ a.btn-link-circle {
 
   a.btn-circle {
     border-radius: 50%;
-    line-height: 60px;
-    width: 60px;
-    height: 60px;
+    line-height: 40px;
+    width: 40px;
+    height: 40px;
     padding: 0;
   }
 
@@ -110,6 +125,67 @@ a.btn-link-circle {
   .border-style-no {
     width: 60px !important;
   }
+
+  .bottom-5 {
+    margin-bottom: 8px !important;
+  }
+
+  .circle {
+    height:30px;
+    width:30px;
+    border-radius:50%;
+    line-height:30px;
+    text-align:center;
+    display:inline-block;
+    font-size: 15px !important;
+  }
+
+  td, th {
+    padding: 2px 2px !important;
+  }
+
+  .collapsible-header {
+    padding: 0.5rem !important;
+  }
+
+  .collapsible-body {
+    padding: 0.5rem !important;
+  }
+
+  ul.collapsible {
+    margin: 0 !important;
+  }
+
+  .tree-input {
+    height: 2rem !important;
+  }
+
+  .input-field {
+    margin-bottom: 1rem;
+  }
+
+  .history-list {
+    font-size: 15px !important;
+  }
+}
+
+.circle {
+  height:40px;
+  width:40px;
+  border-radius:50%;
+  line-height:40px;
+  text-align:center;
+  display:inline-block;
+  color: black !important;
+}
+
+.circle.checked {
+  background: #122344;
+  color: white !important;
+}
+
+th {
+  text-align: center !important;
 }
 
 /* iPad共通 */
@@ -117,13 +193,13 @@ a.btn-link-circle {
   html {
     font-size: 20px;
   }
-  
+
   .mobile-btn {
     height: 54px;
     line-height: 54px;
-    font-size: 18px;
     padding: 0 28px;
     margin: 10px !important;
+    font-size: 17px !important;
   }
 
   .nav-wrapper {
@@ -142,7 +218,7 @@ a.btn-link-circle {
     min-width: 100px !important;
     min-height: 40px !important;
   }
-  
+
   .btn-font-size {
     font-size: 24px;
   }
@@ -150,7 +226,7 @@ a.btn-link-circle {
   .create-btn {
     font-size: 20px;
   }
-  
+
   .mesured-value-font-size {
     font-size: 24px !important;
   }
@@ -161,6 +237,16 @@ a.btn-link-circle {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .btn-floating i {
+    line-height: 60px !important;
+  }
+
+  .btn-floating {
+    width: 60px !important;
+    height: 60px !important;
+    line-height: 60px !important;
   }
 
   .modal .modal-footer {
@@ -194,7 +280,8 @@ a.btn-link-circle {
     }
 
     .link-font-size {
-      font-size: 28px !important;
+      font-size: 20px !important;
+      font-weight: bold;
     }
 
     .sticky-table-wrapper {
@@ -227,7 +314,8 @@ a.btn-link-circle {
   }
 
   .link-font-size {
-    font-size: 30px !important;
+    font-size: 20px !important;
+    font-weight: bold;
   }
 
   .mesured-value-font-size {
@@ -254,8 +342,15 @@ a.btn-link-circle {
 
 .normal-button {
   background-color: #122344;
-  font-size: 20px !important;
+  font-size: 20px;
 }
+
+.not-select {
+  background-color: white !important;
+  border: 2px solid #122344 !important;
+  color: black !important;
+}
+
 
 .normal-button:hover {
   background-color: #122344;
@@ -264,10 +359,6 @@ a.btn-link-circle {
 .btn-width-height {
   min-width: 80px;
   min-height: 20px;
-}
-
-.link-font-size {
-  font-size: 19px;
 }
 
 .mesured-value-font-size {
@@ -280,7 +371,7 @@ a.btn-link-circle {
 
 .container {
   width: 95%;
-  padding-top: 5%;
+  padding-top: 3%;
 }
 
 button,
@@ -509,6 +600,10 @@ input[type=range]::-webkit-slider-thumb {
   margin-bottom: 0px;
 }
 
+.bottom-5 {
+  margin-bottom: 0.5rem;
+}
+
 #page_top {
   position: fixed;
   bottom: 30px;
@@ -530,10 +625,6 @@ input[type=range]::-webkit-slider-thumb {
 
 .tree-btn {
   margin: 5px;
-}
-
-a.btn-orange {
-  color: #fff;
 }
 
 a.btn-shadow {

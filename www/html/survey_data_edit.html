@@ -37,7 +37,8 @@
     <li id="survey-data-list-link"></li>
     <li id="survey-data-history-list-link"></li>
     <li id="contact-list-link"></li>
-    <li><a class="waves-effect waves-light modal-trigger" href="#modal1"><i class="material-icons">exit_to_app</i>ログアウト</a></li>
+    <li><a class="waves-effect waves-light modal-trigger" href="#modal1"><i
+          class="material-icons">exit_to_app</i>ログアウト</a></li>
   </ul>
 
   <!-- Modal Structure -->
@@ -46,86 +47,342 @@
       <p>ログアウトします。よろしいでしょうか？</p>
     </div>
     <div class="modal-footer">
-      <a href="javascript:logout();" class="modal-close waves-effect waves-green btn normal-button">ログアウトする</a>
-      <a href="#!" class="modal-close waves-effect waves-green btn-flat">閉じる</a>
+      <a href="javascript:logout();" class="modal-close waves-effect waves-light btn normal-button">ログアウトする</a>
+      <a href="#!" class="modal-close waves-effect waves-light btn-flat">閉じる</a>
     </div>
   </div>
 
   <div style="background:rgba(0,0,0,0.8); color: white;" class="center web-edit-message">
     <span class="ml-4" style="margin: 10px;display: inline-block;">Webで編集中のため、登録・更新処理はできません。</span>
   </div>
-  
-  <div class="container main">
-    
-    <div class="row center bottom-0">
-      <div class="col s12 display-number-word">
-        現在の登録本数は<b><span id="survey-data-count" class="display-number"></span></b>本です。
+
+  <div class="container">
+
+    <!-- <div class="row bottom-0">
+      <ul class="collapsible">
+        <li>
+          <div class="collapsible-header">
+            <span>東北線</span><span style="margin-left: 1rem;">No.1</span><span>～</span><span>No.2</span>
+          </div>
+          <div class="collapsible-body">
+            <span>地権者：</span><span style="margin-left: 2px;">山田太郎</span>
+            <span style="margin-left: 1rem;">
+              <a class="modal-trigger waves-effect waves-light btn btn-link-circle btn-shadow enter" href="#number-target-modal" style="margin-left: 2px;">
+                <i class="material-icons create-btn" style="font-size: 15px !important;">create</i></a>
+                調査者：</span><span style="margin-left: 2px;">佐藤和夫</span>
+          </div>
+        </li>
+      </ul>
+    </div> -->
+
+    <!-- 樹種選択 -->
+    <div class="row bottom-0">
+      <div class="input-field col s12 bottom-0" style="margin-top: initial !important">
+        <input id="surveyDataTreeType" name="surveyDataTreeTypeModal" type="text" class="surveyDataTreeType mobile-input tree-input"
+          maxlength="10" placeholder="樹種"
+          onchange="updateInputTextArea(this, 'survey_data_tree_type_modal', true, false)">
       </div>
     </div>
-
-    <div class="row center">
-      <div class="col s12 mesured-value-font-size"><b>直径：<span id="survey-data-mesured-value"></span>cm</b></div>
+    <span id="survey_data_tree_type_modal_required" class="error message-text" style="display:none"><i
+        class="material-icons">error_outline</i>この項目は必須入力です。</span>
+    <div class="row bottom-0" style="overflow: auto;white-space:nowrap;">
+      <div class="input-field col s12 edit" id="tree-type-list" style="margin-top: initial !important"></div>
     </div>
-    <!-- </div> -->
+    <!-- 樹種選択 -->
 
-    <div class="col s12">
-      <div class="row center">
-        <a id="tree-measured-value-1" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size enter">１</a>
-        <a id="tree-measured-value-2"
-          class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter">２</a>
-        <a id="tree-measured-value-3" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size enter">３</a>
-      </div>
-      <div class="row center">
-        <a id="tree-measured-value-4" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size enter">４</a>
-        <a id="tree-measured-value-5"
-          class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter">５</a>
-        <a id="tree-measured-value-6" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size enter">６</a>
-      </div>
-      <div class="row center">
-        <a id="tree-measured-value-7" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size enter">７</a>
-        <a id="tree-measured-value-8"
-          class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter">８</a>
-        <a id="tree-measured-value-9" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size enter">９</a>
-      </div>
-      <div class="row center">
-        <a id="tree-measured-value-none" class="btn btn-orange btn-circle btn-shadow enter"><i
-            class="material-icons">clear</i></a>
-        <a id="tree-measured-value-0"
-          class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter">０</a>
-        <a onclick="createEditSurveyData();" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size create-button"><i
-            class="material-icons">done</i></a>
-        <audio id="submit" src="../sound/submit4.mp3" hidden></audio>
-        <audio id="error" src="../sound/error.mp3" hidden></audio>
-        <audio id="input" src="../sound/input1-4-1.mp3" hidden></audio>
 
-        <audio id="submit-100" src="../sound/submit-100.mp3" hidden></audio>
-        <audio id="submit-300" src="../sound/submit-300.mp3" hidden></audio>
-        <audio id="submit-500" src="../sound/submit-500.mp3" hidden></audio>
-        <audio id="submit-1000" src="../sound/submit-1000.mp3" hidden></audio>
-        <audio id="submit-10000" src="../sound/submit-10000.mp3" hidden></audio>
+    <!-- 現在の樹種本数 -->
+    <div class="row scroll-table bottom-0">
+      <table class="centered" style="font-size: 15px !important;">
+        <tr>
+          <th>天然生林</th>
+          <th>杉</th>
+          <th>ヒノキ</th>
+          <th>松</th>
+          <th>桐</th>
+          <th>合計</th>
+        </tr>
+        <tr>
+          <td>1200本</td>
+          <td>1010本</td>
+          <td>1000本</td>
+          <td>5550本</td>
+          <td>1202本</td>
+          <td>9000本</td>
+        </tr>
+      </table>
+    </div>
+    <!-- 現在の樹種本数 -->
+
+
+    <!-- 伐採方法 -->
+    <div class="row bottom-5" style="overflow: auto;white-space:nowrap;">
+      <div class="input-field col s12">
+        <a id="none" href="javascript:setSurveyMethod('none')" class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">なし</a>
+        <a id="need-rope" href="javascript:setSurveyMethod('need-rope')" class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">ロープ</a>
+        <a id="need-wire" href="javascript:setSurveyMethod('need-wire')" class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">ワイヤ</a>
+        <a id="is-danger-tree" href="javascript:setSurveyMethod('is-danger-tree')" class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">危険</a>
+        <a id="need-cut-middle" href="javascript:setSurveyMethod('need-cut-middle')" class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">中断</a>
+        <a id="need-cut-branch" href="javascript:setSurveyMethod('need-cut-branch')" class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">枝払</a>
+        <a id="etc" href="javascript:setSurveyMethod('etc')" class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">その他</a>
+      </div>
+      <input type="hidden" name="none" value="false" />
+      <input type="hidden" name="need-rope" value="false" />
+      <input type="hidden" name="need-wire" value="false" />
+      <input type="hidden" name="is-denger-tree" value="false" />
+      <input type="hidden" name="need-cut-middle" value="false" />
+      <input type="hidden" name="need-cut-branch" value="false" />
+      <input type="hidden" name="etc" value="false" />
+    </div>
+    <!-- 伐採方法 -->
+
+
+    <!-- ナンバリング、直径 -->
+    <div class="row bottom-5">
+      <div class="col s6 display-fixed link-font-size">
+        <a class="modal-trigger waves-effect waves-light btn btn-link-circle btn-shadow enter"
+          href="#number-target-modal"><i class="material-icons create-btn"
+            style="font-size: 15px !important;">create</i></a>
+        No：<span id="survey-data-no"></span>
+      </div>
+
+      <div class="col s6 display-fixed link-font-size">
+        直径：<span id="survey-data-mesured-value"></span>cm
+      </div>
+      <span id="survey_data_mesured_value_required" class="error message-text" style="display:none"><i
+          class="material-icons">error_outline</i>この項目は必須入力です。</span>
+    </div>
+    <!-- ナンバリング、直径 -->
+
+
+    <!-- 直径入力用のキーボード -->
+    <div id="table-keypad" class="row bottom-0" style="text-align: center;">
+      <div class="col s12">
+        <table class="centered">
+          <tr>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure6', '6')">
+              <div class="circle" id="mesure6">6</div>
+            </td>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure16', '16')">
+              <div class="circle" id="mesure16">16</div>
+            </td>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure26', '26')">
+              <div class="circle" id="mesure26">26</div>
+            </td>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure36', '36')">
+              <div class="circle" id="mesure36">36</div>
+            </td>
+          </tr>
+          <tr>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure8', '8')">
+              <div class="circle" id="mesure8">8</div>
+            </td>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure18', '18')">
+              <div class="circle" id="mesure18">18</div>
+            </td>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure28', '28')">
+              <div class="circle" id="mesure28">28</div>
+            </td>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure38', '38')">
+              <div class="circle" id="mesure38">38</div>
+            </td>
+          </tr>
+          <tr>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure10', '10')">
+              <div class="circle" id="mesure10">10</div>
+            </td>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure20', '20')">
+              <div class="circle" id="mesure20">20</div>
+            </td>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure30', '30')">
+              <div class="circle" id="mesure30">30</div>
+            </td>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure40', '40')">
+              <div class="circle" id="mesure40">40</div>
+            </td>
+          </tr>
+          <tr>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure12', '12')">
+              <div class="circle" id="mesure12">12</div>
+            </td>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure22', '22')">
+              <div class="circle" id="mesure22">22</div>
+            </td>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure32', '32')">
+              <div class="circle" id="mesure32">32</div>
+            </td>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure42', '42')">
+              <div class="circle" id="mesure42">42</div>
+            </td>
+          </tr>
+          <tr>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure14', '14')">
+              <div class="circle" id="mesure14">14</div>
+            </td>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure24', '24')">
+              <div class="circle" id="mesure24">24</div>
+            </td>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure34', '34')">
+              <div class="circle" id="mesure34">34</div>
+            </td>
+            <td onclick="applyMesuredValueOfTableKeypad('#mesure44', '44')">
+              <div class="circle" id="mesure44">44</div>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
+    <!-- 直径入力用のキーボード -->
+
+
+    <!-- テンキー（直径） -->
+    <div id="numeric-keypad" class="row bottom-0" style="display: none;">
+      <div class="col s12">
+        <div class="row center">
+          <a id="tree-measured-value-1" class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">１</a>
+          <a id="tree-measured-value-2"
+            class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light">２</a>
+          <a id="tree-measured-value-3" class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">３</a>
+        </div>
+        <div class="row center">
+          <a id="tree-measured-value-4" class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">４</a>
+          <a id="tree-measured-value-5"
+            class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light">５</a>
+          <a id="tree-measured-value-6" class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">６</a>
+        </div>
+        <div class="row center">
+          <a id="tree-measured-value-7" class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">７</a>
+          <a id="tree-measured-value-8"
+            class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light">８</a>
+          <a id="tree-measured-value-9" class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">９</a>
+        </div>
+        <div class="row center bottom-0">
+          <a id="tree-measured-value-none" class="btn btn-circle btn-shadow enter waves-effect waves-light"><i
+              class="material-icons">clear</i></a>
+          <a id="tree-measured-value-0"
+            class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light">０</a>
+          <a style="visibility:hidden" class="btn btn-circle btn-shadow btn-ten-key-font-size create-button"><i
+              class="material-icons">done</i></a>
+          <audio id="submit" src="../sound/submit4.mp3" hidden></audio>
+          <audio id="error" src="../sound/error.mp3" hidden></audio>
+          <audio id="input" src="../sound/input1-4-1.mp3" hidden></audio>
+
+          <audio id="submit-100" src="../sound/submit-100.mp3" hidden></audio>
+          <audio id="submit-300" src="../sound/submit-300.mp3" hidden></audio>
+          <audio id="submit-500" src="../sound/submit-500.mp3" hidden></audio>
+          <audio id="submit-1000" src="../sound/submit-1000.mp3" hidden></audio>
+          <audio id="submit-10000" src="../sound/submit-10000.mp3" hidden></audio>
+        </div>
+      </div>
+    </div>
+    <!-- テンキー（直径） -->
+
+      <!-- <div class="col s4">
+        <div class="edit">
+          <a href="#" class="waves-effect waves-light btn normal-button enter mobile-btn tree-btn"
+            style="min-width :120px;">登録</a>
+        </div>
+        <div class="edit">
+          <a href="#" class="waves-effect waves-light btn normal-button enter mobile-btn tree-btn"
+            style="min-width :120px;">テンキー</a>
+        </div>
+        <div class="edit">
+          <a href="#" class="waves-effect waves-light btn normal-button enter mobile-btn tree-btn"
+            style="min-width :120px;">備考</a>
+        </div>
+      </div> -->
+
+    <!-- <div class="row bottom-5" style="text-align: center;">
+      <div class="col s4">
+        <div class="edit">
+          <a href="javascript:createEditSurveyData()" class="waves-effect waves-light btn normal-button enter mobile-btn tree-btn">登録</a>
+        </div>
+      </div>
+      <div class="col s4">
+        <div class="edit">
+          <a id="key-pad" href="javascript:changeKeyPad()" class="waves-effect waves-light btn normal-button enter mobile-btn tree-btn">テンキー</a>
+          <input type="hidden" id="key-pad-type" value="table-keypad">
+        </div>
+      </div>
+      <div class="col s4">
+        <div class="edit">
+        <a href="#" class="waves-effect waves-light btn normal-button enter mobile-btn tree-btn">備考</a>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- 備考、キーボード、登録ボタン -->
+    <div class="row bottom-5" style="text-align: center; margin: 1rem;">
+      <div class="col s4">
+        <div class="edit">
+          <a href="#note-target-modal" class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
+            <i class="material-icons" style="font-size: 30px !important;">note</i>
+          </a>
+        </div>
+      </div>
+      <div class="col s4">
+        <div class="edit">
+          <a id="key-pad" href="javascript:changeKeyPad()" class="btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
+            <i class="material-icons">keyboard</i>
+          </a>
+          <input type="hidden" id="key-pad-type" value="table-keypad">
+        </div>
+      </div>
+      <div class="col s4">
+        <div class="edit">
+          <a href="javascript:createEditSurveyData()" class="btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
+            <i class="material-icons">done</i></a>
+        </div>
+      </div>
+    </div>
+    <!-- 備考、キーボード、登録ボタン -->
+
+
+    <!-- 履歴データ（2件まで） -->
+    <div class="row" style="bottom: 0;">
+      <ul class="collection">
+        <li class="collection-item">
+          <div class="history-list">
+            <span style="margin-right: 0.5rem;">青-A-2</span>
+            <span style="margin-right: 0.5rem;">ひのき</span>
+            <span style="margin-right: 0.5rem;">24cm</span>
+            <span style="margin-right: 0.5rem;">ロ、中、危</span>
+            <a href="#!" class="secondary-content"><i class="material-icons" style="color: #122344;">keyboard_arrow_up</i></a></div>
+        </li>
+        <li class="collection-item">
+          <div class="history-list">
+            <span style="margin-right: 0.5rem;">青-A-2</span>
+            <span style="margin-right: 0.5rem;">ひのき</span>
+            <span style="margin-right: 0.5rem;">24cm</span>
+            <span style="margin-right: 0.5rem;">ロ、中、危</span>
+            <a href="#!" class="secondary-content"><i class="material-icons" style="color: #122344;">expand_more</i></a></div>
+        </li>
+      </ul>
+    </div>
+    <!-- 履歴データ（2件まで） -->
+
   </div>
+  <!-- container -->
 
-  <div style="table-layout:fixed;width:100%;position:absolute;bottom:0;">
+  <!-- <div style="table-layout:fixed;width:100%;position:absolute;bottom:0;">
     <div class="col s12" style="padding: 10px 10px 10px 10px;">
       <div class="row" style="margin-bottom: 15px !important;">
         <div class="col s6 display-fixed link-font-size">
-          <a class="modal-trigger btn btn-orange btn-link-circle btn-shadow enter" href="#number-target-modal"><i class="material-icons create-btn">create</i></a>
+          <a class="modal-trigger btn btn-link-circle btn-shadow enter" href="#number-target-modal"><i class="material-icons create-btn">create</i></a>
           No：<span id="survey-data-no"></span>
         </div>
         <div class="col s6 display-fixed link-font-size">
-          <a class="modal-trigger btn btn-orange btn-link-circle btn-shadow enter" href="#note-target-modal"><i class="material-icons create-btn">create</i></a>
+          <a class="modal-trigger btn btn-link-circle btn-shadow enter" href="#note-target-modal"><i class="material-icons create-btn">create</i></a>
           備考：<span id="note" name="note"></span>
         </div>
       </div>
       <div class="row" style="margin-bottom: 5px !important;">
         <div class="col s6 display-fixed link-font-size">
-          <a class="modal-trigger btn btn-orange btn-link-circle btn-shadow enter" href="#tree-type-target-modal"><i class="material-icons create-btn">create</i></a>
+          <a class="modal-trigger btn btn-link-circle btn-shadow enter" href="#tree-type-target-modal"><i class="material-icons create-btn">create</i></a>
           樹種：<span id="survey-data-tree-type"></span>
         </div>
         <div class="col s6 display-fixed link-font-size">
-          <a class="modal-trigger btn btn-orange btn-link-circle btn-shadow enter" href="#name-target-modal"><i class="material-icons create-btn">create</i></a>
+          <a class="modal-trigger btn btn-link-circle btn-shadow enter" href="#name-target-modal"><i class="material-icons create-btn">create</i></a>
           担当者：<span id="name" name="name"></span>
         </div>
       </div>
@@ -181,88 +438,83 @@
 
       </tbody>
     </table>
-  </div>
+  </div> -->
 
   <!-- Modal Structure -->
-  <div id="number-target-modal" class="modal modal-fixed-footer">
-      <div class="modal-content">
-        <h6>ナンバリングを入力してください。</h6>
-        <div class="row bottom-0">
-          <div class="input-field col s8 bottom-0 modal-input">
-            <input id="color" name="color" type="text" class="color" maxlength="5" placeholder="色">
-          </div>
+  <div id="number-target-modal" class="modal">
+    <div class="modal-content">
+      <h6>ナンバリングを入力してください。</h6>
+      <div class="row bottom-0">
+        <div class="input-field col s6 bottom-0 modal-input">
+          <input id="color" name="color" type="text" class="color" maxlength="5" placeholder="色">
+          <label for="color">色</label>
         </div>
-        <div class="row bottom-0">
-          <div class="input-field col s8 bottom-0 modal-input">
-            <input id="word" name="word" type="text" class="word" maxlength="2" placeholder="文字">
-          </div>
-        </div>
-        <div class="row bottom-0">
-          <div class="input-field col s8 bottom-0 modal-input">
-            <input id="number" name="number" type="text" class="number" maxlength="4" value="1" placeholder="連番"
-              onchange="updateInputTextArea(this, 'number', true, true)">
-          </div>
-        </div>
-        <span id="number_required" class="error message-text" style="display:none"><i
-            class="material-icons">error_outline</i>この項目は必須入力です。</span>
-        <span id="number_number" class="error message-text" style="display:none"><i
-            class="material-icons">error_outline</i>半角数値で入力してください。</span>
       </div>
-      <div class="modal-footer">
-        <a href="javascript:setNo();" class="modal-close waves-effect waves-green btn normal-button enter mobile-btn">確定</a>
+      <div class="row bottom-0">
+        <div class="input-field col s6 bottom-0 modal-input">
+          <input id="word" name="word" type="text" class="word" maxlength="2" placeholder="文字">
+          <label for="word">文字</label>
+        </div>
       </div>
+      <div class="row bottom-0">
+        <div class="input-field col s6 bottom-0 modal-input">
+          <input id="number" name="number" type="text" class="number" maxlength="4" value="1" placeholder="連番"
+            onchange="updateInputTextArea(this, 'number', true, true)">
+          <label for="number">連番</label>
+        </div>
+      </div>
+      <div class="row bottom-0">
+        <div class="input-field col s6 bottom-0 modal-input">
+          <input id="branch-number" name="branch-number" type="text" class="number" maxlength="4" value="1" placeholder="枝番">
+          <label for="branch-number">枝番</label>
+        </div>
+      </div>
+      <span id="number_required" class="error message-text" style="display:none"><i
+          class="material-icons">error_outline</i>この項目は必須入力です。</span>
+      <span id="number_number" class="error message-text" style="display:none"><i
+          class="material-icons">error_outline</i>半角数値で入力してください。</span>
+    </div>
+    <div class="modal-footer">
+      <a href="javascript:setNo();"
+        class="modal-close waves-effect waves-light btn normal-button enter mobile-btn">確定</a>
+    </div>
   </div>
 
-  <div id="tree-type-target-modal" class="modal modal-fixed-footer">
-      <div class="modal-content">
-        <h6>樹種を選択してください。</h6>
-        <div class="row bottom-0">
-          <div class="input-field col s6 bottom-0 modal-input">
-            <input id="survey-data-tree-type-modal" name="surveyDataTreeTypeModal" type="text"
-              class="surveyDataTreeType" maxlength="10" placeholder="樹種"
-              onchange="updateInputTextArea(this, 'survey_data_tree_type_modal', true, false)">
-          </div>
-        </div>
-        <span id="survey_data_tree_type_modal_required" class="error message-text" style="display:none"><i
-            class="material-icons">error_outline</i>この項目は必須入力です。</span>
-        <div class="row">
-          <div class="input-field col s8" id="tree-type-list">
-          </div>
+  <!-- 備考入力モーダル -->
+  <div id="note-target-modal" class="modal">
+    <div class="modal-content">
+      <h6>備考を入力してください。</h6>
+      <div class="row">
+        <div class="input-field col s12 modal-input">
+          <textarea id="note-modal" class="materialize-textarea" placeholder="備考" maxlength="300"
+            style="font-size: 18px!important"></textarea>
         </div>
       </div>
-      <div class="modal-footer">
-        <a href="javascript:setTreeType();"
-          class="modal-close waves-effect waves-green btn normal-button enter mobile-btn">確定</a>
-      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="javascript:setNote();"
+        class="modal-close waves-effect waves-light btn normal-button enter mobile-btn">確定</a>
+    </div>
   </div>
+  <!-- 備考入力モーダル -->
 
-  <div id="note-target-modal" class="modal modal-fixed-footer">
-      <div class="modal-content">
-        <h6>備考を入力してください。</h6>
-        <div class="row">
-          <div class="input-field col s12 modal-input">
-            <textarea id="note-modal" class="materialize-textarea" placeholder="備考" maxlength="300" style="font-size: 18px!important"></textarea>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <a href="javascript:setNote();" class="modal-close waves-effect waves-green btn normal-button enter mobile-btn">確定</a>
-      </div>
-  </div>
 
-  <div id="name-target-modal" class="modal modal-fixed-footer">
-      <div class="modal-content">
-        <h6>担当者を入力してください。</h6>
-        <div class="row">
-          <div class="input-field col s8 modal-input">
-            <input id="name-modal" name="name-modal" type="text" placeholder="担当者" maxlength="100">
-          </div>
+  <!-- 担当者モーダル -->
+  <div id="name-target-modal" class="modal">
+    <div class="modal-content">
+      <h6>担当者を入力してください。</h6>
+      <div class="row">
+        <div class="input-field col s8 modal-input">
+          <input id="name-modal" name="name-modal" type="text" placeholder="担当者" maxlength="100">
         </div>
       </div>
-      <div class="modal-footer">
-        <a href="javascript:setName();" class="modal-close waves-effect waves-green btn normal-button enter mobile-btn">確定</a>
-      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="javascript:setName();"
+        class="modal-close waves-effect waves-light btn normal-button enter mobile-btn">確定</a>
+    </div>
   </div>
+  <!-- 担当者モーダル -->
 
   <script src="../components/jquery/dist/jquery.min.js"></script>
   <script src="../components/loader.js"></script>

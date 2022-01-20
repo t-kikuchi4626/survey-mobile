@@ -96,6 +96,7 @@ var createSurveyDataTable = 'CREATE TABLE IF NOT EXISTS survey_data ' +
     'color TEXT,' +
     'word TEXT,' +
     'number INTEGER,' +
+    'branch_number TEXT,' +
     'survey_detail_id INTEGER, ' +
     'survey_data_tree_type TEXT, ' +
     'tree_measured_value INTEGER, ' +

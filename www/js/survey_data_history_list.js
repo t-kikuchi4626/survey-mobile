@@ -37,7 +37,7 @@ async function initialize() {
     // 樹種ボタン設定
     var treeTypeValue = convertSpace(survey.rows.item(0).tree_type_value);
     var specialTree = convertSpace(survey.rows.item(0).special_tree);
-    setTreeTypeButton(treeTypeValue, specialTree, "survey-data-tree-type-modal");
+    setTreeTypeButton(treeTypeValue, specialTree, "surveyDataTreeType");
     // 伐採木履歴データの設定
     await setPage();
 }

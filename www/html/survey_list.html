@@ -58,18 +58,18 @@
       </div>
     </div>
     <div class="row center">
-      <button onclick="synchronize()" id="synchronize-button" class="btn waves-effect waves-light btn-large normal-button mb-2 web-edit-mode">
+      <button onclick="synchronize()" id="synchronize-button" class="btn waves-effect waves-light btn-large normal-button mb-2 web-edit-mode mobile-btn">
         <i class="material-icons left">cloud_upload</i>同期処理を開始する
       </button>
     </div>
     <div class="row center">
-      <button onclick="confirmSynchronize()" id="confirmSynchronize" class="btn waves-effect waves-light btn-large normal-button mb-2 web-edit-mode">
-        <i class="material-icons left">cloud_download</i>同期処理結果を確認する
+      <button onclick="confirmSynchronize()" id="confirmSynchronize" class="btn waves-effect waves-light btn-large normal-button mb-2 web-edit-mode mobile-btn">
+        <i class="material-icons left">cloud_download</i>同期処理を確認する
       </button>
     </div>
     <div class="row center">
-      <button onclick="openWebEditModal()" class="btn waves-effect waves-light btn-large normal-button mb-2 red darken-4">
-        <i class="material-icons left">lock_outline</i>Web編集モードを管理
+      <button onclick="openWebEditModal()" class="btn waves-effect waves-light btn-large normal-button mb-2 red darken-4 mobile-btn">
+        <i class="material-icons left">lock_outline</i>Web編集モードを変更する
       </button>
     </div>
 
@@ -109,14 +109,14 @@
             </label>
           </p>
         </div>
+        <button onclick="switchWebEditMode()" id="web-edit-button" class="btn waves-effect waves-light btn-large normal-button mb-2 red darken-4 mobile-btn">
+          <i class="material-icons left">lock_outline</i>編集モードを切替える
+        </button>
       </div>
-      <div class="modal-footer">
+      <!-- <div class="modal-footer">
         <div class="row center">
-          <button onclick="switchWebEditMode()" id="web-edit-button" class="btn waves-effect waves-light btn-large normal-button mb-2 red darken-4">
-            <i class="material-icons left">lock_outline</i>編集モードを切替える
-          </button>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div id="showSynchronizeResult" class="modal">

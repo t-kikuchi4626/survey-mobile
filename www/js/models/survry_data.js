@@ -68,6 +68,7 @@ function insertSurveyData(param) {
         'color, ' +
         'word, ' +
         'number, ' +
+        'branch_number, ' +
         'survey_data_tree_type, ' +
         'tree_measured_value, ' +
         'need_rope, ' +
@@ -76,8 +77,6 @@ function insertSurveyData(param) {
         'not_need_cut_middle, ' +
         'is_danger_tree, ' +
         'need_cut_branch, ' +
-        'need_cut_divide, ' +
-        'need_collect, ' +
         'note, ' +
         'is_delete, ' +
         'web_edit_mode,' +
@@ -85,7 +84,7 @@ function insertSurveyData(param) {
         'created_by, ' +
         'modified_date,' +
         'created_date)' +
-        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'), DATETIME(\'now\', \'localtime\'))';
+        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'), DATETIME(\'now\', \'localtime\'))';
 
     database.transaction(function (transaction) {
         transaction.executeSql(sql, param);
@@ -536,6 +535,24 @@ function fetchNeedCollect(surveyDetailId) {
                 resolve(resultSet);
             }, function (error) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
+            });
+        });
+    });
+}
+
+/**
+ * 所在地IDと樹種をもとに件数を取得
+ * @param 所在地ID
+ * @param 樹種
+ * @return 件数
+ */
+ function fetchTypeMeasuredValueByTreeType(surveyDetailId, treeType) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT COUNT(*) AS count FROM survey_data WHERE survey_detail_id = ? AND survey_data_tree_type = ? AND is_delete = \'false\'', [surveyDetailId, treeType, measuredValue], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
             });
         });
     });

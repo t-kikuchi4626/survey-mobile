@@ -26,7 +26,8 @@ document.addEventListener("deviceready", async function () {
 
     var treeTypeValue = convertSpace(survey.rows.item(0).tree_type_value);
     var specialTree = convertSpace(survey.rows.item(0).special_tree);
-    setTreeTypeButton(treeTypeValue, specialTree, "survey-data-tree-type-modal");
+    setTreeTypeButton(treeTypeValue, specialTree, "surveyDataTreeType");
+    fetchTreeTypeCount(treeTypeValue, specialTree);
 
     initializeForm();
     await controlEditScreen();
@@ -64,9 +65,10 @@ function setSurveyData(surveyData) {
     $('#color').val(surveyData.color);
     $('#word').val(surveyData.word);
     $('#number').val(surveyData.number + 1);
+    $('#branch-number').val('');
     setNo();
     // 樹種
-    $('#survey-data-tree-type-modal').val(surveyData.survey_data_tree_type);
+    $('#' + surveyData.survey_data_tree_type).removeClass("not-select");
     $('#survey-data-tree-type').text(surveyData.survey_data_tree_type);
     // 直径
     treeMeasuredValue = "";
@@ -133,7 +135,7 @@ function setSurveyData(surveyData) {
         $('input[name="survey-data-need-collect"]').val(true);
     } else {
         $('#survey-data-need-collect').addClass("checked", false);
-    }    
+    }s
 }
 
 /**
@@ -143,6 +145,7 @@ function setNo() {
     var color = $('#color').val();
     var word = $('#word').val();
     var number = $('#number').val();
+    var branchNumber = $('#branch-number').val();
     var no = "";
     if (color != "") {
         no += color + "-";
@@ -150,7 +153,10 @@ function setNo() {
     if (word != "") {
         no += word + "-";
     }
-    no += number;
+    if (number != "") {
+        no += number + "-";
+    }
+    no += branchNumber;
     $('#survey-data-no').text(no);
 }
 
@@ -283,61 +289,49 @@ $(".survey-data-need-collect").on('touchstart', function () {
  * 直径変更
  */
 $("#tree-measured-value-1").on('touchstart', function () {
-    applyMesuredValue(1);
+    applyMesuredValueOfNumericKeypad(1);
 });
 
 $("#tree-measured-value-2").on('touchstart', function () {
-    applyMesuredValue(2);
+    applyMesuredValueOfNumericKeypad(2);
 });
 
 $("#tree-measured-value-3").on('touchstart', function () {
-    applyMesuredValue(3);
+    applyMesuredValueOfNumericKeypad(3);
 });
 
 $("#tree-measured-value-4").on('touchstart', function () {
-    applyMesuredValue(4);
+    applyMesuredValueOfNumericKeypad(4);
 });
 
 $("#tree-measured-value-5").on('touchstart', function () {
-    applyMesuredValue(5);
+    applyMesuredValueOfNumericKeypad(5);
 });
 
 $("#tree-measured-value-6").on('touchstart', function () {
-    applyMesuredValue(6);
+    applyMesuredValueOfNumericKeypad(6);
 });
 
 $("#tree-measured-value-7").on('touchstart', function () {
-    applyMesuredValue(7);
+    applyMesuredValueOfNumericKeypad(7);
 });
 
 $("#tree-measured-value-8").on('touchstart', function () {
-    applyMesuredValue(8);
+    applyMesuredValueOfNumericKeypad(8);
 });
 
 $("#tree-measured-value-9").on('touchstart', function () {
-    applyMesuredValue(9);
+    applyMesuredValueOfNumericKeypad(9);
 });
 
 $("#tree-measured-value-0").on('touchstart', function () {
-    applyMesuredValue(0);
+    applyMesuredValueOfNumericKeypad(0);
 });
 
 $("#tree-measured-value-none").on('touchstart', function () {
     treeMeasuredValue = '';
     $('#survey-data-mesured-value').text(treeMeasuredValue);
 });
-
-/**
- * 直径の設定
- * @param {*} value 設定する直径
- */
-function applyMesuredValue(value) {
-  if (treeMeasuredValue == '0') {
-    treeMeasuredValue = '';
-  }
-  treeMeasuredValue += value;
-  $('#survey-data-mesured-value').text(treeMeasuredValue);
-}
 
 /**
  * 伐採木データ作成および更新
@@ -436,22 +430,22 @@ async function createSurveyData() {
         $('#color').val(),
         $('#word').val(),
         $('#number').val(),
+        $('#branch-number').val(),
         $('#survey-data-tree-type-modal').val(),
         treeMeasuredValue,
-        $('input[name="survey-data-need-rope"]').val(),
-        $('input[name="survey-data-need-wire"]').val(),
-        $('input[name="survey-data-need-cut-middle"]').val(),
-        $('input[name="survey-data-not-need-cut-middle"]').val(),
-        $('input[name="survey-data-is-denger-tree"]').val(),
-        $('input[name="survey-data-need-cut-branch"]').val(),
-        $('input[name="survey-data-need-cut-divide"]').val(),
-        $('input[name="survey-data-need-collect"]').val(),
+        $('input[name="need-rope"]').val(),
+        $('input[name="need-wire"]').val(),
+        $('input[name="need-cut-middle"]').val(),
+        $('input[name="need-cut-middle"]').val() ? false : true,
+        $('input[name="is-denger-tree"]').val(),
+        $('input[name="need-cut-branch"]').val(),
         $('#note-modal').val(),
         false,
         'off',
         fetchUserId(),
         fetchUserId()
     ];
+
     insertSurveyData(param);
 }
 
@@ -468,6 +462,70 @@ $(".enter").on('touchstart', function () {
     $("#input").get(0).play();
 });
 
-function test() {
-    $("#input").get(0).play();
+async function fetchTreeTypeCount(treeTypes, specialTree) {
+
+    if (treeTypes) {
+        var arrayTreeTypes = treeTypes.split(',');
+        for (let i in arrayTreeTypes) {
+            var count = await fetchTypeMeasuredValueByTreeType(surveyDetailId, arrayTreeTypes[i]);
+        }
+    }
+    if (specialTree) {
+        var count = await fetchTypeMeasuredValueByTreeType(surveyDetailId, specialTree);
+    }
+}
+
+
+/**
+ * 伐採方法ボタンをタップした際に、not-selectedクラスを削除する
+ * @param 伐採方法ボタンID
+ */
+function setSurveyMethod(surveyMethod) {
+    if ($('#' + surveyMethod).hasClass("not-select")) {
+        $('#' + surveyMethod).removeClass("not-select");
+        $(`input[name="${surveyMethod}]`).val(true);
+    } else {
+        $('#' + surveyMethod).addClass("not-select");
+        $(`input[name="${surveyMethod}]`).val(false);
+    }
+    // $('#' + surveyMethod).hasClass("not-select") ? $('#' + surveyMethod).removeClass("not-select") : $('#' + surveyMethod).addClass("not-select");
+    // $(`input[name="${surveyMethod}]`).val(true);
+}
+
+/**
+ * 直径ボタンをタップした際に、選択した直径の背景色を変更する（テーブル形式の場合）
+ * @param 直径ID
+ * @param 直径
+ */
+function applyMesuredValueOfTableKeypad(mesuredValueId, value) {
+    $('.circle').removeClass("checked");
+    $(mesuredValueId).addClass("checked");
+    $('#survey-data-mesured-value').text(value);
+}
+
+/**
+ * 直径ボタンをタップした際に、選択した直径の背景色を変更する（テンキー形式の場合）
+ * @param {*} value 設定する直径
+ */
+ function applyMesuredValueOfNumericKeypad(value) {
+    if (treeMeasuredValue == '0') {
+      treeMeasuredValue = '';
+    }
+    treeMeasuredValue += value;
+    $('#survey-data-mesured-value').text(treeMeasuredValue);
+  }
+
+/**
+ * 直径入力欄をテンキーかテーブル形式か変換する
+ */
+function changeKeyPad() {
+    if ($('#key-pad-type').val() === 'table-keypad') {
+        $('#table-keypad').hide();
+        $('#numeric-keypad').show();
+        $('#key-pad-type').val('numeric-keypad');
+    } else {
+        $('#numeric-keypad').hide();
+        $('#table-keypad').show();
+        $('#key-pad-type').val('table-keypad');
+    }
 }
