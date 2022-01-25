@@ -46,7 +46,7 @@ function fetchSurveyDataAllNoSurveyDetail() {
 function fetchSurveyDataBySurveyDetailId(surveyDetailId) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = ? order by id asc', [surveyDetailId, 'false'], function (ignored, resultSet) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = ? order by id desc', [surveyDetailId, 'false'], function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
@@ -363,6 +363,21 @@ function fetchNewSurveyData(surveyDetailId) {
     });
 }
 
+/**
+ * IDをもとに伐採木データ取得(履歴リンクから遷移時に発火)
+ * @param 所在地ID 
+ */
+function fetchNewSurveyHistoryDataById(id) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE id = ? AND is_delete = \'false\' ORDER BY id DESC', [id], async function (ignored, resultSet) {
+                resolve(resultSet.rows.item(0));
+            }, function (error) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            });
+        });
+    });
+}
 /**
  * 所在地IDをもとに削除されていない伐採木の登録件数を取得
  * @param 所在地ID

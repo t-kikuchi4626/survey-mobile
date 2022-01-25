@@ -8,11 +8,21 @@ var surveyDetailId = null;
 //var treeMeasuredValue = "";
 // uuid
 var uuid = "";
+var id = null;
 
 document.addEventListener("deviceready", async function () {
     var param = location.search.substring(1).split("&");
-    surveyId = param[0];
-    surveyDetailId = param[1];
+    if (param.length === 3) {
+        //履歴リンクから移動時の対応
+        surveyId = param[0];
+        id = param[1];
+        surveyDetailId = param[2];
+        surveyDetailId = surveyDetailId.substring(0, surveyDetailId.indexOf("%"));
+
+    } else {
+        surveyId = param[0];
+        surveyDetailId = param[1];
+    }
     uuid = device.uuid;
 
     // 所在地一覧遷移タグ作成
@@ -31,14 +41,19 @@ document.addEventListener("deviceready", async function () {
     var treeCountArray = await fetchTreeTypeCount(treeTypeValue, specialTree, surveyDetailId);
 
     setTreeCount(treeCountArray);
-    initializeForm(surveyId, surveyDetailId);
+    if (param.length === 3) {
+        initializeForm(surveyId, surveyDetailId, true, id);
+    }
+    else {
+        initializeForm(surveyId, surveyDetailId, false, id);
+    }
     await controlEditScreen();
 });
 
 /**
  * 伐採木データ登録画面の初期化
  */
-async function initializeForm(surveyId, surveyDetailId) {
+async function initializeForm(surveyId, surveyDetailId, isHistoryFlag, id) {
     //地権者モーダル表示
     var surveyDetailItem = $('#area-ower-info');
     var surveyDetailList = await fetchSurveyDetailById(surveyDetailId);
@@ -57,12 +72,10 @@ async function initializeForm(surveyId, surveyDetailId) {
         texts = setSurveyDetail(texts, surveyDetailList.rows.item(0));
     }
     surveyDetailItem.append(texts);
-
     //履歴2件ずつページングで表示
     var surveyDetailItem = $('#history-list');
     var surveyDetailList = await fetchSurveyDataBySurveyDetailId(surveyDetailId);
     var texts = '';
-    alert(surveyDetailList.rows.length)
     if (surveyDetailList.rows.length == 0) {
         texts += '<div class="col s12 m7">';
         texts += '<div class="card horizontal">';
@@ -75,20 +88,24 @@ async function initializeForm(surveyId, surveyDetailId) {
         texts += '</div>';
     } else {
         for (var i = 0; i < surveyDetailList.rows.length; i++) {
-            texts = setSurveyHistoryData(texts, surveyDetailList.rows.item(i));
+            texts = setSurveyHistoryData(texts, surveyDetailList.rows.item(i), surveyId, surveyDetailId);
         }
     }
-    alert(texts);
     surveyDetailItem.append(texts);
 
-
-    //初期表示
-    var surveyData = await fetchNewSurveyData(surveyDetailId);
-
-    if (surveyData != undefined) {
-        setSurveyData(surveyData);
+    if (isHistoryFlag) {
+        //初期表示
+        var surveyData = await fetchNewSurveyHistoryDataById(id);
+        if (surveyData != undefined) {
+            setSurveyData(surveyData);
+        }
+    } else {
+        //履歴リンクから遷移した時
+        var surveyData = await fetchNewSurveyData(surveyDetailId);
+        if (surveyData != undefined) {
+            setSurveyData(surveyData);
+        }
     }
-
     var surveyDataCount = await fetchNotDeleteSurveyDataCount(surveyDetailId);
     $('#survey-data-count').text(surveyDataCount);
 
@@ -98,10 +115,11 @@ async function initializeForm(surveyId, surveyDetailId) {
  * 調査データを画面に設定
  * @param 調査データ
  */
-function setSurveyHistoryData(texts, surveyData) {
+function setSurveyHistoryData(texts, surveyData, surveyId, surveyDetailId) {
     var needText = "";
-    texts += '<li class="collection-item">';
     texts += '<div id="history-list" class="history-list">';
+    texts += '<a href="../html/survey_data_edit.html?' + surveyId + '&' + surveyData.id + '&' + surveyDetailId + '>';
+    texts += '<li id="history-data" class="collection-item">';
     texts += `<span style="margin-right: 0.5rem;">${surveyData.color}-${surveyData.word}-${surveyData.number}</span>`
     if (surveyData.tree_type !== undefined) {
         texts += `<span style="margin-right: 0.5rem;">${surveyData.tree_type}</span>`
@@ -130,7 +148,11 @@ function setSurveyHistoryData(texts, surveyData) {
         needText += `危`;
         needText += `,`;
     }
-    texts += '<span style="margin-right: 0.5rem;">' + needText + '</span>'
+    texts += '<span style="margin-right: 0.5rem;">' + needText + '</span>';
+    texts += '</li>';
+    texts += '</a>';
+    texts += '</div>';
+
     return texts;
 }
 
@@ -549,7 +571,6 @@ function validate() {
             result = false;
         }
     }
-    alert('#survey-data-tree-type').val();
     return result;
 }
 

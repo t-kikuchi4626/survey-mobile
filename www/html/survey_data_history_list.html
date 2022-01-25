@@ -37,7 +37,8 @@
     <li id="survey-data-list-link" class="menu"></li>
     <li id="survey-data-history-list-link" class="menu"></li>
     <li id="contact-list-link" class="menu"></li>
-    <li><a class="menu waves-effect waves-light modal-trigger" href="#modal1"><i class="material-icons">exit_to_app</i>ログアウト</a></li>
+    <li><a class="menu waves-effect waves-light modal-trigger" href="#modal1"><i
+          class="material-icons">exit_to_app</i>ログアウト</a></li>
   </ul>
 
   <!-- Modal Structure -->
@@ -58,23 +59,39 @@
   <div id="survey-data-header" style="padding-top: 40px;display: none;"></div>
   <span id="pagination"></span>
   <div class="container sticky-table-wrapper">
-    <table class="striped centered highlight sticky-table talbe-history-list-style">
+    <table class="striped centered highlight sticky-table talbe-history-list-style" style="font-size:x-large">
       <thead>
         <tr class="border-style">
           <th class="border-style-no">No</th>
           <th class="border-style">樹種</th>
           <th class="border-style">直径</th>
-          <th class="border-style">伐採ロ有<hr><span id="need-rope-count"></span>本</th>
-          <th class="border-style">伐採ワ有<hr><span id="need-wire-count"></span>本</th>
-          <th class="border-style">中断ロ有<hr><span id="need-cut-middle-count"></span>本</th>
-          <th class="border-style">中断ロ無<hr><span id="not-need-cut-middle-count"></span>本</th>
-          <th class="border-style">危険木有<hr><span id="is-danger-tree-count"></span>本</th>
-          <th class="border-style">枝払い有<hr><span id="need-cut-branch-count"></span>本</th>
-          <th class="border-style">玉切り有<hr><span id="need-cut-divide-count"></span>本</th>
-          <th class="border-style">集積有<hr><span id="need-collect-count"></span>本</th>
+          <th class="border-style">伐採ロ有
+            <hr><span id="need-rope-count"></span>本
+          </th>
+          <th class="border-style">伐採ワ有
+            <hr><span id="need-wire-count"></span>本
+          </th>
+          <th class="border-style">中断ロ有
+            <hr><span id="need-cut-middle-count"></span>本
+          </th>
+          <th class="border-style">中断ロ無
+            <hr><span id="not-need-cut-middle-count"></span>本
+          </th>
+          <th class="border-style">危険木有
+            <hr><span id="is-danger-tree-count"></span>本
+          </th>
+          <th class="border-style">枝払い有
+            <hr><span id="need-cut-branch-count"></span>本
+          </th>
+          <th class="border-style">玉切り有
+            <hr><span id="need-cut-divide-count"></span>本
+          </th>
+          <th class="border-style">集積有
+            <hr><span id="need-collect-count"></span>本
+          </th>
           <th class="border-style">備考</th>
           <th class="border-style">担当者</th>
-          <th class="border-style">編集</th>
+          <!--<th class="border-style">編集</th>-->
           <th class="border-style">削除</th>
         </tr>
       </thead>
@@ -93,105 +110,106 @@
     </div>
   </div>
   <div id="number-target-modal" class="modal modal-fixed-footer">
-      <div class="modal-content">
-        <h6>ナンバリングを入力してください。</h6>
-        <div class="row bottom-0">
-          <div class="input-field col s8 bottom-0 modal-input">
-            <input id="color" name="color" type="text" class="color" maxlength="5" placeholder="色">
-          </div>
+    <div class="modal-content">
+      <h6>ナンバリングを入力してください。</h6>
+      <div class="row bottom-0">
+        <div class="input-field col s8 bottom-0 modal-input">
+          <input id="color" name="color" type="text" class="color" maxlength="5" placeholder="色">
         </div>
-        <div class="row bottom-0">
-          <div class="input-field col s8 bottom-0 modal-input">
-            <input id="word" name="word" type="text" class="word" maxlength="2" placeholder="文字">
-          </div>
-        </div>
-        <div class="row bottom-0">
-          <div class="input-field col s8 bottom-0 modal-input">
-            <input id="number" name="number" type="text" class="number" maxlength="4" placeholder="連番"
-              onchange="updateInputTextArea(this, 'number', true, true)">
-          </div>
-        </div>
-        <span id="number_required" class="error message-text" style="display:none"><i
-            class="material-icons">error_outline</i>この項目は必須入力です。</span>
-        <span id="number_number" class="error message-text" style="display:none"><i
-            class="material-icons">error_outline</i>半角数値で入力してください。</span>
       </div>
-      <div class="modal-footer">
-        <a href="javascript:setNo();" class="modal-close waves-effect waves-green btn normal-button mobile-btn">確定</a>
+      <div class="row bottom-0">
+        <div class="input-field col s8 bottom-0 modal-input">
+          <input id="word" name="word" type="text" class="word" maxlength="2" placeholder="文字">
+        </div>
       </div>
+      <div class="row bottom-0">
+        <div class="input-field col s8 bottom-0 modal-input">
+          <input id="number" name="number" type="text" class="number" maxlength="4" placeholder="連番"
+            onchange="updateInputTextArea(this, 'number', true, true)">
+        </div>
+      </div>
+      <span id="number_required" class="error message-text" style="display:none"><i
+          class="material-icons">error_outline</i>この項目は必須入力です。</span>
+      <span id="number_number" class="error message-text" style="display:none"><i
+          class="material-icons">error_outline</i>半角数値で入力してください。</span>
+    </div>
+    <div class="modal-footer">
+      <a href="javascript:setNo();" class="modal-close waves-effect waves-green btn normal-button mobile-btn">確定</a>
+    </div>
   </div>
   <div id="tree-type-target-modal" class="modal modal-fixed-footer">
-      <div class="modal-content">
-        <h6>樹種を選択してください。</h6>
-        <div class="row bottom-0">
-          <div class="input-field col s6 bottom-0 modal-input">
-            <input id="survey-data-tree-type-modal" name="surveyDataTreeTypeModal" type="text"
-              class="surveyDataTreeType" maxlength="10" placeholder="樹種"
-              onchange="updateInputTextArea(this, 'survey_data_tree_type_modal', true, false)">
-          </div>
-        </div>
-        <span id="survey_data_tree_type_modal_required" class="error message-text" style="display:none"><i
-            class="material-icons">error_outline</i>この項目は必須入力です。</span>
-        <div class="row">
-          <div class="input-field col s12" id="tree-type-list">
-            <span id="tree-type-d"></span>
-          </div>
+    <div class="modal-content">
+      <h6>樹種を選択してください。</h6>
+      <div class="row bottom-0">
+        <div class="input-field col s6 bottom-0 modal-input">
+          <input id="survey-data-tree-type-modal" name="surveyDataTreeTypeModal" type="text" class="surveyDataTreeType"
+            maxlength="10" placeholder="樹種"
+            onchange="updateInputTextArea(this, 'survey_data_tree_type_modal', true, false)">
         </div>
       </div>
-      <div class="modal-footer">
-        <a href="javascript:setTreeType();"
-          class="modal-close waves-effect waves-green btn normal-button mobile-btn">確定</a>
+      <span id="survey_data_tree_type_modal_required" class="error message-text" style="display:none"><i
+          class="material-icons">error_outline</i>この項目は必須入力です。</span>
+      <div class="row">
+        <div class="input-field col s12" id="tree-type-list">
+          <span id="tree-type-d"></span>
+        </div>
       </div>
+    </div>
+    <div class="modal-footer">
+      <a href="javascript:setTreeType();"
+        class="modal-close waves-effect waves-green btn normal-button mobile-btn">確定</a>
+    </div>
   </div>
   <div id="measured-value-target-modal" class="modal modal-fixed-footer">
-      <div class="modal-content">
-        <h6>直径を入力してください。</h6>
-        <div class="row modal-mesured-value-font-size center"><b>
+    <div class="modal-content">
+      <h6>直径を入力してください。</h6>
+      <div class="row modal-mesured-value-font-size center"><b>
           直径：<span id="measured-value-modal"></span>cm</b>
-        </div>
-        <div class="row center">
-          <a id="tree-measured-value-1" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size">１</a>
-          <a id="tree-measured-value-2"
-            class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin">２</a>
-          <a id="tree-measured-value-3" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size">３</a>
-        </div>
-        <div class="row center">
-          <a id="tree-measured-value-4" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size">４</a>
-          <a id="tree-measured-value-5"
-            class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin">５</a>
-          <a id="tree-measured-value-6" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size">６</a>
-        </div>
-        <div class="row center">
-          <a id="tree-measured-value-7" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size">７</a>
-          <a id="tree-measured-value-8"
-            class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin">８</a>
-          <a id="tree-measured-value-9" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size">９</a>
-        </div>
-        <div class="row center">
-          <a id="tree-measured-value-none" class="btn btn-orange btn-circle btn-shadow "><i
-              class="material-icons">clear</i></a>
-          <a id="tree-measured-value-0"
-            class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin">０</a>
-          <a class="btn btn-orange btn-circle btn-shadow btn-visibility-hidden"></a>
-        </div>
       </div>
-      <div class="modal-footer">
-        <a href="javascript:setMeasuredValue();"
-          class="modal-close waves-effect waves-green btn normal-button mobile-btn">確定</a>
+      <div class="row center">
+        <a id="tree-measured-value-1" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size">１</a>
+        <a id="tree-measured-value-2"
+          class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin">２</a>
+        <a id="tree-measured-value-3" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size">３</a>
       </div>
+      <div class="row center">
+        <a id="tree-measured-value-4" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size">４</a>
+        <a id="tree-measured-value-5"
+          class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin">５</a>
+        <a id="tree-measured-value-6" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size">６</a>
+      </div>
+      <div class="row center">
+        <a id="tree-measured-value-7" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size">７</a>
+        <a id="tree-measured-value-8"
+          class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin">８</a>
+        <a id="tree-measured-value-9" class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size">９</a>
+      </div>
+      <div class="row center">
+        <a id="tree-measured-value-none" class="btn btn-orange btn-circle btn-shadow "><i
+            class="material-icons">clear</i></a>
+        <a id="tree-measured-value-0"
+          class="btn btn-orange btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin">０</a>
+        <a class="btn btn-orange btn-circle btn-shadow btn-visibility-hidden"></a>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="javascript:setMeasuredValue();"
+        class="modal-close waves-effect waves-green btn normal-button mobile-btn">確定</a>
+    </div>
   </div>
   <div id="note-target-modal" class="modal modal-fixed-footer">
-      <div class="modal-content">
-        <h6>備考を入力してください。</h6>
-        <div class="row">
-          <div class="input-field col s12">
-            <textarea id="note-modal" class="materialize-textarea" placeholder="備考" maxlength="300" style="font-size: 18px!important"></textarea>
-          </div>
+    <div class="modal-content">
+      <h6>備考を入力してください。</h6>
+      <div class="row">
+        <div class="input-field col s12">
+          <textarea id="note-modal" class="materialize-textarea" placeholder="備考" maxlength="300"
+            style="font-size: 18px!important"></textarea>
         </div>
       </div>
-      <div class="modal-footer">
-        <a href="javascript:setNote();" class="modal-close waves-effect waves-green btn normal-button mobile-btn">確定</a>
-      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="javascript:setNote();" class="modal-close waves-effect waves-green btn normal-button mobile-btn">確定</a>
+    </div>
   </div>
   <div id="name-target-modal" class="modal modal-fixed-footer">
     <div class="modal-content">
@@ -224,7 +242,7 @@
   <script src="../js/models/survry_data.js"></script>
   <script src="../js/models/survry.js"></script>
   <script src="../js/models/web_edit_mode.js"></script>
-  
+
 </body>
 
 </html>
