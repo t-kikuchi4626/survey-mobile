@@ -104,8 +104,8 @@ function setSurveyData(surveyData) {
     $('#name-modal').val(surveyData.name);
     $('#name').text(surveyData.name);
     // 備考
-    $('#note-modal').val('');
-    $('#note').text('');
+    $('#note-modal').val(surveyData.note);
+    $('#note').text(surveyData.note);
     // No
     $('#color').val(surveyData.color);
     $('#word').val(surveyData.word);
@@ -115,9 +115,10 @@ function setSurveyData(surveyData) {
     // 樹種
     $('#' + surveyData.survey_data_tree_type).removeClass("not-select");
     $('#survey-data-tree-type').text(surveyData.survey_data_tree_type);
-    setTreeType()
+    setTreeType(surveyData)
     // 直径
     $('#survey-data-mesured-value').val(surveyData.tree_measured_value);
+    $('#survey-data-mesured-value').text(surveyData.tree_measured_value);
     // 伐採ロープ
     if (surveyData.need_rope == 'true') {
         $('#survey-data-need-rope').removeClass("hidden");
@@ -208,9 +209,13 @@ function setNo() {
 /**
  * 樹種の表示設定
  */
-function setTreeType() {
-    $('#survey-data-tree-type').text($('#survey-data-tree-type-modal').val());
-    $('#survey-data-tree-type').val($('#survey-data-tree-type-modal').val())
+function setTreeType(surveyData) {
+    if (surveyData.survey_data_tree_type !== null) {
+        $('#surveyDataTreeType').text(surveyData.survey_data_tree_type);
+        $('#surveyDataTreeType').val(surveyData.survey_data_tree_type);
+        //選択ボタンを押下状態にする
+        inputTreeType("survey-area-tree-type", surveyData.survey_data_tree_type)
+    }
 }
 
 

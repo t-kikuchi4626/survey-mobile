@@ -5,12 +5,12 @@ var appPass = '#t2IOj4rVl2lQ%_$7)7pXeoGE/Jg#0&0-/$X-Suojg)!21RCLel#4Q%322BtS148'
 // var path = 'http://survey-develop.japanwest.cloudapp.azure.com:80/';
 // var path = 'https://develop-survey.japaneast.cloudapp.azure.com:8443/';
 // var path = 'http://172.21.144.1:8443/';
-var path = 'http://172.18.41.87:8443/';
+var path = 'http://172.18.41.135:8443/';
 var surveyCompanyId = null;
 
 var instances = null;
 const STATUS = {
-    processing : "processing",
+    processing: "processing",
     finish: "finish",
     error: "error"
 }
@@ -41,15 +41,15 @@ var pagetop = $('#page_top');
 pagetop.hide();
 // 100px スクロールしたらボタン表示
 $(window).scroll(function () {
-   if ($(this).scrollTop() > 5) {
+    if ($(this).scrollTop() > 5) {
         pagetop.fadeIn();
-   } else {
+    } else {
         pagetop.fadeOut();
-   }
+    }
 });
 pagetop.click(function () {
-   $('body, html').animate({ scrollTop: 0 }, 500);
-   return false;
+    $('body, html').animate({ scrollTop: 0 }, 500);
+    return false;
 });
 
 /**
@@ -162,17 +162,17 @@ function createContactSidenavLink(id, surveyId, surveyDetailId) {
  * @param uuid 端末番号
  * @returns uuid + 現在日時分秒ミリ秒 + ランダムな文字列10桁
  */
- function generateIdentifyCode(uuid) {
+function generateIdentifyCode(uuid) {
     var date = new Date();
-    var now = date.getFullYear() 
-            + ("00" + (date.getMonth() + 1)).slice(-2) 
-            + ("00" + date.getDate()).slice(-2) 
-            + ('0' + date.getHours()).slice(-2) 
-            + ('0' + date.getMinutes()).slice(-2) 
-            + ('0' + date.getSeconds()).slice(-2);
-    var random =  Math.random().toString(36).slice(-25);
+    var now = date.getFullYear()
+        + ("00" + (date.getMonth() + 1)).slice(-2)
+        + ("00" + date.getDate()).slice(-2)
+        + ('0' + date.getHours()).slice(-2)
+        + ('0' + date.getMinutes()).slice(-2)
+        + ('0' + date.getSeconds()).slice(-2);
+    var random = Math.random().toString(36).slice(-25);
     return uuid + now + random;
-  }
+}
 
 /**
  * web編集モードより、画面のROCK状態を制御する
@@ -181,17 +181,17 @@ async function controlEditScreen() {
     var item = localStorage.getItem(KEY);
     var obj = JSON.parse(item);
     if (obj.user != null) {
-      surveyCompanyId = obj.user.survey_company_id;
+        surveyCompanyId = obj.user.survey_company_id;
     }
     const webEditMode = await fetchWebEditModeByCompanyId(surveyCompanyId);
     if (webEditMode.rows.length > 0 && webEditMode.rows.item(0).web_edit_mode === 'on') {
-      $('.web-edit-mode').prop("disabled", true);
-      $('.input-area').prop("disabled", true);
-      $('.enter').addClass('edit-link');
-      $('.create-button').addClass('edit-link');
-      $('.web-edit-message').show();
+        $('.web-edit-mode').prop("disabled", true);
+        $('.input-area').prop("disabled", true);
+        $('.enter').addClass('edit-link');
+        $('.create-button').addClass('edit-link');
+        $('.web-edit-message').show();
     } else {
-      $('.web-edit-mode').prop("disabled", false);
-      $('.web-edit-message').hide();
+        $('.web-edit-mode').prop("disabled", false);
+        $('.web-edit-message').hide();
     }
 }

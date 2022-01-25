@@ -84,26 +84,22 @@ function setTreeTypeButton(treeTypes, specialTree, input) {
 
 
 /**
- * 樹種ごとのカウント
+ * 樹種ごとのカウントをテーブル形式で表示
  * @param 連想配列（樹種、カウント数）
  */
 function setTreeCount(treeCountArray) {
-    $('#tree-type-list-count').append('<tr>');
     Object.keys(treeCountArray).forEach(function (value) {
         var html = `<th>${value}</th>`;
-        $('#tree-type-list-count').append(html);
+        $('#tree-type-list-count-header').append(html);
     });
-    $('#tree-type-list-count').append('<th>合計</th>');
-    $('#tree-type-list-count').append('</tr>');
-    $('#tree-type-list-count').append('<tr>');
+    $('#tree-type-list-count-header').append('<th>合計</th>');
     var counts = 0;
     Object.keys(treeCountArray).forEach(function (value) {
-        var td = '<td>' + treeCountArray[value] + '本</td>';
-        $('#tree-type-list-count').append(td);
-        var counts = counts + int(treeCountArray[value]);
+        var td = `<td>${treeCountArray[value]}本</td>`;
+        $('#tree-type-list-count-value').append(td);
+        counts = counts + treeCountArray[value];
     });
-    $('#tree-type-list-count').append('<td>' + counts + '本</td>');
-    $('#tree-type-list-count').append('</tr>');
+    $('#tree-type-list-count-value').append('<td>' + counts + '本</td>');
 }
 /**
  * 登録画面遷移リンク作成
