@@ -121,8 +121,8 @@ function setSurveyHistoryData(texts, surveyData, surveyId, surveyDetailId) {
     texts += '<a href="../html/survey_data_edit.html?' + surveyId + '&' + surveyData.id + '&' + surveyDetailId + '>';
     texts += '<li id="history-data" class="collection-item">';
     texts += `<span style="margin-right: 0.5rem;">${surveyData.color}-${surveyData.word}-${surveyData.number}</span>`
-    if (surveyData.tree_type !== undefined) {
-        texts += `<span style="margin-right: 0.5rem;">${surveyData.tree_type}</span>`
+    if (surveyData.survey_data_tree_type !== null) {
+        texts += `<span style="margin-right: 0.5rem;">${surveyData.survey_data_tree_type}</span>`
     } else {
         texts += `<span style="margin-right: 0.5rem;">樹種データなし</span>`
     }
@@ -200,7 +200,8 @@ function setSurveyData(surveyData) {
     setNo();
     // 樹種
     $('#' + surveyData.survey_data_tree_type).removeClass("not-select");
-    $('#survey-data-tree-type').text(surveyData.survey_data_tree_type);
+    $('#surveyDataTreeType').text(surveyData.survey_data_tree_type);
+    $('#surveyDataTreeType').val(surveyData.survey_data_tree_type);
     setTreeType(surveyData)
     // 直径
     $('#survey-data-mesured-value').val(surveyData.tree_measured_value);
@@ -471,23 +472,6 @@ $("#tree-measured-value-none").on('touchstart', function () {
     $('#survey-data-mesured-value').val('');
 });
 
-/**
- * 樹種テキストボックスの更新処理
- * @param {*} 更新内容
- * @param {*} 更新カラム
- * @param {*} 必須チェック有無
- * @param {*} 数値チェック有無
- */
-function updateInputTreeTextArea(inputdata, column, required, number) {
-    if (required && validateRequired(inputdata, column)) {
-        return;
-    }
-    if (number && validateNumber(inputdata, column)) {
-        return;
-    }
-    $('#survey-data-tree-type').val(inputdata);
-}
-
 
 /**
  * 伐採木データ作成および更新
@@ -546,7 +530,7 @@ function validate() {
     }
     // 樹種チェック
     if (result) {
-        if ($('#survey-data-tree-type').val() == '') {
+        if ($('#surveyDataTreeType').val() == '') {
             alert("申し訳ございません。\r\n樹種の入力は必須です。樹種を入力してください。");
             result = false;
         }
@@ -587,7 +571,7 @@ async function createSurveyData() {
         $('#word').val(),
         $('#number').val(),
         $('#branch-number').val(),
-        $('#survey-data-tree-type').val(),
+        $('#surveyDataTreeType').val(),
         $('#survey-data-mesured-value').val(),
         $('input[name="need-rope"]').val(),
         $('input[name="need-wire"]').val(),
