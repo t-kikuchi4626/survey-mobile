@@ -71,6 +71,24 @@ function fetchSurveyDetailBySurveyId(surveyId) {
 }
 
 /**
+ * 調査業務詳細IDをもとに所在地データ取得
+ * @param 調査業務ID
+ * @return 所在地
+ */
+function fetchSurveyDetailById(surveyDetailId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_detail WHERE id = ? order by id asc', [surveyDetailId], function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error) {
+                alert(1);
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            });
+        });
+    });
+}
+
+/**
  * 調査業務IDをもとに所在地データ取得
  * @param 調査業務ID
  * @return 所在地
@@ -248,11 +266,11 @@ function generateSurveyUpdateDetailSql() {
         'created_date = ?, ' +
         'modified_by = ?, ' +
         'modified_date = ? ' +
-        'WHERE id = ? ' ;
+        'WHERE id = ? ';
 }
 
 function generateSurveyDetailDeleteSql(placeholder) {
-    return 'DELETE FROM survey_detail WHERE id IN (' + placeholder +') ';
+    return 'DELETE FROM survey_detail WHERE id IN (' + placeholder + ') ';
 }
 
 function generateSurveyDetailDeleteBySurveySql(placeholder) {

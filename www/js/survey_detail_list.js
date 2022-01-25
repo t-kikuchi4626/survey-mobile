@@ -6,7 +6,7 @@ document.addEventListener("deviceready", async function () {
     surveyId = location.search.substring(1);
     var survey = await fetchSurveyById(surveyId);
     setSurvey(survey.rows.item(0));
-    
+
     var surveyDetailItem = $('#survey-detail-item');
     var surveyDetailList = await fetchSurveyDetailBySurveyId(surveyId);
     var texts = '';
@@ -22,14 +22,14 @@ document.addEventListener("deviceready", async function () {
         texts += '</div>';
     } else {
         for (var i = 0; i < surveyDetailList.rows.length; i++) {
-            texts = setSurveyDetail(texts, surveyDetailList.rows.item(i));
+            texts = setSurveyDetail(texts, surveyDetailList.rows.item(0));
         }
     }
     surveyDetailItem.append(texts);
-    
+
     // サイドナビゲーションリンク作成
     createContactSidenavLink(2, surveyId, "");
-    
+
     await controlEditScreen();
 });
 

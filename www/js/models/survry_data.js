@@ -13,7 +13,7 @@ function fetchSurveyDataAll(surveyDetailIdList, offset) {
     var placeholder = placeholderTmp.slice(0, -2);
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql(`SELECT * FROM survey_data WHERE survey_detail_id IN (${placeholder})  ORDER BY id ASC limit 4000 offset ${offset}` , surveyDetailIdList, function (ignored, resultSet) {
+            transaction.executeSql(`SELECT * FROM survey_data WHERE survey_detail_id IN (${placeholder})  ORDER BY id ASC limit 4000 offset ${offset}`, surveyDetailIdList, function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
@@ -173,7 +173,7 @@ function updateSurveyData(id, inputdata, column) {
  * @param Web編集モード
  * @param 調査会社ID
  */
- function updateWebEditModeSurveyDataByCompanyId(webEditMode, companyId) {
+function updateWebEditModeSurveyDataByCompanyId(webEditMode, companyId) {
     database.transaction(function (transaction) {
         var sql = 'UPDATE survey_data SET web_edit_mode = ?,' +
             'modified_by = ?, ' +
@@ -546,10 +546,10 @@ function fetchNeedCollect(surveyDetailId) {
  * @param 樹種
  * @return 件数
  */
- function fetchTypeMeasuredValueByTreeType(surveyDetailId, treeType) {
+function fetchTypeMeasuredValueByTreeType(surveyDetailId, treeType) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT COUNT(*) AS count FROM survey_data WHERE survey_detail_id = ? AND survey_data_tree_type = ? AND is_delete = \'false\'', [surveyDetailId, treeType, measuredValue], async function (ignored, resultSet) {
+            transaction.executeSql('SELECT COUNT(*) AS count FROM survey_data WHERE survey_detail_id = ? AND survey_data_tree_type = ? AND is_delete = \'false\'', [surveyDetailId, treeType], async function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
@@ -593,7 +593,7 @@ function updateSurveyDataById(param) {
 /**
  * identifyCodeをもとに伐採木を更新するSQL
  */
- function generateSurveyDataByIdentifyCodeSQL() {
+function generateSurveyDataByIdentifyCodeSQL() {
     return 'UPDATE survey_data SET ' +
         'color = ?, ' +
         'word = ?, ' +
@@ -613,4 +613,4 @@ function updateSurveyDataById(param) {
         'modified_by = ?, ' +
         'modified_date = ? ' +
         'WHERE identify_code = ? ';
- }
+}

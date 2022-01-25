@@ -29,6 +29,12 @@
           </a>
         </li>
       </ul>
+      <ul class="right">
+        <a href="#area-ower-modal"
+          class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
+          <i class="material-icons" style="font-size: 30px !important;">perm_identity</i>
+        </a>
+      </ul>
     </div>
   </nav>
 
@@ -78,9 +84,9 @@
     <!-- 樹種選択 -->
     <div class="row bottom-0">
       <div class="input-field col s12 bottom-0" style="margin-top: initial !important">
-        <input id="surveyDataTreeType" name="surveyDataTreeTypeModal" type="text" class="surveyDataTreeType mobile-input tree-input"
-          maxlength="10" placeholder="樹種"
-          onchange="updateInputTextArea(this, 'survey_data_tree_type_modal', true, false)">
+        <input id="surveyDataTreeType" name="surveyDataTreeTypeModal" type="text"
+          class="surveyDataTreeType mobile-input tree-input" maxlength="10" placeholder="樹種"
+          href="javascript:updateInputTextArea(this, 'survey_data_tree_type_modal', true, false)">
       </div>
     </div>
     <span id="survey_data_tree_type_modal_required" class="error message-text" style="display:none"><i
@@ -93,8 +99,10 @@
 
     <!-- 現在の樹種本数 -->
     <div class="row scroll-table bottom-0">
-      <table class="centered" style="font-size: 15px !important;">
-        <tr>
+      <table class="centered" id="tree-type-list-count" style="font-size:15px!important;">
+      </table>
+    </div>
+    <!--<tr>
           <th>天然生林</th>
           <th>杉</th>
           <th>ヒノキ</th>
@@ -108,23 +116,28 @@
           <td>1000本</td>
           <td>5550本</td>
           <td>1202本</td>
-          <td>9000本</td>
-        </tr>
-      </table>
-    </div>
+          <td>9000本</td> 
+        </tr>-->
     <!-- 現在の樹種本数 -->
 
 
     <!-- 伐採方法 -->
     <div class="row bottom-5" style="overflow: auto;white-space:nowrap;">
       <div class="input-field col s12">
-        <a id="none" href="javascript:setSurveyMethod('none')" class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">なし</a>
-        <a id="need-rope" href="javascript:setSurveyMethod('need-rope')" class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">ロープ</a>
-        <a id="need-wire" href="javascript:setSurveyMethod('need-wire')" class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">ワイヤ</a>
-        <a id="is-danger-tree" href="javascript:setSurveyMethod('is-danger-tree')" class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">危険</a>
-        <a id="need-cut-middle" href="javascript:setSurveyMethod('need-cut-middle')" class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">中断</a>
-        <a id="need-cut-branch" href="javascript:setSurveyMethod('need-cut-branch')" class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">枝払</a>
-        <a id="etc" href="javascript:setSurveyMethod('etc')" class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">その他</a>
+        <a id="none" href="javascript:setSurveyMethod('none')"
+          class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">なし</a>
+        <a id="need-rope" href="javascript:setSurveyMethod('need-rope')"
+          class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">ロープ</a>
+        <a id="need-wire" href="javascript:setSurveyMethod('need-wire')"
+          class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">ワイヤ</a>
+        <a id="is-danger-tree" href="javascript:setSurveyMethod('is-danger-tree')"
+          class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">危険</a>
+        <a id="need-cut-middle" href="javascript:setSurveyMethod('need-cut-middle')"
+          class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">中断</a>
+        <a id="need-cut-branch" href="javascript:setSurveyMethod('need-cut-branch')"
+          class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">枝払</a>
+        <a id="etc" href="javascript:setSurveyMethod('etc')"
+          class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">その他</a>
       </div>
       <input type="hidden" name="none" value="false" />
       <input type="hidden" name="need-rope" value="false" />
@@ -239,22 +252,28 @@
     <div id="numeric-keypad" class="row bottom-0" style="display: none;">
       <div class="col s12">
         <div class="row center">
-          <a id="tree-measured-value-1" class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">１</a>
+          <a id="tree-measured-value-1"
+            class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">１</a>
           <a id="tree-measured-value-2"
             class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light">２</a>
-          <a id="tree-measured-value-3" class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">３</a>
+          <a id="tree-measured-value-3"
+            class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">３</a>
         </div>
         <div class="row center">
-          <a id="tree-measured-value-4" class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">４</a>
+          <a id="tree-measured-value-4"
+            class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">４</a>
           <a id="tree-measured-value-5"
             class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light">５</a>
-          <a id="tree-measured-value-6" class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">６</a>
+          <a id="tree-measured-value-6"
+            class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">６</a>
         </div>
         <div class="row center">
-          <a id="tree-measured-value-7" class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">７</a>
+          <a id="tree-measured-value-7"
+            class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">７</a>
           <a id="tree-measured-value-8"
             class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light">８</a>
-          <a id="tree-measured-value-9" class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">９</a>
+          <a id="tree-measured-value-9"
+            class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">９</a>
         </div>
         <div class="row center bottom-0">
           <a id="tree-measured-value-none" class="btn btn-circle btn-shadow enter waves-effect waves-light"><i
@@ -277,7 +296,7 @@
     </div>
     <!-- テンキー（直径） -->
 
-      <!-- <div class="col s4">
+    <!-- <div class="col s4">
         <div class="edit">
           <a href="#" class="waves-effect waves-light btn normal-button enter mobile-btn tree-btn"
             style="min-width :120px;">登録</a>
@@ -315,14 +334,16 @@
     <div class="row bottom-5" style="text-align: center; margin: 1rem;">
       <div class="col s4">
         <div class="edit">
-          <a href="#note-target-modal" class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
+          <a href="#note-target-modal"
+            class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
             <i class="material-icons" style="font-size: 30px !important;">note</i>
           </a>
         </div>
       </div>
       <div class="col s4">
         <div class="edit">
-          <a id="key-pad" href="javascript:changeKeyPad()" class="btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
+          <a id="key-pad" href="javascript:changeKeyPad()"
+            class="btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
             <i class="material-icons">keyboard</i>
           </a>
           <input type="hidden" id="key-pad-type" value="table-keypad">
@@ -330,7 +351,8 @@
       </div>
       <div class="col s4">
         <div class="edit">
-          <a href="javascript:createEditSurveyData()" class="btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
+          <a href="javascript:createEditSurveyData()"
+            class="btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
             <i class="material-icons">done</i></a>
         </div>
       </div>
@@ -347,7 +369,9 @@
             <span style="margin-right: 0.5rem;">ひのき</span>
             <span style="margin-right: 0.5rem;">24cm</span>
             <span style="margin-right: 0.5rem;">ロ、中、危</span>
-            <a href="#!" class="secondary-content"><i class="material-icons" style="color: #122344;">keyboard_arrow_up</i></a></div>
+            <a href="#!" class="secondary-content"><i class="material-icons"
+                style="color: #122344;">keyboard_arrow_up</i></a>
+          </div>
         </li>
         <li class="collection-item">
           <div class="history-list">
@@ -355,7 +379,8 @@
             <span style="margin-right: 0.5rem;">ひのき</span>
             <span style="margin-right: 0.5rem;">24cm</span>
             <span style="margin-right: 0.5rem;">ロ、中、危</span>
-            <a href="#!" class="secondary-content"><i class="material-icons" style="color: #122344;">expand_more</i></a></div>
+            <a href="#!" class="secondary-content"><i class="material-icons" style="color: #122344;">expand_more</i></a>
+          </div>
         </li>
       </ul>
     </div>
@@ -465,7 +490,8 @@
       </div>
       <div class="row bottom-0">
         <div class="input-field col s6 bottom-0 modal-input">
-          <input id="branch-number" name="branch-number" type="text" class="number" maxlength="4" value="1" placeholder="枝番">
+          <input id="branch-number" name="branch-number" type="text" class="number" maxlength="4" value="1"
+            placeholder="枝番">
           <label for="branch-number">枝番</label>
         </div>
       </div>
@@ -516,16 +542,28 @@
   </div>
   <!-- 担当者モーダル -->
 
-  <script src="../components/jquery/dist/jquery.min.js"></script>
-  <script src="../components/loader.js"></script>
-  <script src="../js/common.js"></script>
-  <script src="../js/survey_data_common.js"></script>
-  <script src="../js/survey_data_edit.js"></script>
-  <script src="../js/models/survry_data.js"></script>
-  <script src="../js/models/survry_area.js"></script>
-  <script src="../js/models/survry.js"></script>
-  <script src="../js/models/web_edit_mode.js"></script>
+  <!-- 地権者情報表示モーダル -->
+  <div id="area-ower-modal" class="modal">
+    <div class="modal-content">
+      <h6>地権者情報</h6>
+      <div class="name-modal" id="area-ower-info">
+      </div>
+    </div>
+    <!-- 地権者情報表示モーダル -->
 
+    <script src="../components/jquery/dist/jquery.min.js"></script>
+    <script src="../components/loader.js"></script>
+    <script src="../js/common.js"></script>
+    <script src="../js/survey_data_common.js"></script>
+    <script src="../js/survey_data_edit.js"></script>
+    <script src="../js/models/survry_data.js"></script>
+    <script src="../js/models/survry_area.js"></script>
+    <script src="../js/models/survry.js"></script>
+    <script src="../js/models/web_edit_mode.js"></script>
+    <script src="../js/models/survry_detail.js"></script>
+    <script src="../js/models/survry.js"></script>
+    <script src="../js/models/web_edit_mode.js"></script>
+  </div>
 </body>
 
 </html>

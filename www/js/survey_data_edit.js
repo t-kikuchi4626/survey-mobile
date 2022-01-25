@@ -1,9 +1,11 @@
+
+
 // 調査業務ID
 var surveyId = null;
 // 所在地ID
 var surveyDetailId = null;
 // 直径
-var treeMeasuredValue = "";
+//var treeMeasuredValue = "";
 // uuid
 var uuid = "";
 
@@ -23,21 +25,40 @@ document.addEventListener("deviceready", async function () {
     createContactSidenavLink(3, surveyId, surveyDetailId);
 
     var survey = await fetchSurveyById(surveyId);
-
-    var treeTypeValue = convertSpace(survey.rows.item(0).tree_type_value);
-    var specialTree = convertSpace(survey.rows.item(0).special_tree);
+    var treeTypeValue = await convertSpace(survey.rows.item(0).tree_type_value);
+    var specialTree = await convertSpace(survey.rows.item(0).special_tree);
     setTreeTypeButton(treeTypeValue, specialTree, "surveyDataTreeType");
-    fetchTreeTypeCount(treeTypeValue, specialTree);
+    var treeCountArray = await fetchTreeTypeCount(treeTypeValue, specialTree, surveyDetailId);
 
-    initializeForm();
+    setTreeCount(treeCountArray);
+    initializeForm(surveyId, surveyDetailId);
     await controlEditScreen();
 });
 
 /**
  * 伐採木データ登録画面の初期化
  */
-async function initializeForm() {
+async function initializeForm(surveyId, surveyDetailId) {
+    //地権者モーダル表示
+    var surveyDetailItem = $('#area-ower-info');
+    var surveyDetailList = await fetchSurveyDetailById(surveyDetailId);
+    var texts = '';
+    if (surveyDetailList.rows.length == 0) {
+        texts += '<div class="col s12 m7">';
+        texts += '<div class="card horizontal">';
+        texts += '<div class="card-stacked">';
+        texts += '<div class="card-content">';
+        texts += '<p>データが存在しません。</p>'
+        texts += '</div>';
+        texts += '</div>';
+        texts += '</div>';
+        texts += '</div>';
+    } else {
+        texts = setSurveyDetail(texts, surveyDetailList.rows.item(0));
+    }
+    surveyDetailItem.append(texts);
 
+    //初期表示
     var surveyData = await fetchNewSurveyData(surveyDetailId);
 
     if (surveyData != undefined) {
@@ -49,6 +70,30 @@ async function initializeForm() {
 
 }
 
+/**
+ * 所在地データを画面に設定
+ * @param 所在地データ
+ */
+function setSurveyDetail(texts, surveyDetail) {
+    texts += '<div class="row">';
+    texts += '<div class="card horizontal">';
+    texts += '<div class="card-stacked">';
+    texts += '<div class="card-content">';
+    texts += '<div class="col s12 m8">';
+    texts += '所在地No：' + convertSpace(surveyDetail.detail_number);
+    texts += '<br>';
+    texts += '線路名：' + convertSpace(surveyDetail.line_name)
+    texts += '<br>';
+    texts += '支持物：No' + convertSpace(surveyDetail.steal_tower_start);
+    texts += '~';
+    texts += 'No' + convertSpace(surveyDetail.steal_tower_end);
+    texts += '<br>'
+    texts += '所在地：' + convertSpace(surveyDetail.survey_address);
+    texts += '<br>'
+    texts += '地権者名：' + convertSpace(surveyDetail.area_owner_name);
+    texts += '<br>'
+    return texts;
+}
 
 /**
  * 伐採木データ設定
@@ -65,14 +110,14 @@ function setSurveyData(surveyData) {
     $('#color').val(surveyData.color);
     $('#word').val(surveyData.word);
     $('#number').val(surveyData.number + 1);
-    $('#branch-number').val('');
+    $('#branch-number').val(surveyData.branch_number);
     setNo();
     // 樹種
     $('#' + surveyData.survey_data_tree_type).removeClass("not-select");
     $('#survey-data-tree-type').text(surveyData.survey_data_tree_type);
+    setTreeType()
     // 直径
-    treeMeasuredValue = "";
-    $('#survey-data-mesured-value').text("");
+    $('#survey-data-mesured-value').val(surveyData.tree_measured_value);
     // 伐採ロープ
     if (surveyData.need_rope == 'true') {
         $('#survey-data-need-rope').removeClass("hidden");
@@ -135,7 +180,7 @@ function setSurveyData(surveyData) {
         $('input[name="survey-data-need-collect"]').val(true);
     } else {
         $('#survey-data-need-collect').addClass("checked", false);
-    }s
+    } s
 }
 
 /**
@@ -165,7 +210,9 @@ function setNo() {
  */
 function setTreeType() {
     $('#survey-data-tree-type').text($('#survey-data-tree-type-modal').val());
+    $('#survey-data-tree-type').val($('#survey-data-tree-type-modal').val())
 }
+
 
 /**
  * 備考の表示設定
@@ -329,9 +376,27 @@ $("#tree-measured-value-0").on('touchstart', function () {
 });
 
 $("#tree-measured-value-none").on('touchstart', function () {
-    treeMeasuredValue = '';
-    $('#survey-data-mesured-value').text(treeMeasuredValue);
+    $('#survey-data-mesured-value').text('');
+    $('#survey-data-mesured-value').val('');
 });
+
+/**
+ * 樹種テキストボックスの更新処理
+ * @param {*} 更新内容
+ * @param {*} 更新カラム
+ * @param {*} 必須チェック有無
+ * @param {*} 数値チェック有無
+ */
+function updateInputTreeTextArea(inputdata, column, required, number) {
+    if (required && validateRequired(inputdata, column)) {
+        return;
+    }
+    if (number && validateNumber(inputdata, column)) {
+        return;
+    }
+    $('#survey-data-tree-type').val(inputdata);
+}
+
 
 /**
  * 伐採木データ作成および更新
@@ -390,31 +455,32 @@ function validate() {
     }
     // 樹種チェック
     if (result) {
-        if ($('#survey-data-tree-type-modal').val() == '') {
+        if ($('#survey-data-tree-type').val() == '') {
             alert("申し訳ございません。\r\n樹種の入力は必須です。樹種を入力してください。");
             result = false;
         }
     }
     // 直径チェック
     if (result) {
-        if (treeMeasuredValue == '') {
+        if ($('#survey-data-mesured-value').val == '') {
             alert("申し訳ございません。\r\n直径の入力は必須です。直径を入力してください。");
             result = false;
         }
     }
     if (result) {
-        if (treeMeasuredValue == 0) {
+        if ($('#survey-data-mesured-value').val == 0) {
             alert("申し訳ございません。\r\n直径は0以上で入力してください。");
             result = false;
         }
     }
     // 直径の桁数チェック
     if (result) {
-        if (Number(treeMeasuredValue) >= 1000) {
+        if (Number($('#survey-data-mesured-value').val) >= 1000) {
             alert("申し訳ございません。\r\n直径は1000以上は登録できません。1000未満で入力してください。");
             result = false;
         }
     }
+    alert('#survey-data-tree-type').val();
     return result;
 }
 
@@ -431,8 +497,8 @@ async function createSurveyData() {
         $('#word').val(),
         $('#number').val(),
         $('#branch-number').val(),
-        $('#survey-data-tree-type-modal').val(),
-        treeMeasuredValue,
+        $('#survey-data-tree-type').val(),
+        $('#survey-data-mesured-value').val(),
         $('input[name="need-rope"]').val(),
         $('input[name="need-wire"]').val(),
         $('input[name="need-cut-middle"]').val(),
@@ -462,20 +528,25 @@ $(".enter").on('touchstart', function () {
     $("#input").get(0).play();
 });
 
-async function fetchTreeTypeCount(treeTypes, specialTree) {
+async function fetchTreeTypeCount(treeTypes, specialTree, surveyDetailId) {
 
     if (treeTypes) {
+        var treeTypesCount = {};
         var arrayTreeTypes = treeTypes.split(',');
         for (let i in arrayTreeTypes) {
             var count = await fetchTypeMeasuredValueByTreeType(surveyDetailId, arrayTreeTypes[i]);
+            treeTypesCount[arrayTreeTypes[i]] = count.rows.item(0).count;
         }
     }
     if (specialTree) {
-        var count = await fetchTypeMeasuredValueByTreeType(surveyDetailId, specialTree);
+        var arraySpecialTreeTypes = specialTree.split(',');
+        for (let i in arraySpecialTreeTypes) {
+            var count = await fetchTypeMeasuredValueByTreeType(surveyDetailId, arraySpecialTreeTypes[i]);
+            treeTypesCount[arraySpecialTreeTypes[i]] = count.rows.item(0).count;
+        }
     }
+    return treeTypesCount;
 }
-
-
 /**
  * 伐採方法ボタンをタップした際に、not-selectedクラスを削除する
  * @param 伐採方法ボタンID
@@ -501,19 +572,21 @@ function applyMesuredValueOfTableKeypad(mesuredValueId, value) {
     $('.circle').removeClass("checked");
     $(mesuredValueId).addClass("checked");
     $('#survey-data-mesured-value').text(value);
+    $('#survey-data-mesured-value').val(value);
 }
 
 /**
  * 直径ボタンをタップした際に、選択した直径の背景色を変更する（テンキー形式の場合）
  * @param {*} value 設定する直径
  */
- function applyMesuredValueOfNumericKeypad(value) {
-    if (treeMeasuredValue == '0') {
-      treeMeasuredValue = '';
+function applyMesuredValueOfNumericKeypad(value) {
+    if ($('#survey-data-mesured-value').val == '0') {
+        $('#survey-data-mesured-value').val = '';
     }
-    treeMeasuredValue += value;
-    $('#survey-data-mesured-value').text(treeMeasuredValue);
-  }
+    value = $('#survey-data-mesured-value').val() + value
+    $('#survey-data-mesured-value').text(value);
+    $('#survey-data-mesured-value').val(value);
+}
 
 /**
  * 直径入力欄をテンキーかテーブル形式か変換する

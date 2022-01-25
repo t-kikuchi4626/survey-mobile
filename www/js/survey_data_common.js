@@ -74,11 +74,37 @@ function setTreeTypeButton(treeTypes, specialTree, input) {
         }
     }
     if (specialTree) {
-        var html = `<a id="${arrayTreeTypes[i]}" href="javascript:inputTreeType('#${input}', '${specialTree}')" class="tree-select-btn waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">${specialTree}</a>`;
-        $('#tree-type-list').append(html);
+        var arrayspecialTree = specialTree.split(',');
+        for (let i in arrayspecialTree) {
+            var html = `<a id="${arrayspecialTree[i]}" href="javascript:inputTreeType('#${input}', '${arrayspecialTree[i]}')" class="tree-select-btn waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">${specialTree}</a>`;
+            $('#tree-type-list').append(html);
+        }
     }
 }
 
+
+/**
+ * 樹種ごとのカウント
+ * @param 連想配列（樹種、カウント数）
+ */
+function setTreeCount(treeCountArray) {
+    $('#tree-type-list-count').append('<tr>');
+    Object.keys(treeCountArray).forEach(function (value) {
+        var html = `<th>${value}</th>`;
+        $('#tree-type-list-count').append(html);
+    });
+    $('#tree-type-list-count').append('<th>合計</th>');
+    $('#tree-type-list-count').append('</tr>');
+    $('#tree-type-list-count').append('<tr>');
+    var counts = 0;
+    Object.keys(treeCountArray).forEach(function (value) {
+        var td = '<td>' + treeCountArray[value] + '本</td>';
+        $('#tree-type-list-count').append(td);
+        var counts = counts + int(treeCountArray[value]);
+    });
+    $('#tree-type-list-count').append('<td>' + counts + '本</td>');
+    $('#tree-type-list-count').append('</tr>');
+}
 /**
  * 登録画面遷移リンク作成
  * @param 調査ID
@@ -86,7 +112,7 @@ function setTreeTypeButton(treeTypes, specialTree, input) {
  */
 function createRegisterLink(surveyId, surveyDetailId) {
     var surveyDataRegisterLink = $('#survey-data-register-link');
-    var registerLinkText = '<a href="../html/survey_data_edit.html?' + surveyId + '&' + surveyDetailId + '"><i class="material-icons">arrow_back_ios</i></a>';
+    var registerLinkText = '<a href="../html/survey_data_edit.html?surveyId=' + surveyId + '&surveyDetail=' + surveyDetail.id + '><i class="material-icons">arrow_back_ios</i></a>';
     surveyDataRegisterLink.append(registerLinkText);
 }
 
