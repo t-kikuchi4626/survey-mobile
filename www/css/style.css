@@ -696,3 +696,8 @@ a.btn-small-font-size {
 .edit-link {
   pointer-events: none !important;
 }
+
+.scroll{
+  height: 120px;
+  overflow: auto;
+}

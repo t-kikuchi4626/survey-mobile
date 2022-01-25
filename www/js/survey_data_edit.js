@@ -58,6 +58,30 @@ async function initializeForm(surveyId, surveyDetailId) {
     }
     surveyDetailItem.append(texts);
 
+    //履歴2件ずつページングで表示
+    var surveyDetailItem = $('#history-list');
+    var surveyDetailList = await fetchSurveyDataBySurveyDetailId(surveyDetailId);
+    var texts = '';
+    alert(surveyDetailList.rows.length)
+    if (surveyDetailList.rows.length == 0) {
+        texts += '<div class="col s12 m7">';
+        texts += '<div class="card horizontal">';
+        texts += '<div class="card-stacked">';
+        texts += '<div class="card-content">';
+        texts += '<p>データが存在しません。</p>'
+        texts += '</div>';
+        texts += '</div>';
+        texts += '</div>';
+        texts += '</div>';
+    } else {
+        for (var i = 0; i < surveyDetailList.rows.length; i++) {
+            texts = setSurveyHistoryData(texts, surveyDetailList.rows.item(i));
+        }
+    }
+    alert(texts);
+    surveyDetailItem.append(texts);
+
+
     //初期表示
     var surveyData = await fetchNewSurveyData(surveyDetailId);
 
@@ -68,6 +92,46 @@ async function initializeForm(surveyId, surveyDetailId) {
     var surveyDataCount = await fetchNotDeleteSurveyDataCount(surveyDetailId);
     $('#survey-data-count').text(surveyDataCount);
 
+}
+
+/**
+ * 調査データを画面に設定
+ * @param 調査データ
+ */
+function setSurveyHistoryData(texts, surveyData) {
+    var needText = "";
+    texts += '<li class="collection-item">';
+    texts += '<div id="history-list" class="history-list">';
+    texts += `<span style="margin-right: 0.5rem;">${surveyData.color}-${surveyData.word}-${surveyData.number}</span>`
+    if (surveyData.tree_type !== undefined) {
+        texts += `<span style="margin-right: 0.5rem;">${surveyData.tree_type}</span>`
+    } else {
+        texts += `<span style="margin-right: 0.5rem;">樹種データなし</span>`
+    }
+
+    texts += `<span style="margin-right: 0.5rem;">${surveyData.tree_measured_value}cm</span>`
+    if (surveyData.need_cut_middle == true) {
+        needText += `中`;
+        needText += `,`;
+    }
+    if (surveyData.need_cut_branch == true) {
+        needText += `枝`;
+        needText += `,`;
+    }
+    if (surveyData.need_cut_divide == true) {
+        needText += `玉`;
+        needText += `,`;
+    }
+    if (surveyData.need_collect == true) {
+        needText += `集`;
+        needText += `,`;
+    }
+    if (surveyData.is_danger_tree == true) {
+        needText += `危`;
+        needText += `,`;
+    }
+    texts += '<span style="margin-right: 0.5rem;">' + needText + '</span>'
+    return texts;
 }
 
 /**

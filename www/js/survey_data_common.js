@@ -108,7 +108,7 @@ function setTreeCount(treeCountArray) {
  */
 function createRegisterLink(surveyId, surveyDetailId) {
     var surveyDataRegisterLink = $('#survey-data-register-link');
-    var registerLinkText = '<a href="../html/survey_data_edit.html?surveyId=' + surveyId + '&surveyDetail=' + surveyDetail.id + '><i class="material-icons">arrow_back_ios</i></a>';
+    var registerLinkText = '<a href="../html/survey_data_edit.html?' + surveyId + surveyDetailId + '><i class="material-icons">arrow_back_ios</i></a>';
     surveyDataRegisterLink.append(registerLinkText);
 }
 
