@@ -59,10 +59,7 @@ async function initializeForm(surveyId, surveyDetailId, isHistoryFlag, id) {
     var surveyDetailList = await fetchSurveyDetailById(surveyDetailId);
     var texts = '';
     if (surveyDetailList.rows.length == 0) {
-        texts += '<div class="col s12 m7">';
-        texts += '<div class="card horizontal">';
-        texts += '<div class="card-stacked">';
-        texts += '<div class="card-content">';
+        texts += '<div class="row">';
         texts += '<p>データが存在しません。</p>'
         texts += '</div>';
         texts += '</div>';
@@ -162,10 +159,6 @@ function setSurveyHistoryData(texts, surveyData, surveyId, surveyDetailId) {
  */
 function setSurveyDetail(texts, surveyDetail) {
     texts += '<div class="row">';
-    texts += '<div class="card horizontal">';
-    texts += '<div class="card-stacked">';
-    texts += '<div class="card-content">';
-    texts += '<div class="col s12 m8">';
     texts += '所在地No：' + convertSpace(surveyDetail.detail_number);
     texts += '<br>';
     texts += '線路名：' + convertSpace(surveyDetail.line_name)
@@ -178,6 +171,7 @@ function setSurveyDetail(texts, surveyDetail) {
     texts += '<br>'
     texts += '地権者名：' + convertSpace(surveyDetail.area_owner_name);
     texts += '<br>'
+    texts += '</div>'
     return texts;
 }
 
@@ -668,11 +662,13 @@ function applyMesuredValueOfNumericKeypad(value) {
 function changeKeyPad() {
     if ($('#key-pad-type').val() === 'table-keypad') {
         $('#table-keypad').hide();
+        $('#done').hide();
         $('#numeric-keypad').show();
         $('#key-pad-type').val('numeric-keypad');
     } else {
         $('#numeric-keypad').hide();
         $('#table-keypad').show();
+        $('#done').show();
         $('#key-pad-type').val('table-keypad');
     }
 }

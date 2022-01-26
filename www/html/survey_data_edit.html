@@ -29,12 +29,6 @@
           </a>
         </li>
       </ul>
-      <ul class="right">
-        <a href="#area-ower-modal"
-          class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
-          <i class="material-icons" style="font-size: 30px !important;">perm_identity</i>
-        </a>
-      </ul>
     </div>
   </nav>
 
@@ -61,9 +55,13 @@
   <div style="background:rgba(0,0,0,0.8); color: white;" class="center web-edit-message">
     <span class="ml-4" style="margin: 10px;display: inline-block;">Webで編集中のため、登録・更新処理はできません。</span>
   </div>
-
+  <ul class="right" style="margin: 10px;">
+    <a href="#area-ower-modal"
+      class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
+      <i class="material-icons" style="font-size: 30px !important;">perm_identity</i>
+    </a>
+  </ul>
   <div class="container">
-
     <!-- <div class="row bottom-0">
       <ul class="collapsible">
         <li>
@@ -284,8 +282,10 @@
               class="material-icons">clear</i></a>
           <a id="tree-measured-value-0"
             class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light">０</a>
-          <a style="visibility:hidden" class="btn btn-circle btn-shadow btn-ten-key-font-size create-button"><i
-              class="material-icons">done</i></a>
+          <a href="javascript:createEditSurveyData()"
+            class="leef btn btn-circle waves-effect waves-light enter mobile-floating btn-shadow btn-ten-key-font-size btn-ten-key-margin">
+            <i class="material-icons">done</i>
+          </a>
           <audio id="submit" src="../sound/submit4.mp3" hidden></audio>
           <audio id="error" src="../sound/error.mp3" hidden></audio>
           <audio id="input" src="../sound/input1-4-1.mp3" hidden></audio>
@@ -335,29 +335,29 @@
     </div> -->
 
     <!-- 備考、キーボード、登録ボタン -->
-    <div class="row bottom-5" style="text-align: center; margin: 1rem;">
-      <div class="col s4">
+    <div class="row bottom-5" style="margin: 1rem;">
+      <div class="col s1.5 right">
+        <div class="edit">
+          <a id="done" href="javascript:createEditSurveyData()"
+            class="btn-floating waves-effect waves-light enter mobile-floating">
+            <i class="material-icons">done</i></a>
+        </div>
+      </div>
+      <div class="col s1.5 right">
+        <div class="edit">
+          <a id="key-pad" href="javascript:changeKeyPad()"
+            class="btn-floating waves-effect waves-light enter mobile-floating">
+            <i class="material-icons keybode">keyboard</i>
+          </a>
+          <input type="hidden" id="key-pad-type" value="table-keypad">
+        </div>
+      </div>
+      <div class="col s1.5 right">
         <div class="edit">
           <a href="#note-target-modal"
             class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
             <i class="material-icons" style="font-size: 30px !important;">note</i>
           </a>
-        </div>
-      </div>
-      <div class="col s4">
-        <div class="edit">
-          <a id="key-pad" href="javascript:changeKeyPad()"
-            class="btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
-            <i class="material-icons">keyboard</i>
-          </a>
-          <input type="hidden" id="key-pad-type" value="table-keypad">
-        </div>
-      </div>
-      <div class="col s4">
-        <div class="edit">
-          <a href="javascript:createEditSurveyData()"
-            class="btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
-            <i class="material-icons">done</i></a>
         </div>
       </div>
     </div>
@@ -551,7 +551,7 @@
   <div id="area-ower-modal" class="modal">
     <div class="modal-content">
       <h6>地権者情報</h6>
-      <div class="name-modal" id="area-ower-info">
+      <div class="row" id="area-ower-info">
       </div>
     </div>
     <!-- 地権者情報表示モーダル -->

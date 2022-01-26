@@ -701,3 +701,13 @@ a.btn-small-font-size {
   height: 120px;
   overflow: auto;
 }
+
+.leef{
+  background-color: #26a69a!important;
+  color: #eafaf9;
+}
+
+.keybode{
+  background-color: #999;
+  color: #fff;
+}
