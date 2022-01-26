@@ -46,7 +46,7 @@ function fetchSurveyDataAllNoSurveyDetail() {
 function fetchSurveyDataBySurveyDetailId(surveyDetailId) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = ? order by id desc', [surveyDetailId, 'false'], function (ignored, resultSet) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = ? order by created_date desc', [surveyDetailId, 'false'], function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
