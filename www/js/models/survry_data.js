@@ -46,7 +46,7 @@ function fetchSurveyDataAllNoSurveyDetail() {
 function fetchSurveyDataBySurveyDetailId(surveyDetailId) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = ? order by created_date desc', [surveyDetailId, 'false'], function (ignored, resultSet) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = ? order by created_date desc limit 2', [surveyDetailId, 'false'], function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
@@ -54,6 +54,40 @@ function fetchSurveyDataBySurveyDetailId(surveyDetailId) {
         });
     });
 }
+
+/**
+ * 所在地IDをもとに伐採木データ取得（１件新しいもの）
+ * @param 所在地ID
+ * @return 伐採木
+ */
+function fetchSurveyNewDataBySurveyId(id) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE id >= ? AND is_delete = ? order by created_date desc limit 2', [id, 'false'], function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            });
+        });
+    });
+}
+
+// /**
+//  * 所在地IDをもとに伐採木データ取得（１件古いもの）
+//  * @param 所在地ID
+//  */
+// function fetchSurveyOldDataBySurveyId(id) {
+//     return new Promise(function (resolve) {
+//         database.transaction(function (transaction) {
+//             transaction.executeSql('SELECT * FROM survey_data WHERE id <= AND is_delete = ? order by created_date desc limit 2', [id, 'false'], function (ignored, resultSet) {
+//                 resolve(resultSet);
+//             }, function (error) {
+//                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+//             });
+//         });
+//     });
+// }
+
 
 /**
  * 伐採木の登録

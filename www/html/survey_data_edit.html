@@ -51,24 +51,37 @@
       <a href="#!" class="modal-close waves-effect waves-light btn-flat">閉じる</a>
     </div>
   </div>
-
   <div style="background:rgba(0,0,0,0.8); color: white;" class="center web-edit-message">
     <span class="ml-4" style="margin: 10px;display: inline-block;">Webで編集中のため、登録・更新処理はできません。</span>
   </div>
-  <ul class="right" style="margin: 10px;">
-    <a href="#area-ower-modal"
-      class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
-      <i class="material-icons" style="font-size: 30px !important;">perm_identity</i>
-    </a>
-  </ul>
+  <!-- 現在の樹種本数 -->
+  <div class="row s1.5">
+    <div class="col s1.5" style="display:flex; padding:0.1em">
+      <table class="centered" style="font-size:15px!important;width:45em;table-layout: fixed;">
+        <tr id="tree-type-list-count-header">
+        </tr>
+        <tr id="tree-type-list-count-value">
+        </tr>
+      </table>
+    </div>
+    <div class=" col s1.5 right" style="display:flex; padding:0.1em">
+      <ul>
+        <il style="color: #122344;display:block;padding:0.1em margin-top 0.5em;margin-bottom:0.5em;margin-right:0.5em;">
+          <a href="#area-ower-modal"
+            class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating"
+            style="display:flex">
+            <i class=" material-icons" style="font-size: 30px !important;">perm_identity</i>
+          </a>
+        </il>
+      </ul>
+    </div>
+  </div>
   <div class="container">
     <!-- 樹種選択 -->
-    <div class="row bottom-0">
-      <div class="input-field col s12 bottom-0" style="margin-top: initial !important">
-        <input id="surveyDataTreeType" name="surveyDataTreeTypeModal" type="text"
-          class="surveyDataTreeType mobile-input tree-input" maxlength="10" placeholder="樹種"
-          href="javascript:updateInputTextArea(this, 'survey_data_tree_type_modal', true, false)">
-      </div>
+    <div class="input-field col s12 bottom-0" style="margin-top: initial !important">
+      <input id="surveyDataTreeType" name="surveyDataTreeTypeModal" type="text"
+        class="surveyDataTreeType mobile-input tree-input" maxlength="10" placeholder="樹種"
+        href="javascript:updateInputTextArea(this, 'survey_data_tree_type_modal', true, false)" style="height:1.3em">
     </div>
     <span id="survey_data_tree_type_modal_required" class="error message-text" style="display:none"><i
         class="material-icons">error_outline</i>この項目は必須入力です。</span>
@@ -76,15 +89,6 @@
       <div class="input-field col s12 edit" id="tree-type-list" style="margin-top: initial !important"></div>
     </div>
     <!-- 樹種選択 -->
-    <!-- 現在の樹種本数 -->
-    <div class="row scroll-table bottom-0">
-      <table class="centered" style="font-size:15px!important;">
-        <tr id="tree-type-list-count-header">
-        </tr>
-        <tr id="tree-type-list-count-value">
-        </tr>
-      </table>
-    </div>
     <!-- 伐採方法 -->
     <div class="row bottom-5" style="overflow: auto;white-space:nowrap;">
       <div class="input-field col s12">
@@ -110,6 +114,7 @@
       <input type="hidden" name="need-cut-middle" value="false" />
       <input type="hidden" name="need-cut-branch" value="false" />
       <input type="hidden" name="etc" value="false" />
+      <a type="hidden" id="survey-data-id" value=""></a>
     </div>
     <!-- 伐採方法 -->
 
@@ -236,13 +241,15 @@
           <a id="tree-measured-value-9"
             class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">９</a>
         </div>
-        <div class="row center bottom-0">
-          <a id="tree-measured-value-none" class="btn btn-circle btn-shadow enter waves-effect waves-light"><i
-              class="material-icons">clear</i></a>
+        <div class="row center-align">
+          <a id="tree-measured-value-none"
+            class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light"
+            style="margin: right 1.5em;"><i class="material-icons">clear</i></a>
           <a id="tree-measured-value-0"
-            class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light">０</a>
+            class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">０</a>
           <a href="javascript:createEditSurveyData()"
-            class="leef btn btn-circle waves-effect waves-light enter mobile-floating btn-shadow btn-ten-key-font-size btn-ten-key-margin">
+            class="leef btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light"
+            style="margin: left 1.5em;">
             <i class="material-icons">done</i>
           </a>
           <audio id="submit" src="../sound/submit4.mp3" hidden></audio>
@@ -258,7 +265,7 @@
       </div>
     </div>
     <!-- テンキー（直径） -->
-
+    <!-- container -->
     <!-- 備考、キーボード、登録ボタン -->
     <div class="row bottom-5" style="margin: 1rem;">
       <div class="col s1.5 right">
@@ -285,71 +292,32 @@
           </a>
         </div>
       </div>
+      <!-- 履歴データ（2件まで） -->
     </div>
-    <!-- 備考、キーボード、登録ボタン -->
-
-
-    <!-- 履歴データ（2件まで） -->
-    <div class="swiper-container">
-      <div id="history-list" class="swiper-wrapper">
+    <div class="row s1.5">
+      <div class="col s1.5" style="display:flex; padding:0.1em">
+        <table id="history-list-contents" style="width:35em;table-layout: fixed;">
+          <tbody>
+          </tbody>
+        </table>
+        <!--<div class="col s1.5 right" style="display:flex; padding:0.1em">
+          <ul>
+            <il style="color:#122344!important;display:block;padding:0.1em;margin-bottom:1em;">
+              <a id="before-history-data" class="waves-effect waves-light">
+                <i style="color:#122344!important;" class="material-icons fa-5x">expand_less</i>
+              </a>
+            </il>
+            <il style="color: #122344!important;display:block;padding:0.1em;margin-bottom:1em;">
+              <a id="next-history-data" class="waves-effect waves-light">
+                <i style="color:#122344!important;" class="material-icons fa-10x">expand_more</i>
+              </a>
+            </il>
+          </ul>
+        </div>-->
       </div>
     </div>
-    <!-- 履歴データ（2件まで） -->
   </div>
-  <!-- container -->
-
-  <table class="centered">
-    <thead>
-      <tr>
-        <th class="border-style survey-note">伐採ロ有</th>
-        <th class="border-style survey-note">伐採ワ有</th>
-        <th class="border-style survey-note">中断ロ有</th>
-        <th class="border-style survey-note">中断ロ無</th>
-        <th class="border-style survey-note">危険木有</th>
-        <th class="border-style survey-note">枝払い有</th>
-        <th class="border-style survey-note">玉切り有</th>
-        <th class="border-style survey-note">集積有</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <td class="border-style survey-data-need-rope enter">
-        <span id="survey-data-need-rope" class="hidden"><i class="material-icons">check</i></span>
-        <input type="hidden" name="survey-data-need-rope" value="false" />
-      </td>
-      <td class="border-style survey-data-need-wire enter">
-        <span id="survey-data-need-wire" class="hidden"><i class="material-icons">check</i></span>
-        <input type="hidden" name="survey-data-need-wire" value="false" />
-      </td>
-      <td class="border-style survey-data-need-cut-middle enter">
-        <span id="survey-data-need-cut-middle" class="hidden"><i class="material-icons">check</i></span>
-        <input type="hidden" name="survey-data-need-cut-middle" value="false" />
-      </td>
-      <td class="border-style survey-data-not-need-cut-middle enter">
-        <span id="survey-data-not-need-cut-middle" class="hidden"><i class="material-icons">check</i></span>
-        <input type="hidden" name="survey-data-not-need-cut-middle" value="false" />
-      </td>
-      <td class="border-style survey-data-is-denger-tree enter">
-        <span id="survey-data-is-denger-tree" class="hidden"><i class="material-icons">check</i></span>
-        <input type="hidden" name="survey-data-is-denger-tree" value="false" />
-      </td>
-      <td class="border-style survey-data-need-cut-branch enter">
-        <span id="survey-data-need-cut-branch" class="hidden"><i class="material-icons">check</i></span>
-        <input type="hidden" name="survey-data-need-cut-branch" value="false" />
-      </td>
-      <td class="border-style survey-data-need-cut-divide enter">
-        <span id="survey-data-need-cut-divide" class="hidden"><i class="material-icons">check</i></span>
-        <input type="hidden" name="survey-data-need-cut-divide" value="false" />
-      </td>
-      <td class="border-style survey-data-need-collect enter">
-        <span id="survey-data-need-collect" class="hidden"><i class="material-icons">check</i></span>
-        <input type="hidden" name="survey-data-need-collect" value="false" />
-      </td>
-
-    </tbody>
-  </table>
-  </div> -->
-
+  <!-- 備考、キーボード、登録ボタン -->
   <!-- Modal Structure -->
   <div id="number-target-modal" class="modal">
     <div class="modal-content">
@@ -390,7 +358,6 @@
         class="modal-close waves-effect waves-light btn normal-button enter mobile-btn">確定</a>
     </div>
   </div>
-
   <!-- 備考入力モーダル -->
   <div id="note-target-modal" class="modal">
     <div class="modal-content">
@@ -408,8 +375,6 @@
     </div>
   </div>
   <!-- 備考入力モーダル -->
-
-
   <!-- 担当者モーダル -->
   <div id="name-target-modal" class="modal">
     <div class="modal-content">
@@ -429,26 +394,24 @@
 
   <!-- 地権者情報表示モーダル -->
   <div id="area-ower-modal" class="modal">
-    <div class="modal-content">
+    <div id="area-info" class="modal-content">
       <h6>地権者情報</h6>
-      <div class="row" id="area-ower-info">
-      </div>
     </div>
-    <!-- 地権者情報表示モーダル -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.3/js/swiper.min.js"></script>
-    <script src="../components/jquery/dist/jquery.min.js"></script>
-    <script src="../components/loader.js"></script>
-    <script src="../js/common.js"></script>
-    <script src="../js/survey_data_common.js"></script>
-    <script src="../js/survey_data_edit.js"></script>
-    <script src="../js/models/survry_data.js"></script>
-    <script src="../js/models/survry_area.js"></script>
-    <script src="../js/models/survry.js"></script>
-    <script src="../js/models/web_edit_mode.js"></script>
-    <script src="../js/models/survry_detail.js"></script>
-    <script src="../js/models/survry.js"></script>
-    <script src="../js/models/web_edit_mode.js"></script>
   </div>
+  <!-- 地権者情報表示モーダル -->
+  <script src="../components/jquery/dist/jquery.min.js"></script>
+  <script src="../components/jquery/dist/jquery.colorbox-min.js"></script>
+  <script src="../components/loader.js"></script>
+  <script src="../js/common.js"></script>
+  <script src="../js/survey_data_common.js"></script>
+  <script src="../js/survey_data_edit.js"></script>
+  <script src="../js/models/survry_data.js"></script>
+  <script src="../js/models/survry_area.js"></script>
+  <script src="../js/models/survry.js"></script>
+  <script src="../js/models/web_edit_mode.js"></script>
+  <script src="../js/models/survry_detail.js"></script>
+  <script src="../js/models/survry.js"></script>
+  <script src="../js/models/web_edit_mode.js"></script>
 </body>
 
 </html>
