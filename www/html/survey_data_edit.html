@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="../components/materialize/dist/css/materialize.min.css">
   <link rel="stylesheet" href="../css/iconfont/material-icons.css">
   <link rel="stylesheet" href="../css/style.css">
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.3/css/swiper.min.css">
 </head>
 
 <body>
@@ -62,23 +62,6 @@
     </a>
   </ul>
   <div class="container">
-    <!-- <div class="row bottom-0">
-      <ul class="collapsible">
-        <li>
-          <div class="collapsible-header">
-            <span>東北線</span><span style="margin-left: 1rem;">No.1</span><span>～</span><span>No.2</span>
-          </div>
-          <div class="collapsible-body">
-            <span>地権者：</span><span style="margin-left: 2px;">山田太郎</span>
-            <span style="margin-left: 1rem;">
-              <a class="modal-trigger waves-effect waves-light btn btn-link-circle btn-shadow enter" href="#number-target-modal" style="margin-left: 2px;">
-                <i class="material-icons create-btn" style="font-size: 15px !important;">create</i></a>
-                調査者：</span><span style="margin-left: 2px;">佐藤和夫</span>
-          </div>
-        </li>
-      </ul>
-    </div> -->
-
     <!-- 樹種選択 -->
     <div class="row bottom-0">
       <div class="input-field col s12 bottom-0" style="margin-top: initial !important">
@@ -93,8 +76,6 @@
       <div class="input-field col s12 edit" id="tree-type-list" style="margin-top: initial !important"></div>
     </div>
     <!-- 樹種選択 -->
-
-
     <!-- 現在の樹種本数 -->
     <div class="row scroll-table bottom-0">
       <table class="centered" style="font-size:15px!important;">
@@ -104,25 +85,6 @@
         </tr>
       </table>
     </div>
-    <!--<tr>
-          <th>天然生林</th>
-          <th>杉</th>
-          <th>ヒノキ</th>
-          <th>松</th>
-          <th>桐</th>
-          <th>合計</th>
-        </tr>
-        <tr>
-          <td>1200本</td>
-          <td>1010本</td>
-          <td>1000本</td>
-          <td>5550本</td>
-          <td>1202本</td>
-          <td>9000本</td> 
-        </tr>-->
-    <!-- 現在の樹種本数 -->
-
-
     <!-- 伐採方法 -->
     <div class="row bottom-5" style="overflow: auto;white-space:nowrap;">
       <div class="input-field col s12">
@@ -151,7 +113,6 @@
     </div>
     <!-- 伐採方法 -->
 
-
     <!-- ナンバリング、直径 -->
     <div class="row bottom-5">
       <div class="col s6 display-fixed link-font-size">
@@ -168,7 +129,6 @@
           class="material-icons">error_outline</i>この項目は必須入力です。</span>
     </div>
     <!-- ナンバリング、直径 -->
-
 
     <!-- 直径入力用のキーボード -->
     <div id="table-keypad" class="row bottom-0" style="text-align: center;">
@@ -249,7 +209,6 @@
     </div>
     <!-- 直径入力用のキーボード -->
 
-
     <!-- テンキー（直径） -->
     <div id="numeric-keypad" class="row bottom-0" style="display: none;">
       <div class="col s12">
@@ -300,40 +259,6 @@
     </div>
     <!-- テンキー（直径） -->
 
-    <!-- <div class="col s4">
-        <div class="edit">
-          <a href="#" class="waves-effect waves-light btn normal-button enter mobile-btn tree-btn"
-            style="min-width :120px;">登録</a>
-        </div>
-        <div class="edit">
-          <a href="#" class="waves-effect waves-light btn normal-button enter mobile-btn tree-btn"
-            style="min-width :120px;">テンキー</a>
-        </div>
-        <div class="edit">
-          <a href="#" class="waves-effect waves-light btn normal-button enter mobile-btn tree-btn"
-            style="min-width :120px;">備考</a>
-        </div>
-      </div> -->
-
-    <!-- <div class="row bottom-5" style="text-align: center;">
-      <div class="col s4">
-        <div class="edit">
-          <a href="javascript:createEditSurveyData()" class="waves-effect waves-light btn normal-button enter mobile-btn tree-btn">登録</a>
-        </div>
-      </div>
-      <div class="col s4">
-        <div class="edit">
-          <a id="key-pad" href="javascript:changeKeyPad()" class="waves-effect waves-light btn normal-button enter mobile-btn tree-btn">テンキー</a>
-          <input type="hidden" id="key-pad-type" value="table-keypad">
-        </div>
-      </div>
-      <div class="col s4">
-        <div class="edit">
-        <a href="#" class="waves-effect waves-light btn normal-button enter mobile-btn tree-btn">備考</a>
-        </div>
-      </div>
-    </div> -->
-
     <!-- 備考、キーボード、登録ボタン -->
     <div class="row bottom-5" style="margin: 1rem;">
       <div class="col s1.5 right">
@@ -365,109 +290,64 @@
 
 
     <!-- 履歴データ（2件まで） -->
-    <div class="scroll" style="bottom: 0;">
-      <ul id="history-list" class="collection">
-        <!--<li class="collection-item">
-          <div id="history-list" class="history-list">
-            <span style="margin-right: 0.5rem;">青-A-2</span>
-            <span style="margin-right: 0.5rem;">ひのき</span>
-            <span style="margin-right: 0.5rem;">24cm</span>
-            <span style="margin-right: 0.5rem;">ロ、中、危</span>
-            <a href="#!" class="secondary-content"><i class="material-icons"
-                style="color: #122344;">keyboard_arrow_up</i></a>
-          </div>
-        </li>
-        <li class="collection-item">
-          <div class="history-list">
-            <span style="margin-right: 0.5rem;">青-A-2</span>
-            <span style="margin-right: 0.5rem;">ひのき</span>
-            <span style="margin-right: 0.5rem;">24cm</span>
-            <span style="margin-right: 0.5rem;">ロ、中、危</span>
-            <a href="#!" class="secondary-content"><i class="material-icons" style="color: #122344;">expand_more</i></a>
-          </div>
-          </div>
-        </li>-->
-      </ul>
+    <div class="swiper-container">
+      <div id="history-list" class="swiper-wrapper">
+      </div>
     </div>
     <!-- 履歴データ（2件まで） -->
-
   </div>
   <!-- container -->
 
-  <!-- <div style="table-layout:fixed;width:100%;position:absolute;bottom:0;">
-    <div class="col s12" style="padding: 10px 10px 10px 10px;">
-      <div class="row" style="margin-bottom: 15px !important;">
-        <div class="col s6 display-fixed link-font-size">
-          <a class="modal-trigger btn btn-link-circle btn-shadow enter" href="#number-target-modal"><i class="material-icons create-btn">create</i></a>
-          No：<span id="survey-data-no"></span>
-        </div>
-        <div class="col s6 display-fixed link-font-size">
-          <a class="modal-trigger btn btn-link-circle btn-shadow enter" href="#note-target-modal"><i class="material-icons create-btn">create</i></a>
-          備考：<span id="note" name="note"></span>
-        </div>
-      </div>
-      <div class="row" style="margin-bottom: 5px !important;">
-        <div class="col s6 display-fixed link-font-size">
-          <a class="modal-trigger btn btn-link-circle btn-shadow enter" href="#tree-type-target-modal"><i class="material-icons create-btn">create</i></a>
-          樹種：<span id="survey-data-tree-type"></span>
-        </div>
-        <div class="col s6 display-fixed link-font-size">
-          <a class="modal-trigger btn btn-link-circle btn-shadow enter" href="#name-target-modal"><i class="material-icons create-btn">create</i></a>
-          担当者：<span id="name" name="name"></span>
-        </div>
-      </div>
-    </div>
+  <table class="centered">
+    <thead>
+      <tr>
+        <th class="border-style survey-note">伐採ロ有</th>
+        <th class="border-style survey-note">伐採ワ有</th>
+        <th class="border-style survey-note">中断ロ有</th>
+        <th class="border-style survey-note">中断ロ無</th>
+        <th class="border-style survey-note">危険木有</th>
+        <th class="border-style survey-note">枝払い有</th>
+        <th class="border-style survey-note">玉切り有</th>
+        <th class="border-style survey-note">集積有</th>
+      </tr>
+    </thead>
 
-    <table class="centered">
-      <thead>
-        <tr>
-          <th class="border-style survey-note">伐採ロ有</th>
-          <th class="border-style survey-note">伐採ワ有</th>
-          <th class="border-style survey-note">中断ロ有</th>
-          <th class="border-style survey-note">中断ロ無</th>
-          <th class="border-style survey-note">危険木有</th>
-          <th class="border-style survey-note">枝払い有</th>
-          <th class="border-style survey-note">玉切り有</th>
-          <th class="border-style survey-note">集積有</th>
-        </tr>
-      </thead>
+    <tbody>
+      <td class="border-style survey-data-need-rope enter">
+        <span id="survey-data-need-rope" class="hidden"><i class="material-icons">check</i></span>
+        <input type="hidden" name="survey-data-need-rope" value="false" />
+      </td>
+      <td class="border-style survey-data-need-wire enter">
+        <span id="survey-data-need-wire" class="hidden"><i class="material-icons">check</i></span>
+        <input type="hidden" name="survey-data-need-wire" value="false" />
+      </td>
+      <td class="border-style survey-data-need-cut-middle enter">
+        <span id="survey-data-need-cut-middle" class="hidden"><i class="material-icons">check</i></span>
+        <input type="hidden" name="survey-data-need-cut-middle" value="false" />
+      </td>
+      <td class="border-style survey-data-not-need-cut-middle enter">
+        <span id="survey-data-not-need-cut-middle" class="hidden"><i class="material-icons">check</i></span>
+        <input type="hidden" name="survey-data-not-need-cut-middle" value="false" />
+      </td>
+      <td class="border-style survey-data-is-denger-tree enter">
+        <span id="survey-data-is-denger-tree" class="hidden"><i class="material-icons">check</i></span>
+        <input type="hidden" name="survey-data-is-denger-tree" value="false" />
+      </td>
+      <td class="border-style survey-data-need-cut-branch enter">
+        <span id="survey-data-need-cut-branch" class="hidden"><i class="material-icons">check</i></span>
+        <input type="hidden" name="survey-data-need-cut-branch" value="false" />
+      </td>
+      <td class="border-style survey-data-need-cut-divide enter">
+        <span id="survey-data-need-cut-divide" class="hidden"><i class="material-icons">check</i></span>
+        <input type="hidden" name="survey-data-need-cut-divide" value="false" />
+      </td>
+      <td class="border-style survey-data-need-collect enter">
+        <span id="survey-data-need-collect" class="hidden"><i class="material-icons">check</i></span>
+        <input type="hidden" name="survey-data-need-collect" value="false" />
+      </td>
 
-      <tbody>
-        <td class="border-style survey-data-need-rope enter">
-          <span id="survey-data-need-rope" class="hidden"><i class="material-icons">check</i></span>
-          <input type="hidden" name="survey-data-need-rope" value="false" />
-        </td>
-        <td class="border-style survey-data-need-wire enter">
-          <span id="survey-data-need-wire" class="hidden"><i class="material-icons">check</i></span>
-          <input type="hidden" name="survey-data-need-wire" value="false" />
-        </td>
-        <td class="border-style survey-data-need-cut-middle enter">
-          <span id="survey-data-need-cut-middle" class="hidden"><i class="material-icons">check</i></span>
-          <input type="hidden" name="survey-data-need-cut-middle" value="false" />
-        </td>
-        <td class="border-style survey-data-not-need-cut-middle enter">
-          <span id="survey-data-not-need-cut-middle" class="hidden"><i class="material-icons">check</i></span>
-          <input type="hidden" name="survey-data-not-need-cut-middle" value="false" />
-        </td>
-        <td class="border-style survey-data-is-denger-tree enter">
-          <span id="survey-data-is-denger-tree" class="hidden"><i class="material-icons">check</i></span>
-          <input type="hidden" name="survey-data-is-denger-tree" value="false" />
-        </td>
-        <td class="border-style survey-data-need-cut-branch enter">
-          <span id="survey-data-need-cut-branch" class="hidden"><i class="material-icons">check</i></span>
-          <input type="hidden" name="survey-data-need-cut-branch" value="false" />
-        </td>
-        <td class="border-style survey-data-need-cut-divide enter">
-          <span id="survey-data-need-cut-divide" class="hidden"><i class="material-icons">check</i></span>
-          <input type="hidden" name="survey-data-need-cut-divide" value="false" />
-        </td>
-        <td class="border-style survey-data-need-collect enter">
-          <span id="survey-data-need-collect" class="hidden"><i class="material-icons">check</i></span>
-          <input type="hidden" name="survey-data-need-collect" value="false" />
-        </td>
-
-      </tbody>
-    </table>
+    </tbody>
+  </table>
   </div> -->
 
   <!-- Modal Structure -->
@@ -555,7 +435,7 @@
       </div>
     </div>
     <!-- 地権者情報表示モーダル -->
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.3/js/swiper.min.js"></script>
     <script src="../components/jquery/dist/jquery.min.js"></script>
     <script src="../components/loader.js"></script>
     <script src="../js/common.js"></script>

@@ -1,29 +1,27 @@
-
-
 // 調査業務ID
 var surveyId = null;
 // 所在地ID
 var surveyDetailId = null;
-// 直径
-//var treeMeasuredValue = "";
 // uuid
 var uuid = "";
 var id = null;
+var isHistoryFlag = false;
 
 document.addEventListener("deviceready", async function () {
     var param = location.search.substring(1).split("&");
-    if (param.length === 3) {
-        //履歴リンクから移動時の対応
-        surveyId = param[0];
-        id = param[1];
-        surveyDetailId = param[2];
-        surveyDetailId = surveyDetailId.substring(0, surveyDetailId.indexOf("%"));
-
-    } else {
-        surveyId = param[0];
-        surveyDetailId = param[1];
-    }
     uuid = device.uuid;
+    param.length === 3 ?
+        (v => {
+            //履歴リンクから移動時の対応
+            surveyId = param[0];
+            id = param[1];
+            surveyDetailId = param[2];
+            surveyDetailId = surveyDetailId.substring(0, surveyDetailId.indexOf("%"));
+        })() :
+        (v => {
+            surveyId = param[0];
+            surveyDetailId = param[1];
+        })();
 
     // 所在地一覧遷移タグ作成
     var surveyDetailListLink = $('#survey-detail-list-link');
@@ -39,14 +37,10 @@ document.addEventListener("deviceready", async function () {
     var specialTree = await convertSpace(survey.rows.item(0).special_tree);
     setTreeTypeButton(treeTypeValue, specialTree, "surveyDataTreeType");
     var treeCountArray = await fetchTreeTypeCount(treeTypeValue, specialTree, surveyDetailId);
-
     setTreeCount(treeCountArray);
-    if (param.length === 3) {
-        initializeForm(surveyId, surveyDetailId, true, id);
-    }
-    else {
-        initializeForm(surveyId, surveyDetailId, false, id);
-    }
+
+    param.length === 3 ? isHistoryFlag = true : isHistoryFlag = false;
+    initializeForm(surveyId, surveyDetailId, isHistoryFlag, id);
     await controlEditScreen();
 });
 
@@ -58,54 +52,44 @@ async function initializeForm(surveyId, surveyDetailId, isHistoryFlag, id) {
     var surveyDetailItem = $('#area-ower-info');
     var surveyDetailList = await fetchSurveyDetailById(surveyDetailId);
     var texts = '';
-    if (surveyDetailList.rows.length == 0) {
-        texts += '<div class="row">';
-        texts += '<p>データが存在しません。</p>'
-        texts += '</div>';
-        texts += '</div>';
-        texts += '</div>';
-        texts += '</div>';
-    } else {
-        texts = setSurveyDetail(texts, surveyDetailList.rows.item(0));
-    }
+    surveyDetailList.rows.length == 0 ?
+        (v => {
+            texts += '<div class="row">';
+            texts += '<p>データが存在しません。</p>'
+            texts += '</div>';
+            texts += '</div>';
+            texts += '</div>';
+            texts += '</div>';
+        })() :
+        (v => {
+            texts = setSurveyDetail(texts, surveyDetailList.rows.item(0));
+        })();
+
     surveyDetailItem.append(texts);
     //履歴2件ずつページングで表示
-    var surveyDetailItem = $('#history-list');
-    var surveyDetailList = await fetchSurveyDataBySurveyDetailId(surveyDetailId);
-    var texts = '';
-    if (surveyDetailList.rows.length == 0) {
-        texts += '<div class="col s12 m7">';
-        texts += '<div class="card horizontal">';
-        texts += '<div class="card-stacked">';
-        texts += '<div class="card-content">';
-        texts += '<p>データが存在しません。</p>'
-        texts += '</div>';
-        texts += '</div>';
-        texts += '</div>';
-        texts += '</div>';
-    } else {
-        for (var i = 0; i < surveyDetailList.rows.length; i++) {
-            texts = setSurveyHistoryData(texts, surveyDetailList.rows.item(i), surveyId, surveyDetailId);
-        }
-    }
-    surveyDetailItem.append(texts);
+    var surveyHistoryDetailItem = $('#history-list');
+    var surveyHistoryDetailList = await fetchSurveyDataBySurveyDetailId(surveyDetailId);
+    var historyTexts = '';
+    surveyHistoryDetailList.rows.length == 0 ?
+        (v => {
+            historyTexts += '<div class="row">';
+            historyTexts += '<p>データが存在しません。</p>'
+            historyTexts += '</div>';
+            historyTexts += '</div>';
+            historyTexts += '</div>';
+            historyTexts += '</div>';
+        })() :
+        (v => {
+            historyTexts = setSurveyHistoryData(historyTexts, surveyDetailList.rows.item(i), surveyId, surveyDetailId);
+        })();
+    surveyHistoryDetailItem.append(historyTexts);
+    var viewById = "";
+    isHistoryFlag ? viewById = id : viewById = surveyDetailId;
 
-    if (isHistoryFlag) {
-        //初期表示
-        var surveyData = await fetchNewSurveyHistoryDataById(id);
-        if (surveyData != undefined) {
-            setSurveyData(surveyData);
-        }
-    } else {
-        //履歴リンクから遷移した時
-        var surveyData = await fetchNewSurveyData(surveyDetailId);
-        if (surveyData != undefined) {
-            setSurveyData(surveyData);
-        }
-    }
+    //不要↓か確認
+    await fetchNewSurveyHistoryDataById(viewById);
     var surveyDataCount = await fetchNotDeleteSurveyDataCount(surveyDetailId);
     $('#survey-data-count').text(surveyDataCount);
-
 }
 
 /**
@@ -118,38 +102,45 @@ function setSurveyHistoryData(texts, surveyData, surveyId, surveyDetailId) {
     texts += '<a href="../html/survey_data_edit.html?' + surveyId + '&' + surveyData.id + '&' + surveyDetailId + '>';
     texts += '<li id="history-data" class="collection-item">';
     texts += `<span style="margin-right: 0.5rem;">${surveyData.color}-${surveyData.word}-${surveyData.number}</span>`
-    if (surveyData.survey_data_tree_type !== null) {
-        texts += `<span style="margin-right: 0.5rem;">${surveyData.survey_data_tree_type}</span>`
-    } else {
+    surveyData.survey_data_tree_type !== null ?
+        texts += `<span style="margin-right: 0.5rem;">${surveyData.survey_data_tree_type}</span>` :
         texts += `<span style="margin-right: 0.5rem;">樹種データなし</span>`
-    }
 
     texts += `<span style="margin-right: 0.5rem;">${surveyData.tree_measured_value}cm</span>`
-    if (surveyData.need_cut_middle == true) {
-        needText += `中`;
-        needText += `,`;
-    }
-    if (surveyData.need_cut_branch == true) {
-        needText += `枝`;
-        needText += `,`;
-    }
-    if (surveyData.need_cut_divide == true) {
-        needText += `玉`;
-        needText += `,`;
-    }
-    if (surveyData.need_collect == true) {
-        needText += `集`;
-        needText += `,`;
-    }
-    if (surveyData.is_danger_tree == true) {
-        needText += `危`;
-        needText += `,`;
-    }
+    surveyData.need_cut_middle == true ?
+        (v => {
+            needText += `中`;
+            needText += `,`;
+        })() : "";
+
+    surveyData.need_cut_branch == true ?
+        (v => {
+            needText += `枝`;
+            needText += `,`;
+        })() : "";
+
+    surveyData.need_cut_divide == true ?
+        (v => {
+            needText += `玉`;
+            needText += `,`;
+        })() : "";
+
+    surveyData.need_collect == true ?
+        (v => {
+            needText += `集`;
+            needText += `,`;
+        })() : "";
+
+    surveyData.is_danger_tree == true ?
+        (v => {
+            needText += `危`;
+            needText += `,`;
+        })() : "";
+
     texts += '<span style="margin-right: 0.5rem;">' + needText + '</span>';
     texts += '</li>';
     texts += '</a>';
     texts += '</div>';
-
     return texts;
 }
 
@@ -262,7 +253,7 @@ function setSurveyData(surveyData) {
         $('input[name="survey-data-need-collect"]').val(true);
     } else {
         $('#survey-data-need-collect').addClass("checked", false);
-    } s
+    }
 }
 
 /**
@@ -471,12 +462,11 @@ $("#tree-measured-value-none").on('touchstart', function () {
  * 伐採木データ作成および更新
  */
 async function createEditSurveyData() {
-
-    if (validate() == false) {
-        $("#error").get(0).play();
-        return;
-    }
-
+    validate() == false ?
+        (v => {
+            $("#error").get(0).play();
+            return;
+        })() : "";
     createSurveyData();
     let count = await editSurveyTrimmingTreeCount();
     soundMessage(count);
