@@ -255,10 +255,6 @@ function setDisplayHistoryData(surveyData) {
         "#name-target-modal",
         "setModalName(" + surveyData.id + ");"
     );
-    // 編集反映
-    // tagInfo += '<td id="cell-edit-' + surveyData.id + '" class="border-style">';
-    // tagInfo += '<a onclick="changeEdit(this.id);" id="' + surveyData.id + '" class="enter">';
-    // tagInfo += '<span id="button-name-' + surveyData.id + '"><i class="material-icons tiny">check_circle</i></span></td>';
     // 削除
     tagInfo += '<td id="cell-delete-' + surveyData.id + '" class="border-style">';
     tagInfo += '<a class="modal-trigger enter" id="delete-' + surveyData.id + '" href="#delete-target-modal" onclick="setDeleteId(' + surveyData.id + ');">';
@@ -368,42 +364,6 @@ function setDIsplayCheckInfo(tagId, data) {
     });
 }
 
-// /**
-//  * 編集可能および編集不可設定
-//  * @param 編集ID
-//  */
-// function changeEdit(editId) {
-//     // 状態判定
-//     if (surveyDataInfoList[editId].editFlag) {
-//         // 編集可能設定
-//         changeTargetLineEnable(editId);
-//         // ボタン使用不可設定
-//         changeButtonDisable(editId);
-//     } else {
-//         // チェック状態設定
-//         surveyDataInfoList[editId].needRope = $('input[name="survey-data-need-rope-' + editId + '"]').val();
-//         surveyDataInfoList[editId].needWire = $('input[name="survey-data-need-wire-' + editId + '"]').val();
-//         surveyDataInfoList[editId].needCutMiddle = $('input[name="survey-data-need-cut-middle-' + editId + '"]').val();
-//         surveyDataInfoList[editId].notNeedCutMiddle = $('input[name="survey-data-not-need-cut-middle-' + editId + '"]').val();
-//         surveyDataInfoList[editId].isDengerTree = $('input[name="survey-data-is-denger-tree-' + editId + '"]').val();
-//         surveyDataInfoList[editId].needCutBranch = $('input[name="survey-data-need-cut-branch-' + editId + '"]').val();
-//         surveyDataInfoList[editId].needCutDivide = $('input[name="survey-data-need-cut-divide-' + editId + '"]').val();
-//         surveyDataInfoList[editId].needCollect = $('input[name="survey-data-need-collect-' + editId + '"]').val();
-//         // 入力チェック
-//         if (inputCheck(editId) == false) {
-//             return;
-//         }
-//         // 伐採木データ更新
-//         updateHistorySurveyDataById(editId);
-//         // 編集不可設定
-//         changeTargetLineDisable(editId);
-//         // ボタン使用可能設定
-//         changeButtonEnable();
-//         // 編集中フラグをfalseへ変更
-//         isEdit = false;
-//     }
-// }
-
 /**
  * 対象行を編集不可に設定
  * @param 対象ID 
@@ -464,68 +424,6 @@ function changeTargetCheckItemDisable(tagId) {
     $(tagId).css("color", "gray");
 }
 
-// /**
-//  * 対象行を編集可能に設定
-//  * @param 対象ID 
-//  */
-// function changeTargetLineEnable(targetId) {
-//     // 編集中フラグをtrueに変更
-//     isEdit = true;
-//     // Noリンク
-//     changeTargetLinkItemEnable("#cell-no-" + targetId, "#survey-data-no-link-" + targetId);
-//     // 樹種リンク
-//     changeTargetLinkItemEnable("#cell-tree-type-" + targetId, "#survey-data-tree-type-link-" + targetId);
-//     // 直径リンク
-//     changeTargetLinkItemEnable("#cell-measured-value-" + targetId, "#survey-data-measured-value-link-" + targetId);
-//     // 伐採ロープあり
-//     changeTargetCheckItemEnable("#cell-need-rope-" + targetId);
-//     // 伐採ワイヤーあり
-//     changeTargetCheckItemEnable("#cell-need-wire-" + targetId);
-//     // 中断切りロープあり
-//     changeTargetCheckItemEnable("#cell-need-cut-middle-" + targetId);
-//     // 中断切りロープなし
-//     changeTargetCheckItemEnable("#cell-not-need-cut-middle-" + targetId);
-//     // 危険木
-//     changeTargetCheckItemEnable("#cell-is-denger-tree-" + targetId);
-//     // 枝払い
-//     changeTargetCheckItemEnable("#cell-need-cut-branch-" + targetId);
-//     // 玉切り
-//     changeTargetCheckItemEnable("#cell-need-cut-divide-" + targetId);
-//     // 集積あり
-//     changeTargetCheckItemEnable("#cell-need-collect-" + targetId);
-//     // 備考リンク
-//     changeTargetLinkItemEnable("#cell-note-" + targetId, "#survey-data-note-link-" + targetId);
-//     // 担当者リンク
-//     changeTargetLinkItemEnable("#cell-name-" + targetId, "#survey-data-name-link-" + targetId);
-//     // 編集反映
-//     $('#cell-edit-' + targetId).css("background-color", "");
-//     // 削除
-//     $('#cell-delete-' + targetId).css("background-color", "");
-//     // フラグ設定
-//     surveyDataInfoList[targetId].editFlag = false;
-// }
-
-// /**
-//  * リンク項目の編集可能設定
-//  * @param セルタグID
-//  * @param リンクタグID
-//  */
-// function changeTargetLinkItemEnable(cellTagId, linkTagId) {
-//     $(cellTagId).css("background-color", "");
-//     $(linkTagId).css("pointer-events", "auto");
-//     $(linkTagId).css("color", "blue");
-// }
-
-// /**
-//  * チェック項目の編集可能設定
-//  * @param タグID
-//  */
-// function changeTargetCheckItemEnable(tagId) {
-//     $(tagId).css("background-color", "");
-//     $(tagId).css("pointer-events", "auto");
-//     $(tagId).css("color", "black");
-// }
-
 /**
  * 編集反映および削除ボタンの使用不可設定
  * @param 対象ID
@@ -557,77 +455,6 @@ function changeButtonEnable() {
         $('#delete-' + idList[i]).css("color", "");
     }
 }
-
-// /**
-//  * 入力チェック
-//  * @param 編集ID
-//  * @return チェック結果
-//  */
-// function inputCheck(editId) {
-//     var result = true;
-//     // Noチェック
-//     if (surveyDataInfoList[editId].number == '') {
-//         alert("申し訳ございません。\r\n連番の入力は必須です。連番を入力してください。");
-//         result = false;
-//     }
-//     // Noの数字チェック
-//     if (result) {
-//         if (!String(surveyDataInfoList[editId].number).match(/^\d+$/)) {
-//             alert("申し訳ございません。\r\n連番は半角数字のみ有効です。半角数字のみ入力してください。");
-//             result = false;
-//         }
-//     }
-//     // 樹種チェック
-//     if (result) {
-//         if (surveyDataInfoList[editId].treeType == '') {
-//             alert("申し訳ございません。\r\n樹種の入力は必須です。樹種を入力してください。");
-//             result = false;
-//         }
-//     }
-//     // 直径チェック
-//     if (result) {
-//         if (surveyDataInfoList[editId].measuredValue == '') {
-//             alert("申し訳ございません。\r\n直径の入力は必須です。直径を入力してください。");
-//             result = false;
-//         }
-//     }
-//     // 直径の桁数チェック
-//     if (result) {
-//         if (Number(surveyDataInfoList[editId].measuredValue) >= 1000) {
-//             alert("申し訳ございません。\r\n直径は1000以上は登録できません。1000未満で入力してください。");
-//             result = false;
-//         }
-//     }
-//     return result;
-// }
-
-// /**
-//  * 伐採木データ更新
-//  * @param 更新ID
-//  */
-// function updateHistorySurveyDataById(updateId) {
-//     var param = [
-//         surveyDataInfoList[updateId].color,
-//         surveyDataInfoList[updateId].word,
-//         surveyDataInfoList[updateId].number,
-//         surveyDataInfoList[updateId].treeType,
-//         surveyDataInfoList[updateId].measuredValue,
-//         surveyDataInfoList[updateId].needRope,
-//         surveyDataInfoList[updateId].needWire,
-//         surveyDataInfoList[updateId].needCutMiddle,
-//         surveyDataInfoList[updateId].notNeedCutMiddle,
-//         surveyDataInfoList[updateId].isDengerTree,
-//         surveyDataInfoList[updateId].needCutBranch,
-//         surveyDataInfoList[updateId].needCutDivide,
-//         surveyDataInfoList[updateId].needCollect,
-//         surveyDataInfoList[updateId].note,
-//         surveyDataInfoList[updateId].name,
-//         fetchUserId(),
-//         updateId
-//     ];
-//     updateSurveyDataById(param);
-// }
-
 /**
  * ナンバリング入力用モーダル画面の表示設定
  * @param Id
@@ -760,54 +587,6 @@ async function deleteData() {
     setPage();
 }
 
-// /**
-//  * 直径変更
-//  */
-// $("#tree-measured-value-1").on('touchstart', function () {
-//     applyMesuredValue(1);
-// });
-
-// $("#tree-measured-value-2").on('touchstart', function () {
-//     applyMesuredValue(2);
-// });
-
-// $("#tree-measured-value-3").on('touchstart', function () {
-//     applyMesuredValue(3);
-// });
-
-// $("#tree-measured-value-4").on('touchstart', function () {
-//     applyMesuredValue(4);
-// });
-
-// $("#tree-measured-value-5").on('touchstart', function () {
-//     applyMesuredValue(5);
-// });
-
-// $("#tree-measured-value-6").on('touchstart', function () {
-//     applyMesuredValue(6);
-// });
-
-// $("#tree-measured-value-7").on('touchstart', function () {
-//     applyMesuredValue(7);
-// });
-
-// $("#tree-measured-value-8").on('touchstart', function () {
-//     applyMesuredValue(8);
-// });
-
-// $("#tree-measured-value-9").on('touchstart', function () {
-//     applyMesuredValue(9);
-// });
-
-// $("#tree-measured-value-0").on('touchstart', function () {
-//     applyMesuredValue(0);
-// });
-
-// $("#tree-measured-value-none").on('touchstart', function () {
-//     treeMeasuredValue = '';
-//     $('#measured-value-modal').text(treeMeasuredValue);
-// });
-
 /**
  * 直径の設定
  * @param {*} value 設定する直径
@@ -819,16 +598,6 @@ function applyMesuredValue(value) {
     treeMeasuredValue += value;
     $('#measured-value-modal').text(treeMeasuredValue);
 }
-
-// /**
-//  * 編集中の行があるかチェックする
-//  * 編集中の行がある場合は画面遷移させない
-//  */
-// function isPossibleEdit() {
-//     if (isEdit) {
-//         return alert('編集中の行があります。更新してから画面遷移してください。')
-//     }
-// }
 
 /**
  * ページング処理
