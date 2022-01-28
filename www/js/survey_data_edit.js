@@ -80,7 +80,7 @@ async function initializeForm(surveyId, surveyDetailId, isHistoryFlag, id) {
         })() :
         (v => {
             for (var i = 0; i < surveyDetailList.rows.length; i++) {
-                texts = setSurveyHistoryData(texts, surveyDetailList.rows.item(i), surveyId, surveyDetailId);
+                texts = setSurveyHistoryData(texts, surveyDetailList.rows.item(i), surveyId, surveyDetailId, i);
             }
         })();
     surveyHistoryItem.append(texts);
@@ -124,12 +124,12 @@ function setSurveyDetailModal(texts, surveyDetail) {
  * 調査データを画面に設定
  * @param 調査データ
  */
-function setSurveyHistoryData(texts, surveyData, surveyId, surveyDetailId) {
+function setSurveyHistoryData(texts, surveyData, surveyId, surveyDetailId, countRows) {
     var needText = "";
-    var countRow = 1;
     texts += '<tr style="border:1px solid #e3e3e3!important;">';
     texts += '<td>';
-    texts += `<a class="ajax" href="javascript:getsurveyNextHistoryData();" val= "../html/survey_data_edit.html?${surveyId}&${surveyData.id}&${surveyDetailId}>`;
+    texts += '<div class="col s0.2" style="display:flex;">';
+    texts += `<a class="ajax" style="display:flex; href="javascript:getsurveyNextHistoryData();" val= "../html/survey_data_edit.html?${surveyId}&${surveyData.id}&${surveyDetailId}>`;
     texts += '<li id="history-data" class="collection-item" style="display:flex;">';
     texts += `<span style="margin-right: 0.5rem;">${surveyData.color}-${surveyData.word}-${surveyData.number}</span>`
     surveyData.survey_data_tree_type !== null ?
@@ -170,19 +170,22 @@ function setSurveyHistoryData(texts, surveyData, surveyId, surveyDetailId) {
     texts += `<span style="margin-right: 0.5rem;">${needText}</span>`;
     texts += '</li>';
     texts += '</a>';
-    if (countRow === 1) {
-        texts += '<il style="color:#122344!important;display:flex;padding:0.1em;margin-bottom:1em;">';
+    texts += '</div>';
+    texts += '<div class="col s0.2 right" style="display:flex;">';
+    if (countRows === 0) {
+        texts += '<il style="color:#122344!important;display:flex;">';
         texts += '<a id="before-history-data" class="waves-effect waves-light" style="display:flex;">';
-        texts += '<i style="color:#122344!important;" class="material-icons fa-5x">expand_less</i>';
+        texts += '<i style="color:#122344!important;font-size: 1.5em;" class="material-icons">expand_less</i>';
         texts += '</a>';
         texts += '</il>'
     } else {
-        texts += '<il style="color:#122344!important;display:flex;padding:0.1em;margin-bottom:1em;">';
+        texts += '<il style="color:#122344!important;display:flex;">';
         texts += '<a id="before-history-data" class="waves-effect waves-light">';
-        texts += '<i style="color:#122344!important;" class="material-icons fa-5x">>expand_more</i>';
+        texts += '<i style="color:#122344!important;font-size: 1.5em;" class="material-icons">expand_more</i>';
         texts += '</a>';
         texts += '</il>'
     }
+    texts += '</div>';
     texts += '</td>';
     texts += '</tr>';
     return texts;
