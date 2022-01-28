@@ -187,7 +187,7 @@ async function generateWebEditModeOffData() {
  * @param surveyAreaIdList 小径木IDデータ
  * @param surveyDataIdList 伐採木IDデータ
  */
- async function webEditModeOffProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaIdList, surveyDataIdList) {
+async function webEditModeOffProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaIdList, surveyDataIdList) {
 
   var item = localStorage.getItem(KEY);
   var obj = JSON.parse(item);
@@ -271,13 +271,13 @@ async function generateSynchronizeData(isWebEditMode) {
           for (var i = 0; i < surveyDataList.rows.length; i++) {
             surveyDataArray.push(surveyDataList.rows.item(i));
           }
-          await synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaArray, surveyDataArray,  (!isWebEditMode) ? synchronizeResult.insertId : 0);
+          await synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaArray, surveyDataArray, (!isWebEditMode) ? synchronizeResult.insertId : 0);
           offset = offset + 4000;
         }
       }
     }
   } else {
-    await synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaArray, surveyDataArray,  (!isWebEditMode) ? synchronizeResult.insertId : 0);
+    await synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaArray, surveyDataArray, (!isWebEditMode) ? synchronizeResult.insertId : 0);
   }
 };
 
@@ -393,45 +393,45 @@ async function requestSynchronizeResult() {
       'Authorization': obj.token
     }
   })
-  .done(async (data) => {
+    .done(async (data) => {
 
-    var jsonData = JSON.stringify(data);
-    if (data.length === 0) {
-      $('#modalLocation').modal('close');
-      return alert("正常に同期処理が終了しませんでした。再度同期処理を実行してください。");
-    }
-
-    var responseData = JSON.parse(jsonData);
-    if (!isStatusFinish(responseData.synchronizeWebToMobile)) {
-      $('#modalLocation').modal('close');
-      return alert("現在同期処理実行中です。しばらくしてから再度確認ボタンを押してください。");
-    }
-
-    let status = await updateSynchronizeResultDetail(responseData.synchronizeWebToMobile);
-    let error = await updateSynchronizeResultStatus(status, latestSynchronizeResultId);
-    
-    await applySynchronizeResult();
-
-    if (status === STATUS.error) {
-      applyErrorModal(status, error);
-      $('#synchronizeError').modal('open');
-    } else {
-      for (var i = 0; i < responseData.synchronizeWebToMobile.length; i++) {
-        let ResponseDataTmp = responseData.synchronizeWebToMobile[i];
-        await synchronizeWebToMobile(JSON.parse(ResponseDataTmp.synchronizeToMobile));
+      var jsonData = JSON.stringify(data);
+      if (data.length === 0) {
+        $('#modalLocation').modal('close');
+        return alert("正常に同期処理が終了しませんでした。再度同期処理を実行してください。");
       }
-      $('#synchronize-request').modal('open');
-    }
 
-    $('#modalLocation').modal({ close: true });
-    // 同期処理結果を画面表示
-    await showSurveyList();
-  })
-  .fail(async (jqXHR, textStatus, errorThrown) => {
-    var jsonData = JSON.stringify(jqXHR);
-    var responseData = JSON.parse(jsonData);
-    errorProcess(responseData);
-  });
+      var responseData = JSON.parse(jsonData);
+      if (!isStatusFinish(responseData.synchronizeWebToMobile)) {
+        $('#modalLocation').modal('close');
+        return alert("現在同期処理実行中です。しばらくしてから再度確認ボタンを押してください。");
+      }
+
+      let status = await updateSynchronizeResultDetail(responseData.synchronizeWebToMobile);
+      let error = await updateSynchronizeResultStatus(status, latestSynchronizeResultId);
+
+      await applySynchronizeResult();
+
+      if (status === STATUS.error) {
+        applyErrorModal(status, error);
+        $('#synchronizeError').modal('open');
+      } else {
+        for (var i = 0; i < responseData.synchronizeWebToMobile.length; i++) {
+          let ResponseDataTmp = responseData.synchronizeWebToMobile[i];
+          await synchronizeWebToMobile(JSON.parse(ResponseDataTmp.synchronizeToMobile));
+        }
+        $('#synchronize-request').modal('open');
+      }
+
+      $('#modalLocation').modal({ close: true });
+      // 同期処理結果を画面表示
+      await showSurveyList();
+    })
+    .fail(async (jqXHR, textStatus, errorThrown) => {
+      var jsonData = JSON.stringify(jqXHR);
+      var responseData = JSON.parse(jsonData);
+      errorProcess(responseData);
+    });
 }
 
 /**
