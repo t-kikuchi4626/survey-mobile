@@ -63,7 +63,7 @@ function fetchSurveyDataBySurveyDetailId(surveyDetailId) {
 function fetchSurveyNewDataBySurveyId(id) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM survey_data WHERE id >= ? AND is_delete = ? order by created_date desc limit 2', [id, 'false'], function (ignored, resultSet) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE id > ? AND is_delete = ? order by created_date desc limit 2', [id, 'false'], function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
@@ -72,21 +72,22 @@ function fetchSurveyNewDataBySurveyId(id) {
     });
 }
 
-// /**
-//  * 所在地IDをもとに伐採木データ取得（１件古いもの）
-//  * @param 所在地ID
-//  */
-// function fetchSurveyOldDataBySurveyId(id) {
-//     return new Promise(function (resolve) {
-//         database.transaction(function (transaction) {
-//             transaction.executeSql('SELECT * FROM survey_data WHERE id <= AND is_delete = ? order by created_date desc limit 2', [id, 'false'], function (ignored, resultSet) {
-//                 resolve(resultSet);
-//             }, function (error) {
-//                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
-//             });
-//         });
-//     });
-// }
+
+/**
+  * 所在地IDをもとに伐採木データ取得（１件古いもの）
+  * @param 所在地ID
+  */
+function fetchSurveyOldDataBySurveyId(id) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE id < ? AND is_delete = ? order by created_date desc limit 2', [id, 'false'], function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            });
+        });
+    });
+}
 
 
 /**
@@ -604,6 +605,39 @@ function fetchTypeMeasuredValueByTreeType(surveyDetailId, treeType) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
             });
         });
+    });
+}
+
+/**
+ * IDをもとに伐採木更新(モーダル)
+ * @param 更新データ
+ * @param ユーザID
+ */
+function updateSurveyDataByIdInModal(param) {
+    var sql = 'UPDATE survey_data SET ' +
+        'color = ?, ' +
+        'word = ?, ' +
+        'number = ?, ' +
+        'branch-number= ?,' +
+        'survey_data_tree_type = ?, ' +
+        'tree_measured_value = ?, ' +
+        'need_rope = ?, ' +
+        'need_wire = ?, ' +
+        'need_cut_middle = ?, ' +
+        'not_need_cut_middle = ?, ' +
+        'is_danger_tree = ?, ' +
+        'need_cut_branch = ?, ' +
+        'need_cut_divide = ?, ' +
+        'need_collect = ?, ' +
+        'note = ?, ' +
+        'name = ?, ' +
+        'modified_by = ?, ' +
+        'modified_date = DATETIME(\'now\', \'localtime\') ' +
+        'WHERE id = ? ';
+    database.transaction(function (transaction) {
+        transaction.executeSql(sql, param);
+    }, function (error) {
+        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
     });
 }
 

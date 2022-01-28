@@ -94,13 +94,13 @@ function setTargetSurveyArea(surveyArea) {
     // 集積あり/4cm未満
     if (surveyArea.need_collect == 'true' && surveyArea.is_four_measured == 'true') {
         $('input[name=len]:eq(0)').prop("checked", true);
-    // 集積あり/4cm以上
+        // 集積あり/4cm以上
     } else if (surveyArea.need_collect == 'true' && surveyArea.is_four_measured == 'false') {
         $('input[name=len]:eq(1)').prop("checked", true);
-    // 集積なし/4cm未満
+        // 集積なし/4cm未満
     } else if (surveyArea.need_collect == 'false' && surveyArea.is_four_measured == 'true') {
         $('input[name=len]:eq(2)').prop("checked", true);
-    // 集積なし/4cm以上
+        // 集積なし/4cm以上
     } else if (surveyArea.need_collect == 'false' && surveyArea.is_four_measured == 'false') {
         $('input[name=len]:eq(3)').prop("checked", true);
     }
@@ -110,6 +110,8 @@ function setTargetSurveyArea(surveyArea) {
  * 小径木データ登録および更新
  */
 async function createEditSurveyArea() {
+    //2件以上更新される不具合の対応
+    var param = "";
     // 入力チェック
     if (validate()) {
 
@@ -161,19 +163,19 @@ function applyLen() {
     let needCollect = true;
     let isFourMeasured = true;
     if ($('#need-collect-is-four-measured').prop("checked")) {
-      needCollect = true;
-      isFourMeasured = true;
+        needCollect = true;
+        isFourMeasured = true;
     } else if ($('#need-collect-is-not-four-measured').prop("checked")) {
-      needCollect = true;
-      isFourMeasured = false;
+        needCollect = true;
+        isFourMeasured = false;
     } else if ($('#not-need-collect-is-four-measured').prop("checked")) {
-      needCollect = false;
-      isFourMeasured = true;
+        needCollect = false;
+        isFourMeasured = true;
     } else if ($('#not-need-collect-is-not-four-measured').prop("checked")) {
-      needCollect = false;
-      isFourMeasured = false;
+        needCollect = false;
+        isFourMeasured = false;
     }
-  return [needCollect, isFourMeasured];
+    return [needCollect, isFourMeasured];
 }
 
 /**

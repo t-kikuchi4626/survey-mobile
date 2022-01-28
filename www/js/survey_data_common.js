@@ -15,6 +15,21 @@ function updateInputTextArea(inputdata, column, required, number) {
 }
 
 /**
+ * テキストボックスの更新処理(モーダル内)
+ * @param {*} 更新内容
+ * @param {*} 更新カラム
+ * @param {*} 必須チェック有無
+ * @param {*} 数値チェック有無
+ */
+function updateInputTextAreaInModal(inputdata, column, required, number) {
+    if (required && validateRequired(inputdata, column)) {
+        return;
+    }
+    if (number && validateNumber(inputdata, column)) {
+        return;
+    }
+}
+/**
  * 必須チェック
  * @param {*} 入力値
  * @param {*} 更新カラム
@@ -55,9 +70,36 @@ function validateNumber(inputdata, column) {
 function inputTreeType(id, val) {
     $(id).val(val);
     $(id).change();
-    $('.tree-select-btn').addClass("not-select");
+    $('.def-tree-select-btn').addClass("not-select");
     $('#' + val).removeClass("not-select");
 }
+
+/**
+ * 樹種ボタン押下時、入力欄に樹種名を設定
+ * @param 樹種入力欄ID
+ * @param 設定する樹種名
+ * @param 樹種ボタンのID
+ */
+function inputTreeTypeInModal1(id, val) {
+    $(id).val(val);
+    $(id).change();
+    $('.1modal-tree-select-btn').addClass("not-select");
+    $('#' + val).removeClass("not-select");
+}
+
+/**
+ * 樹種ボタン押下時、入力欄に樹種名を設定
+ * @param 樹種入力欄ID
+ * @param 設定する樹種名
+ * @param 樹種ボタンのID
+ */
+function inputTreeTypeInModal2(id, val) {
+    $(id).val(val);
+    $(id).change();
+    $('.2modal-tree-select-btn').addClass("not-select");
+    $('#' + val).removeClass("not-select");
+}
+
 
 /**
  * 樹種選択ボタンの生成
@@ -69,20 +111,65 @@ function setTreeTypeButton(treeTypes, specialTree, input) {
     if (treeTypes) {
         var arrayTreeTypes = treeTypes.split(',');
         for (let i in arrayTreeTypes) {
-            var html = `<a id="${arrayTreeTypes[i]}" href="javascript:inputTreeType('#${input}', '${arrayTreeTypes[i]}')" class="tree-select-btn waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">${arrayTreeTypes[i]}</a>`;
+            var html = `<a id="${arrayTreeTypes[i]}" href="javascript:inputTreeType('#${input}', '${arrayTreeTypes[i]}')" class="def-tree-select-btn waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">${arrayTreeTypes[i]}</a>`;
             $('#tree-type-list').append(html);
         }
     }
     if (specialTree) {
         var arrayspecialTree = specialTree.split(',');
         for (let i in arrayspecialTree) {
-            var html = `<a id="${arrayspecialTree[i]}" href="javascript:inputTreeType('#${input}', '${arrayspecialTree[i]}')" class="tree-select-btn waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">${specialTree}</a>`;
+            var html = `<a id="${arrayspecialTree[i]}" href="javascript:inputTreeType('#${input}', '${arrayspecialTree[i]}')" class="def-tree-select-btn waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">${specialTree}</a>`;
             $('#tree-type-list').append(html);
         }
     }
 }
 
+/**
+ * モーダル内樹種選択ボタンの生成
+ * @param 樹種タイプ
+ * @param 特殊樹
+ * @param 入力項目
+ */
+function setTreeTypeButtonInModal1(treeTypes, specialTree, input) {
+    if (treeTypes) {
+        var arrayTreeTypes = treeTypes.split(',');
+        for (let i in arrayTreeTypes) {
+            var html = `<a id="${arrayTreeTypes[i]}InModal1" href="javascript:inputTreeTypeInModal1('#${input}', '${arrayTreeTypes[i]}')" class="1modal-tree-select-btn waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">${arrayTreeTypes[i]}</a>`;
+            $('#modal-tree1').append(html);
+        }
+    }
+    if (specialTree) {
+        var arrayspecialTree = specialTree.split(',');
+        for (let i in arrayspecialTree) {
+            var html = `<a id="${arrayspecialTree[i]}InModal1" href="javascript:inputTreeTypeInModal1('#${input}', '${arrayspecialTree[i]}')" class="1modal-tree-select-btn waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">${specialTree}</a>`;
+            $('#modal-tree1').append(html);
+        }
+    }
+}
 
+
+/**
+ * モーダル内樹種選択ボタンの生成
+ * @param 樹種タイプ
+ * @param 特殊樹
+ * @param 入力項目
+ */
+function setTreeTypeButtonInModal2(treeTypes, specialTree, input) {
+    if (treeTypes) {
+        var arrayTreeTypes = treeTypes.split(',');
+        for (let i in arrayTreeTypes) {
+            var html = `<a id="${arrayTreeTypes[i]}InModal2" href="javascript:inputTreeTypeInModal2('#${input}', '${arrayTreeTypes[i]}')" class="2modal-tree-select-btn waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">${arrayTreeTypes[i]}</a>`;
+            $('#modal-tree2').append(html);
+        }
+    }
+    if (specialTree) {
+        var arrayspecialTree = specialTree.split(',');
+        for (let i in arrayspecialTree) {
+            var html = `<a id="${arrayspecialTree[i]}InModal2" href="javascript:inputTreeTypeInModal2('#${input}', '${arrayspecialTree[i]}')" class="2modal-tree-select-btn waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">${specialTree}</a>`;
+            $('#modal-tree2').append(html);
+        }
+    }
+}
 /**
  * 樹種ごとのカウントをテーブル形式で表示
  * @param 連想配列（樹種、カウント数）
