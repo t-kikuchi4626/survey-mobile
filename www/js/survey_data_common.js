@@ -188,6 +188,7 @@ function setTreeCount(treeCountArray) {
     });
     $('#tree-type-list-count-value').append('<td>' + counts + '本</td>');
 }
+
 /**
  * 登録画面遷移リンク作成
  * @param 調査ID
@@ -195,7 +196,7 @@ function setTreeCount(treeCountArray) {
  */
 function createRegisterLink(surveyId, surveyDetailId) {
     var surveyDataRegisterLink = $('#survey-data-register-link');
-    var registerLinkText = '<a href="../html/survey_data_edit.html?' + surveyId + surveyDetailId + '><i class="material-icons">arrow_back_ios</i></a>';
+    var registerLinkText = `<a href="../html/survey_data_edit.html?${surveyId}&${surveyDetailId}"><i class="material-icons">arrow_back_ios</i></a>`;
     surveyDataRegisterLink.append(registerLinkText);
 }
 
@@ -207,11 +208,11 @@ function createRegisterLink(surveyId, surveyDetailId) {
 function createSidenavLink(surveyId, surveyDetailId) {
     // 一覧画面遷移タグ作成
     var surveyDataListLink = $('#survey-data-list-link');
-    var linkText = '<a href="../html/survey_data_list.html?' + surveyId + '&' + surveyDetailId + '"><i class="material-icons">list</i>伐採木データ一覧画面</a>';
+    var linkText = `<a href="../html/survey_data_list.html?${surveyId}&${surveyDetailId}"><i class="material-icons">list</i>伐採木データ一覧画面</a>`;
     surveyDataListLink.append(linkText);
 
     // 履歴一覧画面遷移タグ作成
     var surveyDataHistoryListLink = $('#survey-data-history-list-link');
-    var historyLinkText = '<a href="../html/survey_data_history_list.html?' + surveyId + '&' + surveyDetailId + '"><i class="material-icons">history</i>伐採木データ履歴一覧画面</a>';
+    var historyLinkText = `<a href="../html/survey_data_history_list.html?${surveyId}&${surveyDetailId}"><i class="material-icons">history</i>伐採木データ履歴一覧画面</a>`;
     surveyDataHistoryListLink.append(historyLinkText);
 }
