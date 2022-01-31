@@ -15,21 +15,6 @@ function updateInputTextArea(inputdata, column, required, number) {
 }
 
 /**
- * テキストボックスの更新処理(モーダル内)
- * @param {*} 更新内容
- * @param {*} 更新カラム
- * @param {*} 必須チェック有無
- * @param {*} 数値チェック有無
- */
-function updateInputTextAreaInModal(inputdata, column, required, number) {
-    if (required && validateRequired(inputdata, column)) {
-        return;
-    }
-    if (number && validateNumber(inputdata, column)) {
-        return;
-    }
-}
-/**
  * 必須チェック
  * @param {*} 入力値
  * @param {*} 更新カラム
@@ -81,7 +66,8 @@ function inputTreeType(id, val) {
  * @param 樹種ボタンのID
  */
 function inputTreeTypeInModal(id, val) {
-    $(id).val(val);
+    var vals = val.replace('modal-', "");;
+    $(id).val(vals);
     $(id).change();
     $('.tree-select-btn-in-modal').addClass("not-select");
     $('#' + val).removeClass("not-select");

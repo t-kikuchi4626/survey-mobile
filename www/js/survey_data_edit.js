@@ -72,6 +72,7 @@ async function initializeForm(surveyId, surveyDetailId, id) {
             }
         })();
     surveyHistoryItem.append(texts);
+
     //初期表示
     var surveyData = await fetchNewSurveyHistoryDataById(id);
     if (surveyData != undefined) {
@@ -110,9 +111,9 @@ function setSurveyHistoryData(texts, surveyData, countRows) {
     texts += '<td>';
     texts += '<div class="first col s0.2" style="display:flex;">';
     if (countRows === 0) {
-        texts += `<a href="#history-modal" class="modal-trigger waves-effect waves-light enter mobile-floating" style="display:flex;">`;
+        texts += `<a onclick="modalSetData('${surveyData}')" class="modal-trigger waves-effect waves-light enter mobile-floating" style="display:flex;">`;
     } else {
-        texts += `<a href="#history-modal" class="modal-trigger waves-effect waves-light enter mobile-floating" style="display:flex;">`;
+        texts += `<a onclick="modalSetData('${surveyData}')" class="modal-trigger waves-effect waves-light enter mobile-floating" style="display:flex;">`;
     }
     texts += '<li id="history-data" class="collection-item" style="display:flex;">';
     texts += `<span style="margin-right: 0.5rem;">${surveyData.color}-${surveyData.word}-${surveyData.number}</span>`
@@ -267,6 +268,15 @@ function setSurveyDataInModal(surveyData) {
  * 伐採木データ設定
  * @param 伐採木データ
  */
+function modalSetData(surveyData) {
+    setSurveyDataInModal(surveyData);
+    $('#history-modal').modal('open');
+}
+
+/**
+ * 伐採木データ設定
+ * @param 伐採木データ
+ */
 function setSurveyData(surveyData) {
     //id
     $('#survey-data-id').val(surveyData.id);
@@ -414,7 +424,7 @@ function setTreeType(surveyData) {
 /**
  * 樹種の表示設定
  */
-function setTreeType(surveyData) {
+function setTreeTypeInModal(surveyData) {
     if (surveyData.survey_data_tree_type !== null) {
         $('#modalSurveyDataTreeType').text(surveyData.survey_data_tree_type);
         $('#modalSurveyDataTreeType').val(surveyData.survey_data_tree_type);
@@ -953,11 +963,9 @@ function changeKeyPadInModal() {
         $('#modal-numeric-keypad').show();
         $('#modal-key-pad-type').val('numeric-keypad');
     } else {
-        alert(2)
         $('#modal-numeric-keypad').hide();
         $('#modal-table-keypad').show();
         $('#modal-done').show();
         $('#modal-key-pad-type').val('table-keypad');
     }
 }
-
