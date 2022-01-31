@@ -601,7 +601,7 @@ $("[id^=tree-measured-value-]").on('touchstart', function () {
 });
 
 /**
- * 直径変更(モーダル1内)
+ * 直径変更(モーダル内)
  */
 $("[id^=modal-tree-measured-value-]").on('touchstart', function () {
     var number = $(this).attr("id").replace('modal-tree-measured-value-', "");
@@ -612,21 +612,6 @@ $("[id^=modal-tree-measured-value-]").on('touchstart', function () {
         })() :
         (v => {
             applyMesuredValueOfTableKeypadInModal1(number);
-        })();
-});
-
-/**
- * 直径変更(モーダル2内)
- */
-$("[id^=2modal-tree-measured-value-]").on('touchstart', function () {
-    var number = $(this).attr("id").replace('2modal-tree-measured-value-', "");
-    number == 'none' ?
-        (v => {
-            $('#2modal-survey-data-mesured-value').text('');
-            $('#2modal-survey-data-mesured-value').val('');
-        })() :
-        (v => {
-            applyMesuredValueOfTableKeypadInModal2(number);
         })();
 });
 
@@ -664,22 +649,6 @@ async function createEditSurveyDataInModal1() {
     initializeForm();
 }
 
-/**
- * 伐採木データ作成および更新(履歴データから)
- */
-async function createEditSurveyDataInModal2() {
-    validateInModal2() == false ?
-        (v => {
-            $("#error").get(0).play();
-            return;
-        })() : "";
-    createSurveyDataInModal2();
-    let count = await editSurveyTrimmingTreeCount();
-    soundMessage(count);
-    M.toast({ html: '登録しました！', displayLength: 2000 });
-
-    initializeForm();
-}
 
 /**
  * 登録本数により音声を流す
