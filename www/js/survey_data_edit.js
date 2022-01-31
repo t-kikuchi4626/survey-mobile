@@ -232,6 +232,7 @@ function setSurveyDataInModal(surveyData) {
     $('#modal-word').val(surveyData.word);
     $('#modal-number').val(surveyData.number + 1);
     $('#modal-branch-number').val(surveyData.branch_number);
+    alert(surveyData.color)
     setNoInModal();
     // 樹種
     $('#modal' + surveyData.survey_data_tree_type).removeClass("not-select");
@@ -311,7 +312,7 @@ function setSurveyDataInModal(surveyData) {
  * @param 伐採木データ
  */
 async function modalSetData(id) {
-    var surveyDetailList = await fetchSurveyDetailById(id);
+    var surveyDetailList = await fetchSurveyDataBySurveyId(id);
     if (surveyDetailList.rows.length !== 0) {
         setSurveyDataInModal(surveyDetailList.rows.item(0));
     }
@@ -511,7 +512,6 @@ async function newHistoryData(newId) {
         }
         historyTrItem.remove();
         surveyHistoryItem.append(texts);
-        alert(surveyHistoryItem.html());
     }
 };
 
