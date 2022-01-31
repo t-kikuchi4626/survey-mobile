@@ -111,7 +111,7 @@ function setSurveyHistoryData(texts, surveyData, countRows) {
     texts += '<td>';
     texts += '<div class="first col s0.2" style="display:flex;">';
     if (countRows === 0) {
-        texts += `<a onclick="modalSetData('${surveyData}')" class="modal-trigger waves-effect waves-light enter mobile-floating" style="display:flex;">`;
+        texts += `<a onclick="modalSetData('${surveyData.id}')" class="modal-trigger waves-effect waves-light enter mobile-floating" style="display:flex;">`;
     } else {
         texts += `<a onclick="modalSetData('${surveyData}')" class="modal-trigger waves-effect waves-light enter mobile-floating" style="display:flex;">`;
     }
@@ -178,10 +178,52 @@ function setSurveyHistoryData(texts, surveyData, countRows) {
  * 伐採木データ設定(モーダル)
  * @param 伐採木データ
  */
-function setSurveyDataInModal(surveyData) {
+function initializeModalData() {
     // 担当者名
-    $('#modal-name-modal').val(surveyData.name);
-    $('#modal-name').text(surveyData.name);
+    $('#modal-name-modal').val();
+    $('#modal-name').text();
+    // 備考
+    $('#modal-note-modal').val();
+    $('#modal-note').text();
+    // No
+    $('#modal-color').val();
+    $('#modal-word').val();
+    $('#modal-number').val();
+    $('#modal-branch-number').val();
+    // 樹種
+    $('#modalSurveyDataTreeType').text();
+    $('#modalSurveyDataTreeType').val();
+    // 直径
+    $('#modal-survey-data-mesured-value').val();
+    $('#modal-survey-data-mesured-value').text();
+    // 伐採ロープ
+    $('#modal-survey-data-need-rope').addClass("hidden");
+    $('input[name="modal-survey-data-need-rope"]').val(false);
+    // 伐採ワイヤー
+    $('#modal-survey-data-need-wire').addClass("hidden");
+    $('input[name="modal-survey-data-need-wire"]').val(false);
+    $('#modal-survey-data-need-cut-middle').addClass("hidden");
+    $('input[name="modal-survey-data-need-cut-middle"]').val(false);
+    // 中断切ロープ無
+    $('#modal-survey-data-not-need-cut-middle').addClass("hidden");
+    $('input[name="modal-survey-data-not-need-cut-middle"]').val(false);
+    // 危険木
+    $('#modal-survey-data-is-denger-tree').addClass("hidden");
+    $('input[name="modal-survey-data-is-denger-tree"]').val(false);
+    // 枝払い
+    $('#modal-survey-data-need-cut-branch').addClass("hidden");
+    $('input[name="modal-survey-data-need-cut-branch"]').val(false);
+    // 玉切り
+    $('#modal-survey-data-need-cut-divide').addClass("hidden");
+    $('input[name="modal-survey-data-need-cut-divide"]').val(false);
+    $('#modal-survey-data-need-collect').addClass("checked", false);
+}
+
+/**
+ * 伐採木データ設定(モーダル)
+ * @param 伐採木データ
+ */
+function setSurveyDataInModal(surveyData) {
     // 備考
     $('#modal-note-modal').val(surveyData.note);
     $('#modal-note').text(surveyData.note);
@@ -268,8 +310,11 @@ function setSurveyDataInModal(surveyData) {
  * 伐採木データ設定
  * @param 伐採木データ
  */
-function modalSetData(surveyData) {
-    setSurveyDataInModal(surveyData);
+async function modalSetData(id) {
+    var surveyDetailList = await fetchSurveyDetailById(id);
+    if (surveyDetailList.rows.length !== 0) {
+        setSurveyDataInModal(surveyDetailList.rows.item(0));
+    }
     $('#history-modal').modal('open');
 }
 
@@ -407,6 +452,7 @@ function setNoInModal() {
     }
     no += branchNumber;
     $('#modal-survey-data-no').text(no);
+    alert(no);
 }
 
 /**
