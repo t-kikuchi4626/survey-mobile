@@ -293,33 +293,33 @@
   </div>
   <!-- 備考、キーボード、登録ボタン -->
   <!-- Modal Structure -->
-  <div id="number-target-modal" class="modal">
+  <div id="number-target-modal" class="modal mobile-floating">
     <div class="modal-content">
       <h6>ナンバリングを入力してください。</h6>
       <div class="row bottom-0">
-        <div class="input-field col s6 bottom-0 modal-input">
-          <input id="color" name="color" type="text" class="color" maxlength="5" placeholder="色">
-          <label for="color">色</label>
+        <div class="input-field col s6 bottom-0 modal-input mobile-floating">
+          <input id="color" name="color" type="text" class="color mobile-floating" maxlength="5" placeholder="色">
+          <label for="color" class="mobile-floating">色</label>
         </div>
       </div>
       <div class="row bottom-0">
-        <div class="input-field col s6 bottom-0 modal-input">
-          <input id="word" name="word" type="text" class="word" maxlength="2" placeholder="文字">
-          <label for="word">文字</label>
+        <div class="input-field col s6 bottom-0 modal-input mobile-floating">
+          <input id="word" name="word" type="text" class="word mobile-floating" maxlength="2" placeholder="文字">
+          <label for="word" class="mobile-floating">文字</label>
         </div>
       </div>
       <div class="row bottom-0">
-        <div class="input-field col s6 bottom-0 modal-input">
-          <input id="number" name="number" type="text" class="number" maxlength="4" value="1" placeholder="連番"
-            onchange="updateInputTextArea(this, 'number', true, true)">
-          <label for="number">連番</label>
+        <div class="input-field col s6 bottom-0 modal-input mobile-floating">
+          <input id="number" name="number" type="text" class="number mobile-floating" maxlength="4" value="1"
+            placeholder="連番" onchange="updateInputTextArea(this, 'number', true, true)">
+          <label for="number" class="mobile-floating">連番</label>
         </div>
       </div>
       <div class="row bottom-0">
-        <div class="input-field col s6 bottom-0 modal-input">
-          <input id="branch-number" name="branch-number" type="text" class="number" maxlength="4" value="1"
-            placeholder="枝番">
-          <label for="branch-number">枝番</label>
+        <div class="input-field col s6 bottom-0 modal-input mobile-floating">
+          <input id="branch-number" name="branch-number" type="text mobile-floating" class="number" maxlength="4"
+            value="1" placeholder="枝番">
+          <label for="branch-number" class="mobile-floating">枝番</label>
         </div>
       </div>
       <span id="number_required" class="error message-text" style="display:none"><i
@@ -338,8 +338,8 @@
       <h6>備考を入力してください。</h6>
       <div class="row">
         <div class="input-field col s12 modal-input">
-          <textarea id="note-modal" class="materialize-textarea" placeholder="備考" maxlength="300"
-            style="font-size: 18px!important"></textarea>
+          <textarea id="note-modal" class="materialize-textarea mobile-floating" placeholder="備考"
+            maxlength="300"></textarea>
         </div>
       </div>
     </div>
@@ -374,7 +374,7 @@
   </div>
 
   <!-- 履歴情報表示モーダル -->
-  <div id="history-modal" class="modal large">
+  <div id="history-modal" class="modal">
     <div id="past-history" class="modal-content">
       <h6>履歴情報</h6>
       <div class="container">
@@ -586,6 +586,10 @@
               </div>
             </div>
           </div>
+          <div class="modal-footer">
+            <a href="javascript:setNoInModal('true');"
+              class="waves-effect waves-light btn normal-button enter mobile-btn">確定</a>
+          </div>
         </div>
         <!-- 備考、キーボード、登録ボタン -->
         <div class="row bottom-5 left" style="margin: 1rem;">
@@ -599,7 +603,7 @@
         <div class="row bottom-5" style="margin: 1rem;">
           <div class="col s1.5 right">
             <div class="edit">
-              <a id="modal-done" href="javascript:createEditSurveyDataInModal1()"
+              <a id="modal-done" href="javascript:createEditSurveyDataInModal()"
                 class="btn-floating waves-effect waves-light enter mobile-floating">
                 <i class="material-icons">done</i></a>
             </div>
@@ -619,8 +623,8 @@
               <h6>備考を入力してください。</h6>
               <div class="row">
                 <div class="input-field col s12 modal-input">
-                  <textarea id="modal-note-modal" class="materialize-textarea" placeholder="備考" maxlength="300"
-                    style="font-size: 18px!important"></textarea>
+                  <textarea id="modal-note-modal" class="materialize-textarea mobile-floating" placeholder="備考"
+                    maxlength="300"></textarea>
                 </div>
               </div>
             </div>
@@ -629,6 +633,7 @@
                 class="waves-effect waves-light btn normal-button enter mobile-btn">確定</a>
             </div>
           </div>
+          <input id="modal-id" val="" type="hidden" />
           <!-- 備考入力モーダル -->
         </div>
       </div>

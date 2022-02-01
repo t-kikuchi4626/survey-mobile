@@ -652,7 +652,7 @@ function updateSurveyDataByIdInModal(param) {
         'color = ?, ' +
         'word = ?, ' +
         'number = ?, ' +
-        'branch-number= ?,' +
+        // 'branch_number= ?,' +
         'survey_data_tree_type = ?, ' +
         'tree_measured_value = ?, ' +
         'need_rope = ?, ' +
@@ -664,14 +664,19 @@ function updateSurveyDataByIdInModal(param) {
         'need_cut_divide = ?, ' +
         'need_collect = ?, ' +
         'note = ?, ' +
-        'name = ?, ' +
         'modified_by = ?, ' +
         'modified_date = DATETIME(\'now\', \'localtime\') ' +
         'WHERE id = ? ';
+    alert(param)
     database.transaction(function (transaction) {
-        transaction.executeSql(sql, param);
+        var num = transaction.executeSql(sql, param);
+        if (num == undefined) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            return;
+        }
     }, function (error) {
         alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+        return;
     });
 }
 

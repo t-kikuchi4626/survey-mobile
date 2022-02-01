@@ -106,14 +106,17 @@ function setSurveyDetailModal(texts, surveyDetail) {
  * @param 調査データ
  */
 function setSurveyHistoryData(texts, surveyData, countRows) {
+    //更新用に値を保持する
+    $("#modal-id").val(surveyData.id);
+
     var needText = "";
     texts += '<tr id="historyTr" style="border:1px solid #e3e3e3!important;">';
     texts += '<td>';
     texts += '<div class="first col s0.2" style="display:flex;">';
     if (countRows === 0) {
-        texts += `<a onclick="modalSetData('${surveyData.id}')" class="modal-trigger waves-effect waves-light enter mobile-floating" style="display:flex;">`;
+        texts += `<a onclick="modalSetData('${surveyData.id}')" class="waves-effect waves-light enter mobile-floating" style="display:flex;">`;
     } else {
-        texts += `<a onclick="modalSetData('${surveyData.id}')" class="modal-trigger waves-effect waves-light enter mobile-floating" style="display:flex;">`;
+        texts += `<a onclick="modalSetData('${surveyData.id}')" class="waves-effect waves-light enter mobile-floating" style="display:flex;">`;
     }
     texts += '<li id="history-data" class="collection-item" style="display:flex;">';
     texts += `<span style="margin-right: 0.5rem;">${surveyData.color}-${surveyData.word}-${surveyData.number}</span>`
@@ -158,12 +161,12 @@ function setSurveyHistoryData(texts, surveyData, countRows) {
     texts += '</div>';
     texts += '<div class="col s0.2 right" style="display:flex;">';
     if (countRows === 0) {
-        texts += `<a onclick="newHistoryData('${surveyData.id}')" id="${surveyData.id}">`;
+        texts += `<a class="new-history-data" onclick="newHistoryData('${surveyData.id}')" id="${surveyData.id}">`;
         texts += '<i style="color:#122344!important;font-size: 1.5em;" class="material-icons">expand_less</i>';
         texts += '</a>';
         texts += '</il>'
     } else {
-        texts += `<a onclick="oldHistoryData('${surveyData.id}')" id="${surveyData.id}">`;
+        texts += `<a class="old-history-data" onclick="oldHistoryData('${surveyData.id}')" id="${surveyData.id}">`;
         texts += '<i style="color:#122344!important;font-size: 1.5em;" class="material-icons">expand_more</i>';
         texts += '</a>';
         texts += '</il>'
@@ -232,7 +235,7 @@ function setSurveyDataInModal(surveyData) {
     $('#modal-word').val(surveyData.word);
     $('#modal-number').val(surveyData.number);
     $('#modal-branch-number').val(surveyData.branch_number);
-    setNoInModal();
+    setNoInModal(false);
     // 樹種
     $('#modal-' + surveyData.survey_data_tree_type).removeClass("not-select");
     $('#modalSurveyDataTreeType').text(surveyData.survey_data_tree_type);
@@ -436,7 +439,7 @@ function setNo() {
 /**
  * Noの表示設定(モーダル内)
  */
-function setNoInModal() {
+function setNoInModal(initfFag) {
     var color = $('#modal-color').val();
     var word = $('#modal-word').val();
     var number = $('#modal-number').val();
@@ -453,6 +456,9 @@ function setNoInModal() {
     }
     no += branchNumber;
     $('#modal-survey-data-no').text(no);
+    if (initfFag === 'true') {
+        $('#modal-number-target-modal').modal('close');
+    }
 }
 
 /**
@@ -518,8 +524,10 @@ async function newHistoryData(newId) {
         tbTexts = '<table id="history-list-contents" style="width:100%;table-layout:fixed;">';
         for (var i = 0; i < surveyDetailList.rows.length; i++) {
             var rowNum = surveyDetailList.rows.item(i).num;
+            var id = surveyDetailList.rows.item(i).id;
         }
         var surveyDetailNewList = await fetchSurveyNewDataBySurveyIdByrowNum(newId, rowNum);
+
         for (var i = 0; i < surveyDetailNewList.rows.length; i++) {
             texts = setSurveyHistoryData(texts, surveyDetailNewList.rows.item(i), i);
         }
@@ -692,34 +700,29 @@ $("[id^=modal-tree-measured-value-]").on('touchstart', function () {
  * 伐採木データ作成および更新
  */
 async function createEditSurveyData() {
-    validate() == false ?
-        (v => {
-            $("#error").get(0).play();
-            return;
-        })() : "";
+    if (validate() == false) {
+        $("#error").get(0).play();
+        return;
+    }
     createSurveyData();
     let count = await editSurveyTrimmingTreeCount();
     soundMessage(count);
     M.toast({ html: '登録しました！', displayLength: 2000 });
-
     initializeForm();
 }
 
 /**
  * 伐採木データ作成および更新(履歴データから)
  */
-async function createEditSurveyDataInModal1() {
-    validateInModal1() == false ?
-        (v => {
-            $("#error").get(0).play();
-            return;
-        })() : "";
-    createSurveyDataInModal1();
+async function createEditSurveyDataInModal() {
+    if (validateInModal() == false) {
+        $("#error").get(0).play();
+        return;
+    }
+    createSurveyDataInModal();
     let count = await editSurveyTrimmingTreeCount();
     soundMessage(count);
-    M.toast({ html: '登録しました！', displayLength: 2000 });
-
-    initializeForm();
+    M.toast({ html: '更新しました！', displayLength: 2000 });
 }
 
 
@@ -793,7 +796,7 @@ function validate() {
 /**
  * 入力チェック(モーダル内)
  */
-function validateInModal1() {
+function validateInModal() {
     var result = true;
     // Noチェック
     if ($('#modal-survey-data-no').text() === '' || $('#modal-number').val() === '') {
@@ -873,26 +876,26 @@ async function createSurveyData() {
 /**
  * 伐採木データ作成(モーダル)
  */
-async function createSurveyDataInModal1() {
-    var newId = $(".new-history-data").attr("id");
+async function createSurveyDataInModal() {
+    var id = $('#modal-id').val();
     var param = [
         $('#modal-color').val(),
         $('#modal-word').val(),
         $('#modal-number').val(),
         $('#modal-branch-number').val(),
-        $('#ModalTreeType1').val(),
+        $('#modalSurveyDataTreeType').val(),
         $('#modal-survey-data-mesured-value').val(),
-        $('input[name="modal-need-rope"]').val(),
-        $('input[name="modal-need-wire"]').val(),
-        $('input[name="modal-need-cut-middle"]').val(),
+        $('input[name="modal-need-rope"]').val() ? false : true,
+        $('input[name="modal-need-wire"]').val() ? false : true,
         $('input[name="modal-need-cut-middle"]').val() ? false : true,
-        $('input[name="modal-is-denger-tree"]').val(),
-        $('input[name="modal-need-cut-branch"]').val(),
+        $('input[name="modal-need-cut-middle"]').val() ? false : true,
+        $('input[name="modal-is-denger-tree"]').val() ? false : true,
+        $('input[name="modal-need-cut-branch"]').val() ? false : true,
         $('#modal-note-modal').val(),
         false,
         'off',
-        newId,
-        newId
+        id,
+        id
     ];
     updateSurveyDataByIdInModal(param);
 }
