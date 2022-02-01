@@ -997,13 +997,11 @@ function applyMesuredValueOfNumericKeypad(value) {
 function changeKeyPad() {
     if ($('#key-pad-type').val() === 'table-keypad') {
         $('#table-keypad').hide();
-        $('#done').hide();
         $('#numeric-keypad').show();
         $('#key-pad-type').val('numeric-keypad');
     } else {
         $('#numeric-keypad').hide();
         $('#table-keypad').show();
-        $('#done').show();
         $('#key-pad-type').val('table-keypad');
     }
 }
@@ -1014,13 +1012,11 @@ function changeKeyPad() {
 function changeKeyPadInModal() {
     if ($('#modal-key-pad-type').val() === "table-keypad") {
         $('#modal-table-keypad').hide();
-        $('#modal-done').hide();
         $('#modal-numeric-keypad').show();
         $('#modal-key-pad-type').val('numeric-keypad');
     } else {
         $('#modal-numeric-keypad').hide();
         $('#modal-table-keypad').show();
-        $('#modal-done').show();
         $('#modal-key-pad-type').val('table-keypad');
     }
 }

@@ -248,11 +248,6 @@
             style="margin: right 1.5em;"><i class="material-icons">clear</i></a>
           <a id="tree-measured-value-0"
             class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">０</a>
-          <a href="javascript:createEditSurveyData()"
-            class="leef btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light"
-            style="margin: left 1.5em;">
-            <i class="material-icons">done</i>
-          </a>
           <audio id="submit" src="../sound/submit4.mp3" hidden></audio>
           <audio id="error" src="../sound/error.mp3" hidden></audio>
           <audio id="input" src="../sound/input1-4-1.mp3" hidden></audio>
@@ -268,6 +263,14 @@
     <!-- テンキー（直径） -->
     <!-- container -->
     <!-- 備考、キーボード、登録ボタン -->
+    <div class="row bottom-5 left" style="margin: 1rem;">
+      <div class="edit">
+        <a href="#note-target-modal"
+          class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
+          <i class="material-icons" style="font-size: 30px !important;">note</i>
+        </a>
+      </div>
+    </div>
     <div class="row bottom-5" style="margin: 1rem;">
       <div class="col s1.5 right">
         <div class="edit">
@@ -283,14 +286,6 @@
             <i class="material-icons keybode">keyboard</i>
           </a>
           <input type="hidden" id="key-pad-type" value="table-keypad">
-        </div>
-      </div>
-      <div class="col s1.5 right">
-        <div class="edit">
-          <a href="#note-target-modal"
-            class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
-            <i class="material-icons" style="font-size: 30px !important;">note</i>
-          </a>
         </div>
       </div>
       <!-- 履歴データ（2件まで） -->
@@ -385,7 +380,7 @@
   </div>
 
   <!-- 履歴情報表示モーダル -->
-  <div id="history-modal" class="modal">
+  <div id="history-modal" class="modal large">
     <div id="past-history" class="modal-content">
       <h6>履歴情報</h6>
       <div class="container">
@@ -561,11 +556,6 @@
                 style="margin: right 1.5em;"><i class="material-icons">clear</i></a>
               <a id="modal-tree-measured-value-0"
                 class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">０</a>
-              <a href="javascript:UpdateSurveyData()"
-                class="leef btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light"
-                style="margin: left 1.5em;">
-                <i class="material-icons">done</i>
-              </a>
             </div>
           </div>
         </div>
@@ -604,6 +594,14 @@
           </div>
         </div>
         <!-- 備考、キーボード、登録ボタン -->
+        <div class="row bottom-5 left" style="margin: 1rem;">
+          <div class="edit">
+            <a href="#modal-note-target-modal"
+              class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
+              <i class="material-icons" style="font-size: 30px !important;">note</i>
+            </a>
+          </div>
+        </div>
         <div class="row bottom-5" style="margin: 1rem;">
           <div class="col s1.5 right">
             <div class="edit">
@@ -619,14 +617,6 @@
                 <i class="material-icons keybode">keyboard</i>
               </a>
               <input type="hidden" id="modal-key-pad-type" value="table-keypad">
-            </div>
-          </div>
-          <div class="col s1.5 right">
-            <div class="edit">
-              <a href="#modal-note-target-modal"
-                class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
-                <i class="material-icons" style="font-size: 30px !important;">note</i>
-              </a>
             </div>
           </div>
           <!-- 備考入力モーダル -->
