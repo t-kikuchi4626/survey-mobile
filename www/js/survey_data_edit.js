@@ -113,7 +113,7 @@ function setSurveyHistoryData(texts, surveyData, countRows) {
     if (countRows === 0) {
         texts += `<a onclick="modalSetData('${surveyData.id}')" class="modal-trigger waves-effect waves-light enter mobile-floating" style="display:flex;">`;
     } else {
-        texts += `<a onclick="modalSetData('${surveyData}')" class="modal-trigger waves-effect waves-light enter mobile-floating" style="display:flex;">`;
+        texts += `<a onclick="modalSetData('${surveyData.id}')" class="modal-trigger waves-effect waves-light enter mobile-floating" style="display:flex;">`;
     }
     texts += '<li id="history-data" class="collection-item" style="display:flex;">';
     texts += `<span style="margin-right: 0.5rem;">${surveyData.color}-${surveyData.word}-${surveyData.number}</span>`
@@ -230,7 +230,7 @@ function setSurveyDataInModal(surveyData) {
     // No
     $('#modal-color').val(surveyData.color);
     $('#modal-word').val(surveyData.word);
-    $('#modal-number').val(surveyData.number + 1);
+    $('#modal-number').val(surveyData.number);
     $('#modal-branch-number').val(surveyData.branch_number);
     setNoInModal();
     // 樹種
@@ -313,9 +313,10 @@ function setSurveyDataInModal(surveyData) {
 async function modalSetData(id) {
     var surveyDetailList = await fetchSurveyDataBySurveyId(id);
     if (surveyDetailList.rows.length !== 0) {
+        initializeModalData();
         setSurveyDataInModal(surveyDetailList.rows.item(0));
+        $('#history-modal').modal('open');
     }
-    $('#history-modal').modal('open');
 }
 
 /**
@@ -474,7 +475,7 @@ function setTreeTypeInModal(surveyData) {
         $('#modalSurveyDataTreeType').text(surveyData.survey_data_tree_type);
         $('#modalSurveyDataTreeType').val(surveyData.survey_data_tree_type);
         //選択ボタンを押下状態にする
-        inputTreeType("modalSurveyDataTreeType", surveyData.survey_data_tree_type)
+        inputTreeTypeInModal("#modalSurveyDataTreeType", 'modal-' + surveyData.survey_data_tree_type)
     }
 }
 
@@ -508,7 +509,11 @@ async function newHistoryData(newId) {
     } else {
         tbTexts = '<table id="history-list-contents" style="width:100%;table-layout:fixed;">';
         for (var i = 0; i < surveyDetailList.rows.length; i++) {
-            texts = setSurveyHistoryData(texts, surveyDetailList.rows.item(i), i);
+            var rowNum = surveyDetailList.rows.item(i).num;
+        }
+        var surveyDetailNewList = await fetchSurveyNewDataBySurveyIdByrowNum(newId, rowNum);
+        for (var i = 0; i < surveyDetailNewList.rows.length; i++) {
+            texts = setSurveyHistoryData(texts, surveyDetailNewList.rows.item(i), i);
         }
         tbTexts = tbTexts + texts;
         tbTexts = tbTexts + '</table>'

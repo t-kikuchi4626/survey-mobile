@@ -66,7 +66,7 @@ function inputTreeType(id, val) {
  * @param 樹種ボタンのID
  */
 function inputTreeTypeInModal(id, val) {
-    var vals = val.replace('modal-', "");;
+    var vals = val.replace('modal-', "");
     $(id).val(vals);
     $(id).change();
     $('.tree-select-btn-in-modal').addClass("not-select");
