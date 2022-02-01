@@ -487,6 +487,14 @@ function setNote() {
 }
 
 /**
+ * 備考の表示設定
+ */
+function setNoteInModal() {
+    $('#modal-note').text($('#modal-note-modal').val());
+    $('#modal-note-target-modal').modal('close');
+}
+
+/**
  * 担当者名の表示設定
  */
 function setName() {

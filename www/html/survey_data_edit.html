@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html style="height: 100% !important;">
 
 <head>
   <meta charset="utf-8">
@@ -63,11 +63,11 @@
             class="material-icons">error_outline</i>この項目は必須入力です。</span>
       </div>
       <div class="col s2">
-          <a href="#area-ower-modal"
-            class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating"
-            style="display:flex">
-            <i class=" material-icons" style="font-size: 30px !important;">perm_identity</i>
-          </a>
+        <a href="#area-ower-modal"
+          class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating"
+          style="display:flex">
+          <i class=" material-icons" style="font-size: 30px !important;">perm_identity</i>
+        </a>
       </div>
     </div>
     <div class="row bottom-0" style="overflow: auto;white-space:nowrap;">
@@ -75,7 +75,7 @@
     </div>
     <!-- 現在の樹種本数 -->
     <div class="row s1.5 bottom-0">
-      <div class="col s1.5" style="display:flex; padding:0.1em">
+      <div class="col s1.5" style="display:flex;">
         <table class="centered" style="font-size:15px!important;table-layout: fixed;">
           <tr id="tree-type-list-count-header">
           </tr>
@@ -86,7 +86,7 @@
     </div>
     <!-- 樹種選択 -->
     <!-- 伐採方法 -->
-    <div class="row bottom-5" style="overflow: auto;white-space:nowrap;">
+    <div class="row bottom-0" style="overflow: auto;white-space:nowrap;padding:0.1em;">
       <div class="input-field col s12">
         <a id="none" href="javascript:setSurveyMethod('none')"
           class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">なし</a>
@@ -114,7 +114,7 @@
     <!-- 伐採方法 -->
 
     <!-- ナンバリング、直径 -->
-    <div class="row bottom-5">
+    <div class="row bottom-0">
       <div class="col s6 display-fixed link-font-size">
         <a class="modal-trigger waves-effect waves-light btn btn-link-circle btn-shadow enter"
           href="#number-target-modal"><i class="material-icons create-btn"
@@ -122,7 +122,7 @@
         No：<span id="survey-data-no"></span>
       </div>
 
-      <div class="col s6 display-fixed link-font-size">
+      <div class="row bottom-0">
         直径：<span id="survey-data-mesured-value"></span>cm
       </div>
       <span id="survey_data_mesured_value_required" class="error message-text" style="display:none"><i
