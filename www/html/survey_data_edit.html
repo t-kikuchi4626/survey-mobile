@@ -242,11 +242,6 @@
             style="margin: right 1.5em;"><i class="material-icons">clear</i></a>
           <a id="tree-measured-value-0"
             class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">０</a>
-          <a href="javascript:createEditSurveyData()"
-            class="leef btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light"
-            style="margin: left 1.5em;">
-            <i class="material-icons">done</i>
-          </a>
           <audio id="submit" src="../sound/submit4.mp3" hidden></audio>
           <audio id="error" src="../sound/error.mp3" hidden></audio>
           <audio id="input" src="../sound/input1-4-1.mp3" hidden></audio>
@@ -262,6 +257,14 @@
     <!-- テンキー（直径） -->
     <!-- container -->
     <!-- 備考、キーボード、登録ボタン -->
+    <div class="row bottom-5 left" style="margin: 1rem;">
+      <div class="edit">
+        <a href="#note-target-modal"
+          class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
+          <i class="material-icons" style="font-size: 30px !important;">note</i>
+        </a>
+      </div>
+    </div>
     <div class="row bottom-5" style="margin: 1rem;">
       <div class="col s1.5 right">
         <div class="edit">
@@ -277,14 +280,6 @@
             <i class="material-icons keybode">keyboard</i>
           </a>
           <input type="hidden" id="key-pad-type" value="table-keypad">
-        </div>
-      </div>
-      <div class="col s1.5 right">
-        <div class="edit">
-          <a href="#note-target-modal"
-            class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
-            <i class="material-icons" style="font-size: 30px !important;">note</i>
-          </a>
         </div>
       </div>
       <!-- 履歴データ（2件まで） -->
@@ -379,41 +374,41 @@
   </div>
 
   <!-- 履歴情報表示モーダル -->
-  <div id="1history-modal" class="modal">
-    <div id="1past-history" class="modal-content">
+  <div id="history-modal" class="modal large">
+    <div id="past-history" class="modal-content">
       <h6>履歴情報</h6>
       <div class="container">
         <!-- 樹種選択 -->
         <div class="row bottom-0">
           <div class="input-field col s12 bottom-0" style="display:flex;margin-top: initial !important">
-            <input id="" name="ModalTreeType1" type="text" class="ModalTreeType1 mobile-input tree-input" maxlength="10"
-              placeholder="樹種"
-              href="javascript:updateInputTextAreaInModal(this, '1modal-survey_data_tree_type_modal', true, false)"
+            <input id="modalSurveyDataTreeType" name="surveyDataTreeTypeModal" type="text"
+              class="surveyDataTreeType mobile-input tree-input" maxlength="10" placeholder="樹種"
+              href="javascript:updateInputTextAreaInModal(this, 'modal-survey-area-tree-type', true, false)"
               style="height:1.3em;width:30em;">
 
-            <span id="1modal-survey_data_tree_type_modal_required" class="error message-text" style="display:none"><i
+            <span id="modal-survey_data_tree_type_modal_required" class="error message-text" style="display:none"><i
                 class="material-icons">error_outline</i>この項目は必須入力です。</span>
           </div>
         </div>
         <div class="row bottom-0" style="overflow: auto;white-space:nowrap;">
-          <div class="input-field col s12 edit" id="modal-tree1" style="margin-top: initial !important"></div>
+          <div class="input-field col s12 edit" id="modal-tree-type-list" style="margin-top: initial !important"></div>
         </div>
         <!-- 伐採方法 -->
         <div class="row bottom-5" style="overflow: auto;white-space:nowrap;">
           <div class="input-field col s12">
-            <a id="1modal-none" href="javascript:setSurveyMethodInModal('1modal-none')"
+            <a id="modal-none" href="javascript:setSurveyMethodInModal('modal-none')"
               class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">なし</a>
-            <a id="1modal-need-rope" href="javascript:setSurveyMethod('1modal-need-rope')"
+            <a id="modal-need-rope" href="javascript:setSurveyMethod('modal-need-rope')"
               class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">ロープ</a>
-            <a id="1modal-need-wire" href="javascript:setSurveyMethod('1modal-need-wire')"
+            <a id="modal-need-wire" href="javascript:setSurveyMethod('modal-need-wire')"
               class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">ワイヤ</a>
-            <a id="1modal-is-danger-tree" href="javascript:setSurveyMethod('1modal-is-danger-tree')"
+            <a id="modal-is-danger-tree" href="javascript:setSurveyMethod('modal-is-danger-tree')"
               class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">危険</a>
-            <a id="1modal-need-cut-middle" href="javascript:setSurveyMethod('1modal-need-cut-middle')"
+            <a id="modal-need-cut-middle" href="javascript:setSurveyMethod('modal-need-cut-middle')"
               class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">中断</a>
-            <a id="1modal-need-cut-branch" href="javascript:setSurveyMethod('1modal-need-cut-branch')"
+            <a id="modal-need-cut-branch" href="javascript:setSurveyMethod('modal-need-cut-branch')"
               class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">枝払</a>
-            <a id="1modal-etc" href="javascript:setSurveyMethod('1modal-etc')"
+            <a id="modal-etc" href="javascript:setSurveyMethod('modal-etc')"
               class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">その他</a>
           </div>
           <input type="hidden" name="none" value="false" />
@@ -429,92 +424,92 @@
         <!-- ナンバリング、直径 -->
         <div class="row bottom-5">
           <div class="col s6 display-fixed link-font-size">
-            <a class="1modal-trigger waves-effect waves-light btn btn-link-circle btn-shadow enter"
-              href="#1modal-number-target-modal"><i class="material-icons create-btn"
+            <a class="modal-trigger waves-effect waves-light btn btn-link-circle btn-shadow enter"
+              href="#modal-number-target-modal"><i class="material-icons create-btn"
                 style="font-size: 15px !important;">create</i></a>
-            No：<span id="1modal-survey-data-no"></span>
+            No：<span id="modal-survey-data-no"></span>
           </div>
 
           <div class="col s6 display-fixed link-font-size">
-            直径：<span id="1modal-survey-data-mesured-value"></span>cm
+            直径：<span id="modal-survey-data-mesured-value"></span>cm
           </div>
-          <span id="1modal-survey_data_mesured_value_required" class="error message-text" style="display:none"><i
+          <span id="modal-survey_data_mesured_value_required" class="error message-text" style="display:none"><i
               class="material-icons">error_outline</i>この項目は必須入力です。</span>
         </div>
         <!-- ナンバリング、直径 -->
 
         <!-- 直径入力用のキーボード -->
-        <div id="1modal-table-keypad" class="row bottom-0" style="text-align: center;">
+        <div id="modal-table-keypad" class="row bottom-0" style="text-align: center;">
           <div class="col s12">
             <table class="centered">
               <tr>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure6', '6')">
-                  <div class="1modal-circle" id="1modal-mesure6">6</div>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure6', '6')">
+                  <div class="modal-circle" id="modal-mesure6">6</div>
                 </td>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure16', '16')">
-                  <div class="1modal-circle" id="1modal-mesure16">16</div>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure16', '16')">
+                  <div class="modal-circle" id="modal-mesure16">16</div>
                 </td>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure26', '26')">
-                  <div class="1modal-circle" id="1modal-mesure26">26</div>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure26', '26')">
+                  <div class="modal-circle" id="modal-mesure26">26</div>
                 </td>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure36', '36')">
-                  <div class="1modal-circle" id="1modal-mesure36">36</div>
-                </td>
-              </tr>
-              <tr>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure8', '8')">
-                  <div class="1modal-circle" id="1modal-mesure8">8</div>
-                </td>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure18', '18')">
-                  <div class="1modal-circle" id="1modal-mesure18">18</div>
-                </td>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure28', '28')">
-                  <div class="1modal-circle" id="1modal-mesure28">28</div>
-                </td>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure38', '38')">
-                  <div class="1modal-circle" id="1modal-mesure38">38</div>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure36', '36')">
+                  <div class="modal-circle" id="modal-mesure36">36</div>
                 </td>
               </tr>
               <tr>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure10', '10')">
-                  <div class="1modal-circle" id="1modal-mesure10">10</div>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure8', '8')">
+                  <div class="modal-circle" id="modal-mesure8">8</div>
                 </td>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure20', '20')">
-                  <div class="1modal-circle" id="1modal-mesure20">20</div>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure18', '18')">
+                  <div class="modal-circle" id="modal-mesure18">18</div>
                 </td>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure30', '30')">
-                  <div class="1modal-circle" id="1modal-mesure30">30</div>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure28', '28')">
+                  <div class="modal-circle" id="modal-mesure28">28</div>
                 </td>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure40', '40')">
-                  <div class="1modal-circle" id="1modal-mesure40">40</div>
-                </td>
-              </tr>
-              <tr>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure12', '12')">
-                  <div class="1modal-circle" id="1modal-mesure12">12</div>
-                </td>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure22', '22')">
-                  <div class="1modal-circle" id="1modal-mesure22">22</div>
-                </td>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure32', '32')">
-                  <div class="1modal-circle" id="1modal-mesure32">32</div>
-                </td>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure42', '42')">
-                  <div class="1modal-circle" id="1modal-mesure42">42</div>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure38', '38')">
+                  <div class="modal-circle" id="modal-mesure38">38</div>
                 </td>
               </tr>
               <tr>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure14', '14')">
-                  <div class="1modal-circle" id="1modal-mesure14">14</div>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure10', '10')">
+                  <div class="modal-circle" id="modal-mesure10">10</div>
                 </td>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure24', '24')">
-                  <div class="1modal-circle" id="1modal-mesure24">24</div>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure20', '20')">
+                  <div class="modal-circle" id="modal-mesure20">20</div>
                 </td>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure34', '34')">
-                  <div class="1modal-circle" id="1modal-mesure34">34</div>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure30', '30')">
+                  <div class="modal-circle" id="modal-mesure30">30</div>
                 </td>
-                <td onclick="applyMesuredValueOfTableKeypadInModal1('#1modal-mesure44', '44')">
-                  <div class="1modal-circle" id="1modal-mesure44">44</div>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure40', '40')">
+                  <div class="modal-circle" id="modal-mesure40">40</div>
+                </td>
+              </tr>
+              <tr>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure12', '12')">
+                  <div class="modal-circle" id="modal-mesure12">12</div>
+                </td>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure22', '22')">
+                  <div class="modal-circle" id="modal-mesure22">22</div>
+                </td>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure32', '32')">
+                  <div class="modal-circle" id="modal-mesure32">32</div>
+                </td>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure42', '42')">
+                  <div class="modal-circle" id="modal-mesure42">42</div>
+                </td>
+              </tr>
+              <tr>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure14', '14')">
+                  <div class="modal-circle" id="modal-mesure14">14</div>
+                </td>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure24', '24')">
+                  <div class="modal-circle" id="modal-mesure24">24</div>
+                </td>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure34', '34')">
+                  <div class="modal-circle" id="modal-mesure34">34</div>
+                </td>
+                <td onclick="applyMesuredValueOfTableKeypadInModal1('#modal-mesure44', '44')">
+                  <div class="modal-circle" id="modal-mesure44">44</div>
                 </td>
               </tr>
             </table>
@@ -523,353 +518,118 @@
         <!-- 直径入力用のキーボード -->
 
         <!-- テンキー（直径） -->
-        <div id="1modal-numeric-keypad" class="row bottom-0" style="display: none;">
+        <div id="modal-numeric-keypad" class="row bottom-0" style="display: none;">
           <div class="col s12">
             <div class="row center">
-              <a id="1modal-tree-measured-value-1"
+              <a id="modal-tree-measured-value-1"
                 class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">１</a>
-              <a id="1modal-tree-measured-value-2"
+              <a id="modal-tree-measured-value-2"
                 class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light">２</a>
-              <a id="1modal-tree-measured-value-3"
+              <a id="modal-tree-measured-value-3"
                 class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">３</a>
             </div>
             <div class="row center">
-              <a id="1modal-tree-measured-value-4"
+              <a id="modal-tree-measured-value-4"
                 class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">４</a>
-              <a id="1modal-tree-measured-value-5"
+              <a id="modal-tree-measured-value-5"
                 class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light">５</a>
-              <a id="1modal-tree-measured-value-6"
+              <a id="modal-tree-measured-value-6"
                 class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">６</a>
             </div>
             <div class="row center">
-              <a id="1modal-tree-measured-value-7"
+              <a id="modal-tree-measured-value-7"
                 class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">７</a>
-              <a id="1modal-tree-measured-value-8"
+              <a id="modal-tree-measured-value-8"
                 class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light">８</a>
-              <a id="1modal-tree-measured-value-9"
+              <a id="modal-tree-measured-value-9"
                 class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">９</a>
             </div>
             <div class="row center-align">
-              <a id="1modal-tree-measured-value-none"
+              <a id="modal-tree-measured-value-none"
                 class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light"
                 style="margin: right 1.5em;"><i class="material-icons">clear</i></a>
-              <a id="1modal-tree-measured-value-0"
+              <a id="modal-tree-measured-value-0"
                 class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">０</a>
-              <a href="javascript:UpdateSurveyData()"
-                class="leef btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light"
-                style="margin: left 1.5em;">
-                <i class="material-icons">done</i>
-              </a>
             </div>
           </div>
         </div>
         <!-- テンキー（直径） -->
         <!-- container -->
         <!-- Modal Structure -->
-        <div id="1modal-number-target-modal" class="modal">
-          <div class="1modal-content">
+        <div id="modal-number-target-modal" class="modal">
+          <div class="modal-content">
             <h6>ナンバリングを入力してください。</h6>
             <div class="row bottom-0">
               <div class="input-field col s6 bottom-0 modal-input">
-                <input id="1modal-color" name="color" type="text" class="color" maxlength="5" placeholder="色">
+                <input id="modal-color" name="color" type="text" class="color" maxlength="5" placeholder="色">
                 <label for="color">色</label>
               </div>
             </div>
             <div class="row bottom-0">
               <div class="input-field col s6 bottom-0 modal-input">
-                <input id="1modal-word" name="word" type="text" class="word" maxlength="2" placeholder="文字">
+                <input id="modal-word" name="word" type="text" class="word" maxlength="2" placeholder="文字">
                 <label for="word">文字</label>
               </div>
             </div>
             <div class="row bottom-0">
               <div class="input-field col s6 bottom-0 modal-input">
-                <input id="1modal-number" name="number" type="text" class="number" maxlength="4" value="1"
+                <input id="modal-number" name="number" type="text" class="number" maxlength="4" value="1"
                   placeholder="連番" onchange="updateInputTextArea(this, 'number', true, true)">
                 <label for="number">連番</label>
               </div>
             </div>
             <div class="row bottom-0">
               <div class="input-field col s6 bottom-0 modal-input">
-                <input id="1modal-branch-number" name="branch-number" type="text" class="number" maxlength="4" value="1"
+                <input id="modal-branch-number" name="branch-number" type="text" class="number" maxlength="4" value="1"
                   placeholder="枝番">
                 <label for="branch-number">枝番</label>
               </div>
             </div>
-            <!-- 備考、キーボード、登録ボタン -->
-            <div class="row bottom-5" style="margin: 1rem;">
-              <div class="col s1.5 right">
-                <div class="edit">
-                  <a id="1modal-done" href="javascript:createEditSurveyDataInModal1()"
-                    class="btn-floating waves-effect waves-light enter mobile-floating">
-                    <i class="material-icons">done</i></a>
-                </div>
-              </div>
-              <div class="col s1.5 right">
-                <div class="edit">
-                  <a id="1modal-key-pad" href="javascript:changeKeyPadInModal1()"
-                    class="btn-floating waves-effect waves-light enter mobile-floating">
-                    <i class="material-icons keybode">keyboard</i>
-                  </a>
-                  <input type="hidden" id="1modal-key-pad-type" value="table-keypad">
-                </div>
-              </div>
-              <div class="col s1.5 right">
-                <div class="edit">
-                  <a href="#1modal-note-target-modal"
-                    class="1modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
-                    <i class="material-icons" style="font-size: 30px !important;">note</i>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="2history-modal" class="modal">
-    <div id="past-history" class="modal-content">
-      <h6>履歴情報</h6>
-      <!-- 樹種選択 -->
-      <div class="row bottom-0">
-        <div class="input-field col s12 bottom-0" style="display:flex;margin-top: initial !important">
-          <input id="ModalTreeType2" name="surveyDataTreeTypeInModal2" type="text"
-            class="ModalTreeType2 mobile-input tree-input" maxlength="10" placeholder="樹種"
-            href="javascript:updateInputTextAreaInModal(this, '2modal-survey_data_tree_type_modal', true, false)"
-            style="height:1.3em;width:30em;">
-
-          <span id="2modal-survey_data_tree_type_modal_required" class="error message-text" style="display:none"><i
-              class="material-icons">error_outline</i>この項目は必須入力です。</span>
-        </div>
-      </div>
-      <div class="row bottom-0" style="overflow: auto;white-space:nowrap;">
-        <div class="input-field col s12 edit" id="modal-tree2" style="margin-top: initial !important">
-        </div>
-      </div>
-      <!-- 伐採方法 -->
-      <div class="row bottom-5" style="overflow: auto;white-space:nowrap;">
-        <div class="input-field col s12">
-          <a id="2modal-none" href="javascript:setSurveyMethodInModal('1modal-none')"
-            class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">なし</a>
-          <a id="2modal-need-rope" href="javascript:setSurveyMethod('1modal-need-rope')"
-            class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">ロープ</a>
-          <a id="2modal-need-wire" href="javascript:setSurveyMethod('1modal-need-wire')"
-            class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">ワイヤ</a>
-          <a id="2modal-is-danger-tree" href="javascript:setSurveyMethod('1modal-is-danger-tree')"
-            class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">危険</a>
-          <a id="2modal-need-cut-middle" href="javascript:setSurveyMethod('1modal-need-cut-middle')"
-            class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">中断</a>
-          <a id="2modal-need-cut-branch" href="javascript:setSurveyMethod('1modal-need-cut-branch')"
-            class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">枝払</a>
-          <a id="2modal-etc" href="javascript:setSurveyMethod('1modal-etc')"
-            class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">その他</a>
-        </div>
-        <input type="hidden" name="none" value="false" />
-        <input type="hidden" name="need-rope" value="false" />
-        <input type="hidden" name="need-wire" value="false" />
-        <input type="hidden" name="is-denger-tree" value="false" />
-        <input type="hidden" name="need-cut-middle" value="false" />
-        <input type="hidden" name="need-cut-branch" value="false" />
-        <input type="hidden" name="etc" value="false" />
-      </div>
-      <!-- 伐採方法 -->
-
-      <!-- ナンバリング、直径 -->
-      <div class="row bottom-5">
-        <div class="col s6 display-fixed link-font-size">
-          <a class="2modal-trigger waves-effect waves-light btn btn-link-circle btn-shadow enter"
-            href="#2modal-number-target-modal"><i class="material-icons create-btn"
-              style="font-size: 15px !important;">create</i></a>
-          No：<span id="2modal-survey-data-no"></span>
-        </div>
-
-        <div class="col s6 display-fixed link-font-size">
-          直径：<span id="2modal-survey-data-mesured-value"></span>cm
-        </div>
-        <span id="2modal-survey_data_mesured_value_required" class="error message-text" style="display:none"><i
-            class="material-icons">error_outline</i>この項目は必須入力です。</span>
-      </div>
-      <!-- ナンバリング、直径 -->
-
-      <!-- 直径入力用のキーボード -->
-      <div id="2modal-table-keypad" class="row bottom-0" style="text-align: center;">
-        <div class="col s12">
-          <table class="centered">
-            <tr>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure6', '6')">
-                <div class="2modal-circle" id="2modal-mesure6">6</div>
-              </td>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure16', '16')">
-                <div class="2modal-circle" id="2modal-mesure16">16</div>
-              </td>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure26', '26')">
-                <div class="2modal-circle" id="2modal-mesure26">26</div>
-              </td>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure36', '36')">
-                <div class="2modal-circle" id="2modal-mesure36">36</div>
-              </td>
-            </tr>
-            <tr>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure8', '8')">
-                <div class="2modal-circle" id="2modal-mesure8">8</div>
-              </td>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure18', '18')">
-                <div class="2modal-circle" id="2modal-mesure18">18</div>
-              </td>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure28', '28')">
-                <div class="2modal-circle" id="2modal-mesure28">28</div>
-              </td>
-              <td onclick="applyMesuredValueOfTableKeypad('#2modal-mesure38', '38')">
-                <div class="2modal-circle" id="2modal-mesure38">38</div>
-              </td>
-            </tr>
-            <tr>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure10', '10')">
-                <div class="2modal-circle" id="2modal-mesure10">10</div>
-              </td>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure20', '20')">
-                <div class="2modal-circle" id="2modal-mesure20">20</div>
-              </td>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure30', '30')">
-                <div class="2modal-circle" id="2modal-mesure30">30</div>
-              </td>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure40', '40')">
-                <div class="2modal-circle" id="2modal-mesure40">40</div>
-              </td>
-            </tr>
-            <tr>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure12', '12')">
-                <div class="2modal-circle" id="2modal-mesure12">12</div>
-              </td>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure22', '22')">
-                <div class="2modal-circle" id="2modal-mesure22">22</div>
-              </td>
-              <td onclick="applyMesuredValueOfTableKeypad('#2modal-mesure32', '32')">
-                <div class="2modal-circle" id="2modal-mesure32">32</div>
-              </td>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure42', '42')">
-                <div class="2modal-circle" id="2modal-mesure42">42</div>
-              </td>
-            </tr>
-            <tr>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure14', '14')">
-                <div class="2modal-circle" id="2modal-mesure14">14</div>
-              </td>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure24', '24')">
-                <div class="2modal-circle" id="2modal-mesure24">24</div>
-              </td>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure34', '34')">
-                <div class="2modal-circle" id="2modal-mesure34">34</div>
-              </td>
-              <td onclick="applyMesuredValueOfTableKeypadInModal2('#2modal-mesure44', '44')">
-                <div class="2modal-circle" id="2modal-mesure44">44</div>
-              </td>
-            </tr>
-          </table>
-        </div>
-        <!-- 直径入力用のキーボード -->
-
-        <!-- テンキー（直径） -->
-        <div id="2modal-numeric-keypad" class="row bottom-0" style="display: none;">
-          <div class="col s12">
-            <div class="row center">
-              <a id="2modal-tree-measured-value-1"
-                class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">１</a>
-              <a id="2modal-tree-measured-value-2"
-                class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light">２</a>
-              <a id="2modal-tree-measured-value-3"
-                class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">３</a>
-            </div>
-            <div class="row center">
-              <a id="2modal-tree-measured-value-4"
-                class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">４</a>
-              <a id="2modal-tree-measured-value-5"
-                class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light">５</a>
-              <a id="2modal-tree-measured-value-6"
-                class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">６</a>
-            </div>
-            <div class="row center">
-              <a id="2modal-tree-measured-value-7"
-                class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">７</a>
-              <a id="2modal-tree-measured-value-8"
-                class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light">８</a>
-              <a id="2modal-tree-measured-value-9"
-                class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">９</a>
-            </div>
-            <div class="row center-align">
-              <a id="2modal-tree-measured-value-none"
-                class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light"
-                style="margin: right 1.5em;"><i class="material-icons">clear</i></a>
-              <a id="2modal-tree-measured-value-0"
-                class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light">０</a>
-              <a href="javascript:UpdateSurveyData()"
-                class="leef btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light"
-                style="margin: left 1.5em;">
-                <i class="material-icons">done</i>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- テンキー（直径） -->
-      <!-- container -->
-      <!-- Modal Structure -->
-      <div id="2modal-number-target-modal" class="modal">
-        <div class="1modal-content">
-          <h6>ナンバリングを入力してください。</h6>
-          <div class="row bottom-0">
-            <div class="input-field col s6 bottom-0 modal-input">
-              <input id="2modal-color" name="color" type="text" class="color" maxlength="5" placeholder="色">
-              <label for="color">色</label>
-            </div>
-          </div>
-          <div class="row bottom-0">
-            <div class="input-field col s6 bottom-0 modal-input">
-              <input id="2modal-word" name="word" type="text" class="word" maxlength="2" placeholder="文字">
-              <label for="word">文字</label>
-            </div>
-          </div>
-          <div class="row bottom-0">
-            <div class="input-field col s6 bottom-0 modal-input">
-              <input id="2modal-number" name="number" type="text" class="number" maxlength="4" value="1"
-                placeholder="連番" onchange="updateInputTextArea(this, 'number', true, true)">
-              <label for="number">連番</label>
-            </div>
-          </div>
-          <div class="row bottom-0">
-            <div class="input-field col s6 bottom-0 modal-input">
-              <input id="2modal-branch-number" name="branch-number" type="text" class="number" maxlength="4" value="1"
-                placeholder="枝番">
-              <label for="branch-number">枝番</label>
-            </div>
           </div>
         </div>
         <!-- 備考、キーボード、登録ボタン -->
+        <div class="row bottom-5 left" style="margin: 1rem;">
+          <div class="edit">
+            <a href="#modal-note-target-modal"
+              class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
+              <i class="material-icons" style="font-size: 30px !important;">note</i>
+            </a>
+          </div>
+        </div>
         <div class="row bottom-5" style="margin: 1rem;">
           <div class="col s1.5 right">
             <div class="edit">
-              <a id="2modal-done" href="javascript:createEditSurveyDataInModal2()"
+              <a id="modal-done" href="javascript:createEditSurveyDataInModal1()"
                 class="btn-floating waves-effect waves-light enter mobile-floating">
                 <i class="material-icons">done</i></a>
             </div>
           </div>
           <div class="col s1.5 right">
             <div class="edit">
-              <a id="2modal-key-pad" href="javascript:changeKeyPadInModal2()"
+              <a id="modal-key-pad" href="javascript:changeKeyPadInModal()"
                 class="btn-floating waves-effect waves-light enter mobile-floating">
                 <i class="material-icons keybode">keyboard</i>
               </a>
-              <input type="hidden" id="2modal-key-pad-type" value="table-keypad">
+              <input type="hidden" id="modal-key-pad-type" value="table-keypad">
             </div>
           </div>
-          <div class="col s1.5 right">
-            <div class="edit">
-              <a href="#2modal-note-target-modal"
-                class="2modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating">
-                <i class="material-icons" style="font-size: 30px !important;">note</i>
-              </a>
+          <!-- 備考入力モーダル -->
+          <div id="modal-note-target-modal" class="modal">
+            <div class="modal-content">
+              <h6>備考を入力してください。</h6>
+              <div class="row">
+                <div class="input-field col s12 modal-input">
+                  <textarea id="modal-note-modal" class="materialize-textarea" placeholder="備考" maxlength="300"
+                    style="font-size: 18px!important"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <a href="javascript:setNote();"
+                class="modal-close waves-effect waves-light btn normal-button enter mobile-btn">確定</a>
             </div>
           </div>
+          <!-- 備考入力モーダル -->
         </div>
       </div>
     </div>

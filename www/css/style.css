@@ -702,11 +702,6 @@ a.btn-small-font-size {
   pointer-events: none !important;
 }
 
-.scroll{
-  height: 120px;
-  overflow: auto;
-}
-
 .leef{
   background-color: #26a69a!important;
   color: #eafaf9;
@@ -717,64 +712,3 @@ a.btn-small-font-size {
   color: #fff;
 }
 
-.pagination__content {
-  width: 100%;
-  max-width: 420px;
-  margin: auto;
-}
-.pagination-button {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  width: 100%;
-  color: #fff;
-  text-align: center;
-  background: #333333;
-  overflow: hidden;
-  border-radius: 3px;
-}
-.pagination-selected__wrapper {
-  position:relative;
-  display: block;
-  width: 100%;
-}
-.pagination-selected {
-  position: absolute;
-  text-align: center;
-  width: 100%;
-  padding: 10px 0;
-}
-.pagination-selected i {
-  position: absolute;
-  right: 20px;
-  top: 16px;
-}
-.pagination-selected-list {
-  -webkit-appearance: none;
-  appearance: none;
-  height: 100%;
-  border: none;
-  opacity: 0;
-  z-index: 2;
-  cursor: pointer;
-  color: #333333;
-  width: 100%;
-}
-.pagination-prev,
-.pagination-next {
-  padding: 12px 15px;
-  min-width: 60px;
-}
-.pagination-prev {
-  border-right: 1px solid #fff;
-}
-.pagination-next {
-  border-left: 1px solid #fff;
-}
-.pagination-prev a,
-.pagination-next a,
-.pagination-prev a i,
-.pagination-next a i {
-  color:#fff;
-}
