@@ -75,6 +75,7 @@ var createSurveyAreaTable = 'CREATE TABLE IF NOT EXISTS survey_area ' +
     'identify_code TEXT,' +
     'survey_detail_id INTEGER, ' +
     'tree_type TEXT, ' +
+    'tree_measured_value INTEGER, ' +
     'trimming_area_value TEXT, ' +
     'trimming_tree_area_value TEXT, ' +
     'trimming_tree_count TEXT, ' +

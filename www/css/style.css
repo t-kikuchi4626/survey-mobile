@@ -81,6 +81,10 @@ a.btn-link-circle {
     font-size: 18px!important;
   }
 
+  .mobile-select > .select-wrapper > input {
+    font-size: 18px!important;
+  }
+
   .mobile-btn {
     font-size: 13px!important;
   }

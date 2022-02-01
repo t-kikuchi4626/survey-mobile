@@ -5,7 +5,7 @@ var appPass = '#t2IOj4rVl2lQ%_$7)7pXeoGE/Jg#0&0-/$X-Suojg)!21RCLel#4Q%322BtS148'
 // var path = 'http://survey-develop.japanwest.cloudapp.azure.com:80/';
 // var path = 'https://develop-survey.japaneast.cloudapp.azure.com:8443/';
 // var path = 'http://172.21.144.1:8443/';
-var path = 'http://172.18.41.135:8443/';
+var path = 'http://192.168.3.140:8443/';
 var surveyCompanyId = null;
 
 var instances = null;

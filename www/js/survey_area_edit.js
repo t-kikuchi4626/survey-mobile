@@ -9,6 +9,10 @@ var targetId = null;
 // 端末番号
 var uuid = "";
 
+$(document).ready(function(){
+    $('select').formSelect();
+});
+
 document.addEventListener("deviceready", async function () {
     var param = location.search.substring(1).split("&");
     surveyId = param[0];
@@ -71,7 +75,7 @@ function setInitTargetSurveyArea() {
     // 補償面積（10）
     $('#target-area-value-ten').val("");
     // 集積あり/4cm未満
-    $('#need-collect-is-four-measured').prop("checked", true);
+    $('#need-collect-is-not-four-measured').prop("checked", true);
 }
 
 /**
@@ -111,14 +115,14 @@ function setTargetSurveyArea(surveyArea) {
  */
 async function createEditSurveyArea() {
     //2件以上更新される不具合の対応
-    var param = "";
+    var param = [];
     // 入力チェック
     if (validate()) {
 
         let [needCollect, isFourMeasured] = applyLen();
         if (isUpdate) {
             // 更新項目
-            var param = [
+            param = [
                 $('#survey-area-tree-type').val(),
                 $('#trimming-area-value').val(),
                 $('#trimming-tree-area-value').val(),
@@ -127,14 +131,14 @@ async function createEditSurveyArea() {
                 $('#target-area-value-ten').val(),
                 needCollect,
                 isFourMeasured,
+                $('#tree-measured-value').val(),
                 fetchUserId(),
                 targetId
             ];
-            // 小径木更新
             updateSurveyArea(param);
         } else {
             // 登録項目
-            var param = [
+            param = [
                 surveyDetailId,
                 generateIdentifyCode(uuid),
                 surveyCompanyId,
@@ -146,14 +150,25 @@ async function createEditSurveyArea() {
                 $('#target-area-value-ten').val(),
                 needCollect,
                 isFourMeasured,
+                $('#tree-measured-value').val(),
                 false,
                 'off',
                 fetchUserId(),
             ];
-            targetId = data.id;
+            insertSurveyArea(param);
         }
         M.toast({ html: '登録しました！', displayLength: 2000 });
     }
+}
+
+/**
+ * 集積4cm未満の場合、胸高直径を3で設定する
+ * 集積4cm未満の場合、胸高直径を4で設定する
+ * @param 設定する胸高直径
+ */
+function changeDefaultNeedCollect(treeMeasuredValue) {
+    $('#tree-measured-value').val(treeMeasuredValue);
+    $('#tree-measured-value').formSelect();
 }
 
 /**

@@ -11,7 +11,6 @@
   <link rel="stylesheet" href="../components/materialize/dist/css/materialize.min.css">
   <link rel="stylesheet" href="../css/iconfont/material-icons.css">
   <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.3/css/swiper.min.css">
 </head>
 
 <body>
@@ -56,31 +55,26 @@
   <div class="container">
     <!-- 樹種選択 -->
     <div class="row bottom-0">
-      <div class="input-field col s12 bottom-0" style="display:flex;margin-top: initial !important">
+      <div class="input-field col s10 bottom-0" style="display:flex;margin-top: initial !important">
         <input id="surveyDataTreeType" name="surveyDataTreeTypeModal" type="text"
           class="surveyDataTreeType mobile-input tree-input" maxlength="10" placeholder="樹種"
-          href="javascript:updateInputTextArea(this, 'modal-survey-area-tree-type', true, false)"
-          style="height:1.3em;width:30em;">
+          href="javascript:updateInputTextArea(this, 'modal-survey-area-tree-type', true, false)">
         <span id="modal-survey-area-tree-type_required" class="error message-text" style="display:none"><i
             class="material-icons">error_outline</i>この項目は必須入力です。</span>
-        <div class=" col s1.5 right" style="display:flex; margin-left:1em;">
-          <ul>
-            <il style="color: #122344;display:block;">
-              <a href="#area-ower-modal"
-                class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating"
-                style="display:flex">
-                <i class=" material-icons" style="font-size: 30px !important;">perm_identity</i>
-              </a>
-            </il>
-          </ul>
-        </div>
+      </div>
+      <div class="col s2">
+          <a href="#area-ower-modal"
+            class="modal-trigger btn-floating waves-effect waves-light btn normal-button enter mobile-floating"
+            style="display:flex">
+            <i class=" material-icons" style="font-size: 30px !important;">perm_identity</i>
+          </a>
       </div>
     </div>
     <div class="row bottom-0" style="overflow: auto;white-space:nowrap;">
       <div class="input-field col s12 edit" id="tree-type-list" style="margin-top: initial !important"></div>
     </div>
     <!-- 現在の樹種本数 -->
-    <div class="row s1.5">
+    <div class="row s1.5 bottom-0">
       <div class="col s1.5" style="display:flex; padding:0.1em">
         <table class="centered" style="font-size:15px!important;table-layout: fixed;">
           <tr id="tree-type-list-count-header">

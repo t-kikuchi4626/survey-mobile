@@ -72,13 +72,14 @@ function insertSurveyArea(param) {
         'target_area_value_ten, ' +
         'need_collect, ' +
         'is_four_measured, ' +
+        'tree_measured_value = ?, ' +
         'is_delete, ' +
         'web_edit_mode,' +
         'modified_by, ' +
         'created_by, ' +
         'modified_date,' +
         'created_date)' +
-        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'),DATETIME(\'now\', \'localtime\'))';
+        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'),DATETIME(\'now\', \'localtime\'))';
 
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
@@ -221,6 +222,7 @@ function updateSurveyArea(param) {
             'target_area_value_ten = ?, ' +
             'need_collect = ?, ' +
             'is_four_measured = ?, ' +
+            'tree_measured_value = ?, ' +
             'modified_by = ?, ' +
             'modified_date = DATETIME(\'now\', \'localtime\') ' +
             'WHERE id = ?';
@@ -243,6 +245,7 @@ function updateSurveyArea(param) {
         'target_area_value_ten = ?, ' +
         'need_collect = ?, ' +
         'is_four_measured = ?, ' +
+        'tree_measured_value = ?, ' +
         'modified_by = ?, ' +
         'modified_date = ? ' +
         'WHERE identify_code = ? ';
