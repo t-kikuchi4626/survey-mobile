@@ -232,10 +232,9 @@ function setSurveyDataInModal(surveyData) {
     $('#modal-word').val(surveyData.word);
     $('#modal-number').val(surveyData.number + 1);
     $('#modal-branch-number').val(surveyData.branch_number);
-    alert(surveyData.color)
     setNoInModal();
     // 樹種
-    $('#modal' + surveyData.survey_data_tree_type).removeClass("not-select");
+    $('#modal-' + surveyData.survey_data_tree_type).removeClass("not-select");
     $('#modalSurveyDataTreeType').text(surveyData.survey_data_tree_type);
     $('#modalSurveyDataTreeType').val(surveyData.survey_data_tree_type);
     setTreeTypeInModal(surveyData)
@@ -453,7 +452,6 @@ function setNoInModal() {
     }
     no += branchNumber;
     $('#modal-survey-data-no').text(no);
-    alert(no);
 }
 
 /**
@@ -476,7 +474,7 @@ function setTreeTypeInModal(surveyData) {
         $('#modalSurveyDataTreeType').text(surveyData.survey_data_tree_type);
         $('#modalSurveyDataTreeType').val(surveyData.survey_data_tree_type);
         //選択ボタンを押下状態にする
-        inputTreeType("survey-area-tree-type-in-modal", surveyData.survey_data_tree_type)
+        inputTreeType("modalSurveyDataTreeType", surveyData.survey_data_tree_type)
     }
 }
 
@@ -500,40 +498,46 @@ function setName() {
  */
 async function newHistoryData(newId) {
     var texts = "";
+    var tbTexts = "";
     var surveyDetailList = await fetchSurveyNewDataBySurveyId(newId);
     var surveyHistoryItem = $('#history-list-contents');
-    var historyTrItem = $('#historyTr');
-    //一番新しいIDが同じIDならばアラートを出力する
+    var historyTrItem = $('#history-list-data');
+    //一番古いIDが同じIDならばアラートを出力する
     if (surveyDetailList.rows.length == 1) {
         alert('今表示している履歴データより最新の履歴データはありませんでした！');
     } else {
+        tbTexts = '<table id="history-list-contents" style="width:100%;table-layout:fixed;">';
         for (var i = 0; i < surveyDetailList.rows.length; i++) {
             texts = setSurveyHistoryData(texts, surveyDetailList.rows.item(i), i);
         }
-        historyTrItem.remove();
-        surveyHistoryItem.append(texts);
+        tbTexts = tbTexts + texts;
+        tbTexts = tbTexts + '</table>'
+        surveyHistoryItem.remove();
+        historyTrItem.append(tbTexts);
     }
 };
-
 
 /**
  * 【expand_more】の矢印を押下したとき（最新の履歴を取得）
  */
 async function oldHistoryData(oldId) {
     var texts = "";
+    var tbTexts = "";
     var surveyDetailList = await fetchSurveyOldDataBySurveyId(oldId);
     var surveyHistoryItem = $('#history-list-contents');
-    var historyTrItem = $('#historyTr');
+    var historyTrItem = $('#history-list-data');
     //一番古いIDが同じIDならばアラートを出力する
     if (surveyDetailList.rows.length == 1) {
         alert('今表示している履歴データより過去の履歴データはありませんでした！');
     } else {
+        tbTexts = '<table id="history-list-contents" style="width:100%;table-layout:fixed;">';
         for (var i = 0; i < surveyDetailList.rows.length; i++) {
             texts = setSurveyHistoryData(texts, surveyDetailList.rows.item(i), i);
         }
-        historyTrItem.remove();
-        surveyHistoryItem.append(texts);
-        alert(surveyHistoryItem.html());
+        tbTexts = tbTexts + texts;
+        tbTexts = tbTexts + '</table>'
+        surveyHistoryItem.remove();
+        historyTrItem.append(tbTexts);
     }
 };
 
