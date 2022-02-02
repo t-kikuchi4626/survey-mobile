@@ -4,7 +4,7 @@ document.addEventListener("deviceready", function () {
 
 function executeQuery(tx) {
     // tx.executeSql('DROP TABLE survey_area');
-    // tx.executeSql('DROP TABLE survey_data');
+    //tx.executeSql('DROP TABLE survey_data');
     // tx.executeSql('DROP TABLE survey');
     // tx.executeSql('DROP TABLE survey_detail');
     // tx.executeSql('DROP TABLE synchronize_result');
@@ -101,6 +101,7 @@ var createSurveyDataTable = 'CREATE TABLE IF NOT EXISTS survey_data ' +
     'survey_detail_id INTEGER, ' +
     'survey_data_tree_type TEXT, ' +
     'tree_measured_value INTEGER, ' +
+    'need_none BOOLEAN, ' +
     'need_rope BOOLEAN, ' +
     'need_wire BOOLEAN, ' +
     'need_cut_middle BOOLEAN, ' +

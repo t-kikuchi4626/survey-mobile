@@ -129,6 +129,7 @@ function fetchSurveyOldDataBySurveyId(id) {
  * @param 登録データ
  */
 function insertSurveyData(param) {
+    var updateFlag = true;
     var sql = 'INSERT INTO survey_data (' +
         'survey_detail_id, ' +
         'identify_code, ' +
@@ -140,6 +141,7 @@ function insertSurveyData(param) {
         'branch_number, ' +
         'survey_data_tree_type, ' +
         'tree_measured_value, ' +
+        'need_none, ' +
         'need_rope, ' +
         'need_wire, ' +
         'need_cut_middle, ' +
@@ -153,13 +155,14 @@ function insertSurveyData(param) {
         'created_by, ' +
         'modified_date,' +
         'created_date)' +
-        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'), DATETIME(\'now\', \'localtime\'))';
-
+        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'), DATETIME(\'now\', \'localtime\'))';
     database.transaction(function (transaction) {
         transaction.executeSql(sql, param);
     }, function (error) {
+        updateFlag = false;
         alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
     });
+    return updateFlag;
 }
 
 /**
@@ -656,12 +659,13 @@ function updateSurveyDataByIdInModal(param) {
         'branch_number= ?,' +
         'survey_data_tree_type = ?, ' +
         'tree_measured_value = ?, ' +
+        'need_none = ?, ' +
         'need_rope = ?, ' +
         'need_wire = ?, ' +
         'need_cut_middle = ?, ' +
         'not_need_cut_middle = ?, ' +
-        'need_cut_branch = ?, ' +
         'is_danger_tree = ?, ' +
+        'need_cut_branch = ?, ' +
         'note = ?, ' +
         'modified_by = ?, ' +
         'modified_date = DATETIME(\'now\', \'localtime\') ' +

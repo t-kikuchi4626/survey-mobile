@@ -123,35 +123,30 @@ function setSurveyHistoryData(texts, surveyData, countRows) {
         texts += `<span style="margin-right: 0.5rem;">樹種データなし</span>`
 
     texts += `<span style="margin-right: 0.5rem;">${surveyData.tree_measured_value}cm</span>`
+    if (surveyData.need_none === 'true') {
+        needText += `なし`;
+        needText += `,`;
+    };
 
-    surveyData.need_cut_middle == true ?
-        (v => {
-            needText += `中`;
-            needText += `,`;
-        })() : "";
-    surveyData.need_cut_branch == true ?
-        (v => {
-            needText += `枝`;
-            needText += `,`;
-        })() : "";
+    if (surveyData.need_wire === 'true') {
+        needText += `ワイヤ`;
+        needText += `,`;
+    };
 
-    surveyData.need_cut_divide == true ?
-        (v => {
-            needText += `玉`;
-            needText += `,`;
-        })() : "";
+    if (surveyData.need_cut_middle === 'true') {
+        needText += `中`;
+        needText += `,`;
+    };
 
-    surveyData.need_collect == true ?
-        (v => {
-            needText += `集`;
-            needText += `,`;
-        })() : "";
+    if (surveyData.is_danger_tree === 'true') {
+        needText += `危`;
+        needText += `,`;
+    };
 
-    surveyData.is_danger_tree == true ?
-        (v => {
-            needText += `危`;
-            needText += `,`;
-        })() : "";
+    if (surveyData.need_cut_branch === 'true') {
+        needText += `枝`;
+        needText += `,`;
+    };
 
     texts += `<span style="margin-right: 0.5rem;">${needText}</span>`;
     texts += '</li>';
@@ -197,6 +192,9 @@ function initializeModalData() {
     // 直径
     $('#modal-survey-data-mesured-value').val();
     $('#modal-survey-data-mesured-value').text();
+    //なし
+    $('#modal-survey-data-need-none').addClass("not-select");
+    $('input[name="modal-survey-data-need-none"]').val(false);
     // 伐採ロープ
     $('#modal-survey-data-need-rope').addClass("not-select");
     $('input[name="modal-survey-data-need-rope"]').val(false);
@@ -239,53 +237,65 @@ function setSurveyDataInModal(surveyData) {
     // 直径
     $('#modal-survey-data-mesured-value').val(surveyData.tree_measured_value);
     $('#modal-survey-data-mesured-value').text(surveyData.tree_measured_value);
+
+    //なし
+    if (surveyData.need_none === 'true') {
+        $('#modal-survey-data-need-none').removeClass('not-select');
+        $('input[name="modal-survey-data-need-none"]').val(true);
+    } else {
+        $('#modal-survey-data-need-none').addClass('not-select');
+        $('input[name="modal-survey-data-need-none"]').val(false);
+    }
     // 伐採ロープ
     if (surveyData.need_rope === 'true') {
         $('#modal-survey-data-need-rope').removeClass('not-select');
-        $('#modal-survey-data-need-rope').val(true);
+        $('input[name="modal-survey-data-need-rope"]').val(true);
     } else {
         $('#modal-survey-data-need-rope').addClass('not-select');
-        $('#modal-survey-data-need-rope').val(false);
+        $('input[name="modal-survey-data-need-rope"]').val(false);
     }
+
     // 伐採ワイヤー
     if (surveyData.need_wire === 'true') {
         $('#modal-survey-data-need-wire').removeClass('not-select')
-        $('#modal-survey-data-need-wire').val(true);
+        $('input[name="modal-survey-data-need-wire"]').val(true);
     } else {
         $('#modal-survey-data-need-wire').addClass('not-select')
-        $('#modal-survey-data-need-wire').val(false);
+        $('input[name="modal-survey-data-need-wire"]').val(false);
     }
+
     // 中断切ロープ有
     if (surveyData.need_cut_middle === 'true') {
         $('#modal-survey-data-need-cut-middle').removeClass('not-select');
-        $('#modal-survey-data-need-cut-middle').val(true);
+        $('input[name="modal-survey-data-need-cut-middle"]').val(true);
     } else {
         $('#modal-survey-data-need-cut-middle').addClass('not-select');
-        $('#modal-survey-data-need-cut-middle').val(false);
+        $('input[name="modal-survey-data-need-cut-middle"]').val(false);
     }
+
     // 中断切ロープ無
     if (surveyData.not_need_cut_middle === 'true') {
         $('#modal-survey-data-not-need-cut-middle').removeClass('not-select');
-        $('#modal-survey-data-not-need-cut-middle').val(true);
+        $('input[name="modal-survey-data-not-need-cut-middle"]').val(true);
     } else {
         $('#modal-survey-data-not-need-cut-middle').addClass('not-select');
-        $('#modal-survey-data-not-need-cut-middle').val(false);
+        $('input[name="modal-survey-data-not-need-cut-middle"]').val(false);
     }
     // 危険木
     if (surveyData.is_danger_tree === 'true') {
         $('#modal-survey-data-is-denger-tree').removeClass('not-select');
-        $('#modal-survey-data-is-denger-tree').val(true);
+        $('input[name="modal-survey-data-is-denger-tree"]').val(true);
     } else {
         $('#modal-survey-data-is-denger-tree').addClass('not-select');
-        $('.modal-survey-data-is-denger-tree').val(false);
+        $('input[name="modal-survey-data-is-denger-tree"]').val(false);
     }
     // 枝払い
     if (surveyData.need_cut_branch === 'true') {
         $('#modal-survey-data-need-cut-branch').removeClass('not-select');
-        $('#modal-survey-data-need-cut-branch').val(true);
+        $('input[name="modal-survey-need-cut-branch"]').val(true);
     } else {
         $('#modal-survey-data-need-cut-branch').addClass('not-select');
-        $('#modal-survey-data-need-cut-branch').val(false);
+        $('input[name="modal-survey-need-cut-branch"]').val(false);
     }
 }
 
@@ -329,12 +339,20 @@ function setSurveyData(surveyData) {
     // 直径
     $('#survey-data-mesured-value').val(surveyData.tree_measured_value);
     $('#survey-data-mesured-value').text(surveyData.tree_measured_value);
+    // なし
+    if (surveyData.need_none === 'true') {
+        $("#survey-data-need-none").removeClass("not-select");
+        $('input[name="survey-data-need-none"]').val(true);
+    } else {
+        $("#survey-data-need-none").addClass('not-select');
+        $('input[name="survey-data-need-none"]').val(false);
+    }
     // 伐採ロープ
     if (surveyData.need_rope === 'true') {
         $("#survey-data-need-rope").removeClass("not-select");
         $('input[name="survey-data-need-rope"]').val(true);
     } else {
-        $("#survey-data-need-wire").addClass('not-select');
+        $("#survey-data-need-rope").addClass('not-select');
         $('input[name="survey-data-need-rope"]').val(false);
     }
     // 伐採ワイヤー
@@ -567,13 +585,15 @@ async function createEditSurveyData() {
             $("#error").get(0).play();
             return;
         }
-        createSurveyData();
+        var result = await createSurveyData();
         let count = await editSurveyTrimmingTreeCount();
         soundMessage(count);
         M.toast({ html: '登録しました！', displayLength: 2000 });
         initializeForm();
-    } catch (e) {
-        alert(e)
+    } catch (error) {
+        alert(error)
+        $("#error").get(0).play();
+        return;
     }
 
 }
@@ -747,6 +767,7 @@ async function createSurveyData() {
         $('#branch-number').val(),
         $('#surveyDataTreeType').val(),
         $('#survey-data-mesured-value').val(),
+        $('input[name="survey-data-need-none"]').val(),
         $('input[name="survey-data-need-rope"]').val(),
         $('input[name="survey-data-need-wire"]').val(),
         $('input[name="survey-data-need-cut-middle"]').val(),
@@ -759,8 +780,8 @@ async function createSurveyData() {
         fetchUserId(),
         fetchUserId()
     ];
-
-    insertSurveyData(param);
+    var result = insertSurveyData(param);
+    return result;
 }
 
 /**
@@ -775,6 +796,7 @@ async function createSurveyDataInModal() {
         $('#modal-branch-number').val(),
         $('#modalSurveyDataTreeType').val(),
         $('#modal-survey-data-mesured-value').val(),
+        $('input[name="modal-survey-data-need-none"]').val(),
         $('input[name="modal-survey-data-need-rope"]').val(),
         $('input[name="modal-survey-data-need-wire"]').val(),
         $('input[name="modal-survey-data-need-cut-middle"]').val(),

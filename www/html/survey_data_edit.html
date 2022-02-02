@@ -88,7 +88,7 @@
     <!-- 伐採方法 -->
     <div class="row bottom-0" style="overflow: auto;white-space:nowrap;padding:0.1em;">
       <div class="input-field col s12">
-        <a id="survey-data-none" href="javascript:setSurveyMethod('survey-data-none')"
+        <a id="survey-data-need-none" href="javascript:setSurveyMethod('survey-data-need-none')"
           class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">なし</a>
         <a id="survey-data-need-rope" href="javascript:setSurveyMethod('survey-data-need-rope')"
           class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">ロープ</a>
@@ -100,16 +100,13 @@
           class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">中断</a>
         <a id="survey-data-need-cut-branch" href="javascript:setSurveyMethod('survey-data-need-cut-branch')"
           class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">枝払</a>
-        <a id="survey-data-etc" href="javascript:setSurveyMethod('survey-data-etc')"
-          class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">その他</a>
       </div>
-      <input type="hidden" name="survey-data-none" value="false" />
+      <input type="hidden" name="survey-data-need-none" value="false" />
       <input type="hidden" name="survey-data-need-rope" value="false" />
       <input type="hidden" name="survey-data-need-wire" value="false" />
       <input type="hidden" name="survey-data-is-denger-tree" value="false" />
       <input type="hidden" name="survey-data-need-cut-middle" value="false" />
       <input type="hidden" name="survey-data-need-cut-branch" value="false" />
-      <input type="hidden" name="survey-data-etc" value="false" />
     </div>
     <!-- 伐採方法 -->
 
@@ -318,10 +315,10 @@
         </div>
       </div>
       <div class="row bottom-0">
-        <div class="input-field col s6 bottom-0 modal-input mobile-floating">
-          <input id="branch-number" name="branch-number" type="text mobile-floating" class="number" maxlength="4"
-            value="1" placeholder="枝番">
-          <label for="branch-number" class="mobile-floating">枝番</label>
+        <div class="input-field col s6 bottom-0 modal-input">
+          <input id="branch-number" name="branch-number" type="text" class="number" maxlength="4" value="1"
+            placeholder="枝番">
+          <label for="branch-number">枝番</label>
         </div>
       </div>
       <span id="number_required" class="error message-text" style="display:none"><i
@@ -398,7 +395,7 @@
         <!-- 伐採方法 -->
         <div class="row bottom-5" style="overflow: auto;white-space:nowrap;">
           <div class="input-field col s12">
-            <a id="modal-survey-data-none" href="javascript:setSurveyMethodInModal('modal-survey-data-none')"
+            <a id="modal-survey-data-need-none" href="javascript:setSurveyMethodInModal('modal-survey-data-need-none')"
               class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">なし</a>
             <a id="modal-survey-data-need-rope" href="javascript:setSurveyMethodInModal('modal-survey-data-need-rope')"
               class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">ロープ</a>
@@ -413,16 +410,13 @@
             <a id="modal-survey-data-need-cut-branch"
               href="javascript:setSurveyMethodInModal('modal-survey-data-need-cut-branch')"
               class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">枝払</a>
-            <a id="modal-survey-data-etc" href="javascript:setSurveyMethodInModal('modal-survey-data-etc')"
-              class="survey-method waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">その他</a>
           </div>
-          <input type="hidden" name="modal-survey-data-none" value="false" />
+          <input type="hidden" name="modal-survey-data-need-none" value="false" />
           <input type="hidden" name="modal-survey-data-need-rope" value="false" />
           <input type="hidden" name="modal-survey-data-need-wire" value="false" />
           <input type="hidden" name="modal-survey-data-is-denger-tree" value="false" />
           <input type="hidden" name="modal-survey-data-need-cut-middle" value="false" />
           <input type="hidden" name="modal-survey-data-need-cut-branch" value="false" />
-          <input type="hidden" name="modal-survey-data-etc" value="false" />
         </div>
         <!-- 伐採方法 -->
 
