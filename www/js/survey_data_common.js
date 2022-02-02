@@ -60,7 +60,7 @@ function inputTreeType(id, val) {
 }
 
 /**
- * 樹種ボタン押下時、入力欄に樹種名を設定
+ * 樹種ボタン押下時、入力欄に樹種名を設定(モーダル内)
  * @param 樹種入力欄ID
  * @param 設定する樹種名
  * @param 樹種ボタンのID

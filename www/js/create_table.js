@@ -106,8 +106,8 @@ var createSurveyDataTable = 'CREATE TABLE IF NOT EXISTS survey_data ' +
     'need_cut_middle BOOLEAN, ' +
     'not_need_cut_middle BOOLEAN, ' +
     'need_cut_branch BOOLEAN, ' +
-    'need_cut_divide BOOLEAN, ' +
-    'need_collect BOOLEAN, ' +
+    // 'need_cut_divide BOOLEAN, ' +
+    // 'need_collect BOOLEAN, ' +
     'is_danger_tree BOOLEAN, ' +
     'is_delete BOOLEAN, ' +
     'latitude TEXT, ' +

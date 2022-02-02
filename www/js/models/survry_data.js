@@ -660,10 +660,8 @@ function updateSurveyDataByIdInModal(param) {
         'need_wire = ?, ' +
         'need_cut_middle = ?, ' +
         'not_need_cut_middle = ?, ' +
-        'is_danger_tree = ?, ' +
         'need_cut_branch = ?, ' +
-        'need_cut_divide = ?, ' +
-        'need_collect = ?, ' +
+        'is_danger_tree = ?, ' +
         'note = ?, ' +
         'modified_by = ?, ' +
         'modified_date = DATETIME(\'now\', \'localtime\') ' +
@@ -671,8 +669,8 @@ function updateSurveyDataByIdInModal(param) {
     database.transaction(function (transaction) {
         transaction.executeSql(sql, param);
     }, function (error) {
-        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
         updateFlag = false;
+        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
     });
     return updateFlag;
 }
