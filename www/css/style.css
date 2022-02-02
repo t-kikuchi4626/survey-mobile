@@ -713,3 +713,9 @@ a.btn-small-font-size {
   color: #fff;
 }
 
+.toast{
+  z-index: 9999; 
+  position: fixed!important;
+  top: 0px!important;
+  left: 0px!important;
+}

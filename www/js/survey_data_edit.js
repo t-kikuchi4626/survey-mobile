@@ -547,13 +547,14 @@ $("[id^=tree-measured-value-]").on('touchstart', function () {
  */
 $("[id^=modal-tree-measured-value-]").on('touchstart', function () {
     var number = $(this).attr("id").replace('modal-tree-measured-value-', "");
+    alert(number)
     number == 'none' ?
         (v => {
             $('#modal-survey-data-mesured-value').text('');
             $('#modal-survey-data-mesured-value').val('');
         })() :
         (v => {
-            applyMesuredValueOfTableKeypadInModal1(number);
+            applyMesuredValueOfNumericKeypadInModal(number);
         })();
 });
 
@@ -561,15 +562,20 @@ $("[id^=modal-tree-measured-value-]").on('touchstart', function () {
  * 伐採木データ作成および更新
  */
 async function createEditSurveyData() {
-    if (validate() == false) {
-        $("#error").get(0).play();
-        return;
+    try {
+        if (validate() == false) {
+            $("#error").get(0).play();
+            return;
+        }
+        createSurveyData();
+        let count = await editSurveyTrimmingTreeCount();
+        soundMessage(count);
+        M.toast({ html: '登録しました！', displayLength: 2000 });
+        initializeForm();
+    } catch (e) {
+        alert(e)
     }
-    createSurveyData();
-    let count = await editSurveyTrimmingTreeCount();
-    soundMessage(count);
-    M.toast({ html: '登録しました！', displayLength: 2000 });
-    initializeForm();
+
 }
 
 /**
@@ -857,11 +863,11 @@ function applyMesuredValueOfTableKeypad(mesuredValueId, value) {
 
 
 /**
- * 直径ボタンをタップした際に、選択した直径の背景色を変更する（テーブル形式の場合）
+ * 直径ボタンをタップした際に、選択した直径の背景色を変更する（テーブル形式の場合）(モーダル内)
  * @param 直径ID
  * @param 直径
  */
-function applyMesuredValueOfTableKeypadInModal1(mesuredValueId, value) {
+function applyMesuredValueOfTableKeypadInModal(mesuredValueId, value) {
     $('.modal-circle').removeClass("checked");
     $(mesuredValueId).addClass("checked");
     $('#modal-survey-data-mesured-value').text(value);
@@ -879,6 +885,19 @@ function applyMesuredValueOfNumericKeypad(value) {
     value = $('#survey-data-mesured-value').val() + value
     $('#survey-data-mesured-value').text(value);
     $('#survey-data-mesured-value').val(value);
+}
+
+/**
+ * 直径ボタンをタップした際に、選択した直径の背景色を変更する（テンキー形式の場合）(モーダル内)
+ * @param {*} value 設定する直径
+ */
+function applyMesuredValueOfNumericKeypadInModal(value) {
+    if ($('#modal-survey-data-mesured-value').val == '0') {
+        $('#modal-survey-data-mesured-value').val = '';
+    }
+    value = $('#modal-survey-data-mesured-value').val() + value
+    $('#modal-survey-data-mesured-value').text(value);
+    $('#modal-survey-data-mesured-value').val(value);
 }
 
 /**
