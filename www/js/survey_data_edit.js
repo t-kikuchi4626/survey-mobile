@@ -12,6 +12,9 @@ document.addEventListener("deviceready", async function () {
     surveyId = param[0];
     surveyDetailId = param[1];
 
+    //更新用に値を保持する
+    $("#modal-survey-detail-id").val(surveyDetailId);
+
     // 所在地一覧遷移タグ作成
     var surveyDetailListLink = $('#survey-detail-list-link');
     var detailListLinkText = `<a href="../html/survey_detail_list.html?${surveyId}"><i class="material-icons">arrow_back_ios</i></a>`;
@@ -106,8 +109,6 @@ function setSurveyDetailModal(texts, surveyDetail) {
  * @param 調査データ
  */
 function setSurveyHistoryData(texts, surveyData, countRows) {
-    //更新用に値を保持する
-    $("#modal-id").val(surveyData.id);
 
     var needText = "";
     texts += '<tr id="historyTr" style="border:1px solid #e3e3e3!important;">';
@@ -245,7 +246,7 @@ function setSurveyDataInModal(surveyData) {
     $('#modal-survey-data-mesured-value').val(surveyData.tree_measured_value);
     $('#modal-survey-data-mesured-value').text(surveyData.tree_measured_value);
     // 伐採ロープ
-    if (surveyData.need_rope == 'true') {
+    if (surveyData.need_rope == true) {
         $('#modal-survey-data-need-rope').removeClass("hidden");
         $('input[name="modal-survey-data-need-rope"]').val(true);
     } else {
@@ -253,7 +254,7 @@ function setSurveyDataInModal(surveyData) {
         $('input[name="modal-survey-data-need-rope"]').val(false);
     }
     // 伐採ワイヤー
-    if (surveyData.need_wire == 'true') {
+    if (surveyData.need_wire == true) {
         $('#modal-survey-data-need-wire').removeClass("hidden");
         $('input[name="modal-survey-data-need-wire"]').val(true);
     } else {
@@ -261,7 +262,7 @@ function setSurveyDataInModal(surveyData) {
         $('input[name="modal-survey-data-need-wire"]').val(false);
     }
     // 中断切ロープ有
-    if (surveyData.need_cut_middle == 'true') {
+    if (surveyData.need_cut_middle == true) {
         $('#modal-survey-data-need-cut-middle').removeClass("hidden");
         $('input[name="modal-survey-data-need-cut-middle"]').val(true);
     } else {
@@ -269,7 +270,7 @@ function setSurveyDataInModal(surveyData) {
         $('input[name="modal-survey-data-need-cut-middle"]').val(false);
     }
     // 中断切ロープ無
-    if (surveyData.not_need_cut_middle == 'true') {
+    if (surveyData.not_need_cut_middle == true) {
         $('#modal-survey-data-not-need-cut-middle').removeClass("hidden");
         $('input[name="modal-survey-data-not-need-cut-middle"]').val(true);
     } else {
@@ -277,7 +278,7 @@ function setSurveyDataInModal(surveyData) {
         $('input[name="modal-survey-data-not-need-cut-middle"]').val(false);
     }
     // 危険木
-    if (surveyData.is_danger_tree == 'true') {
+    if (surveyData.is_danger_tree == true) {
         $('#modal-survey-data-is-denger-tree').removeClass("hidden");
         $('input[name="modal-survey-data-is-denger-tree"]').val(true);
     } else {
@@ -285,7 +286,7 @@ function setSurveyDataInModal(surveyData) {
         $('input[name="modal-survey-data-is-denger-tree"]').val(false);
     }
     // 枝払い
-    if (surveyData.need_cut_branch == 'true') {
+    if (surveyData.need_cut_branch == true) {
         $('#modal-survey-data-need-cut-branch').removeClass("hidden");
         $('input[name="modal-survey-data-need-cut-branch"]').val(true);
     } else {
@@ -293,7 +294,7 @@ function setSurveyDataInModal(surveyData) {
         $('input[name="modal-survey-data-need-cut-branch"]').val(false);
     }
     // 玉切り
-    if (surveyData.need_cut_divide == 'true') {
+    if (surveyData.need_cut_divide == true) {
         $('#modal-survey-data-need-cut-divide').removeClass("hidden");
         $('input[name="modal-survey-data-need-cut-divide"]').val(true);
     } else {
@@ -301,7 +302,7 @@ function setSurveyDataInModal(surveyData) {
         $('input[name="modal-survey-data-need-cut-divide"]').val(false);
     }
     // 集積
-    if (surveyData.need_collect == 'true') {
+    if (surveyData.need_collect == true) {
         $('#modal-survey-data-need-collect').removeClass("hidden");
         $('input[name="modal-survey-data-need-collect"]').val(true);
     } else {
@@ -318,6 +319,8 @@ async function modalSetData(id) {
     if (surveyDetailList.rows.length !== 0) {
         initializeModalData();
         setSurveyDataInModal(surveyDetailList.rows.item(0));
+        //更新用に値を保持する
+        $("#modal-id").val(surveyDetailList.rows.item(0).id);
         $('#history-modal').modal('open');
     }
 }
@@ -719,10 +722,32 @@ async function createEditSurveyDataInModal() {
         $("#error").get(0).play();
         return;
     }
-    createSurveyDataInModal();
-    let count = await editSurveyTrimmingTreeCount();
-    soundMessage(count);
-    M.toast({ html: '更新しました！', displayLength: 2000 });
+    var result = await createSurveyDataInModal();
+    if (result) {
+        let count = await editSurveyTrimmingTreeCount();
+        soundMessage(count);
+        M.toast({ html: '更新しました！', displayLength: 2000 });
+
+        //画面の履歴を初期化
+        var texts = "";
+        var tbTexts = "";
+        var surveyHistoryItem = $('#history-list-contents');
+        var historyTrItem = $('#history-list-data');
+        tbTexts = '<table id="history-list-contents" style="width:100%;table-layout:fixed;">';
+        var suveyDetailId = $("#modal-survey-detail-id").val();
+        var surveyDetailNewList = await fetchSurveyDataBySurveyDetailId(suveyDetailId);
+
+        for (var i = 0; i < surveyDetailNewList.rows.length; i++) {
+            texts = setSurveyHistoryData(texts, surveyDetailNewList.rows.item(i), i);
+        }
+        tbTexts = tbTexts + texts;
+        tbTexts = tbTexts + '</table>'
+        surveyHistoryItem.remove();
+        historyTrItem.append(tbTexts);
+    } else {
+        $("#error").get(0).play();
+        return;
+    }
 }
 
 
@@ -812,7 +837,7 @@ function validateInModal() {
     }
     // 樹種チェック
     if (result) {
-        if ($('#modal-surveyDataTreeType').val() === '') {
+        if ($('#modalSurveyDataTreeType').val() === '') {
             alert("申し訳ございません。\r\n樹種の入力は必須です。樹種を入力してください。");
             result = false;
         }
@@ -897,7 +922,8 @@ async function createSurveyDataInModal() {
         id,
         id
     ];
-    updateSurveyDataByIdInModal(param);
+    var result = updateSurveyDataByIdInModal(param);
+    return result;
 }
 
 /**
