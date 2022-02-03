@@ -31,30 +31,28 @@ document.addEventListener("deviceready", async function () {
     setTreeTypeButtonInModal(treeTypeValue, specialTree, "modalSurveyDataTreeType");
     var treeCountArray = await fetchTreeTypeCount(treeTypeValue, specialTree, surveyDetailId);
     setTreeCount(treeCountArray);
-    initializeForm(surveyId, surveyDetailId, id);
+    initializeForm(surveyDetailId);
     await controlEditScreen();
 });
 
 /**
  * 伐採木データ登録画面の初期化
  */
-async function initializeForm(surveyId, surveyDetailId, id) {
+async function initializeForm(surveyDetailId) {
     //地権者モーダル表示
     var surveyDetailItem = $('#area-info');
     var surveyDetailList = await fetchSurveyDetailById(surveyDetailId);
     var texts = '';
-    surveyDetailList.rows.length == 0 ?
-        (v => {
-            texts += '<div class="row">';
-            texts += '<p>データが存在しません。</p>'
-            texts += '</div>';
-            texts += '</div>';
-            texts += '</div>';
-            texts += '</div>';
-        })() :
-        (v => {
-            texts = setSurveyDetailModal(texts, surveyDetailList.rows.item(0));
-        })();
+    if (surveyDetailList.rows.length === 0) {
+        texts += '<div class="row">';
+        texts += '<p>データが存在しません。</p>'
+        texts += '</div>';
+        texts += '</div>';
+        texts += '</div>';
+        texts += '</div>';
+    } else {
+        texts = setSurveyDetailModal(texts, surveyDetailList.rows.item(0));
+    }
     surveyDetailItem.append(texts);
     //履歴2件ずつページングで表示
     var surveyHistoryItem = $('#history-list-contents');
@@ -589,7 +587,22 @@ async function createEditSurveyData() {
         let count = await editSurveyTrimmingTreeCount();
         soundMessage(count);
         M.toast({ html: '登録しました！', displayLength: 2000 });
-        initializeForm();
+
+        //画面の履歴を初期化
+        var texts = "";
+        var tbTexts = "";
+        var surveyHistoryItem = $('#history-list-contents');
+        var historyTrItem = $('#history-list-data');
+        tbTexts = '<table id="history-list-contents" style="width:100%;table-layout:fixed;">';
+        var surveyDetailNewList = await fetchSurveyDataBySurveyDetailId(surveyDetailId);
+        for (var i = 0; i < surveyDetailNewList.rows.length; i++) {
+            texts = setSurveyHistoryData(texts, surveyDetailNewList.rows.item(i), i);
+        }
+        tbTexts = tbTexts + texts;
+        tbTexts = tbTexts + '</table>'
+        surveyHistoryItem.remove();
+        historyTrItem.append(tbTexts);
+
     } catch (error) {
         alert(error)
         $("#error").get(0).play();
@@ -682,20 +695,20 @@ function validate() {
     }
     // 直径チェック
     if (result) {
-        if ($('#survey-data-mesured-value').val === '') {
+        if ($('#survey-data-mesured-value').val() === '' || $('#survey-data-mesured-value').val() === null) {
             alert("申し訳ございません。\r\n直径の入力は必須です。直径を入力してください。");
             result = false;
         }
     }
     if (result) {
-        if ($('#survey-data-mesured-value').val === 0) {
+        if ($('#survey-data-mesured-value').val() === 0) {
             alert("申し訳ございません。\r\n直径は0以上で入力してください。");
             result = false;
         }
     }
     // 直径の桁数チェック
     if (result) {
-        if (Number($('#survey-data-mesured-value').val) >= 1000) {
+        if (Number($('#survey-data-mesured-value').val()) >= 1000) {
             alert("申し訳ございません。\r\n直径は1000以上は登録できません。1000未満で入力してください。");
             result = false;
         }
