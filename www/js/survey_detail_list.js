@@ -22,7 +22,7 @@ document.addEventListener("deviceready", async function () {
         texts += '</div>';
     } else {
         for (var i = 0; i < surveyDetailList.rows.length; i++) {
-            texts = setSurveyDetail(texts, surveyDetailList.rows.item(0));
+            texts = setSurveyDetail(texts, surveyDetailList.rows.item(i));
         }
     }
     surveyDetailItem.append(texts);
