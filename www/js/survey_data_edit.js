@@ -849,12 +849,31 @@ async function fetchTreeTypeCount(treeTypes, specialTree, surveyDetailId) {
  */
 function setSurveyMethod(surveyMethod) {
     if ($('#' + surveyMethod).hasClass("not-select")) {
+        if (surveyMethod === 'survey-data-need-none') {
+            $('#survey-data-need-rope').addClass("not-select");
+            $('#survey-data-need-wire').addClass("not-select");
+            $(`input[name="survey-data-need-rope"]`).val(false);
+            $(`input[name="survey-data-need-wire"]`).val(false);
+
+        } else if (surveyMethod === 'survey-data-need-rope') {
+            $('#survey-data-need-none').addClass("not-select");
+            $('#survey-data-need-wire').addClass("not-select");
+            $(`input[name="survey-data-need-none"]`).val(false);
+            $(`input[name="survey-data-need-wire"]`).val(false);
+
+        } else if (surveyMethod === 'survey-data-need-wire') {
+            $('#survey-data-need-rope').addClass("not-select");
+            $('#survey-data-need-none').addClass("not-select");
+            $(`input[name="survey-data-need-rope"]`).val(false);
+            $(`input[name="survey-data-need-none"]`).val(false);
+        }
         $('#' + surveyMethod).removeClass("not-select");
         $(`input[name="${surveyMethod}"]`).val(true);
     } else {
         $('#' + surveyMethod).addClass("not-select");
         $(`input[name="${surveyMethod}"]`).val(false);
     }
+
 }
 
 /**
@@ -863,12 +882,31 @@ function setSurveyMethod(surveyMethod) {
  */
 function setSurveyMethodInModal(surveyMethod) {
     if ($('#' + surveyMethod).hasClass("not-select")) {
+        if (surveyMethod === 'modal-survey-data-need-none') {
+            $('#modal-survey-data-need-rope').addClass("not-select");
+            $('#modal-survey-data-need-wire').addClass("not-select");
+            $(`input[name="modal-survey-data-need-rope"]`).val(false);
+            $(`input[name="modal-survey-data-need-wire"]`).val(false);
+
+        } else if (surveyMethod === 'modal-survey-data-need-rope') {
+            $('#modal-survey-data-need-none').addClass("not-select");
+            $('#modal-survey-data-need-wire').addClass("not-select");
+            $(`input[name="modal-survey-data-need-none"]`).val(false);
+            $(`input[name="modal-survey-data-need-wire"]`).val(false);
+
+        } else if (surveyMethod === 'modal-survey-data-need-wire') {
+            $('#modal-survey-data-need-rope').addClass("not-select");
+            $('#modal-survey-data-need-none').addClass("not-select");
+            $(`input[name="modal-survey-data-need-rope"]`).val(false);
+            $(`input[name="modal-survey-data-need-none"]`).val(false);
+        }
         $('#' + surveyMethod).removeClass("not-select");
         $(`input[name="${surveyMethod}"]`).val(true);
     } else {
         $('#' + surveyMethod).addClass("not-select");
         $(`input[name="${surveyMethod}"]`).val(false);
     }
+
 }
 
 /**
