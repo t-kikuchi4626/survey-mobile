@@ -1,10 +1,10 @@
-$(document).ready(function(){
+$(document).ready(function () {
     $('select').formSelect();
 });
 
 // 問合せ画面名
 const contactFunctionNameList = {
-    "survey-list": "調査業務一覧" ,
+    "survey-list": "調査業務一覧",
     "survey-detail-list": "所在地一覧",
     "survey-data-edit": "毎木調査登録",
     "survey-data-history": "伐採木データ履歴一覧",
@@ -180,8 +180,9 @@ function setTargetContact(contactId) {
  * 問合せ画面の選択項目設定
  */
 function setContactFunctionOption() {
-    contactFunctionNameList.forEach(function(contactFunctionName) {
+    contactFunctionNameList.forEach(function (contactFunctionName) {
         console.log(contactFunctionName)
+        alert(contactFunctionName)
         $('#contact-function').append($('<option>').html(contactFunctionName).val(contactFunctionName));
     });
 }
@@ -194,12 +195,12 @@ function save() {
     if (validate()) {
         var item = localStorage.getItem(KEY);
         var obj = JSON.parse(item);
-
         var JSONdata = {
             contact_name: $('#contact-name').val(),
             user_name: $('#user-name').val(),
             contact_class: $('#contact-class').val(),
-            contact_function: contactFunctionNameList.get($('#contact-function').val()),
+            //contact_function: contactFunctionNameList.get($('#contact-function').val()),
+            contact_function: $('#contact-function').val(),
             contact_message: $('#contact-message').val(),
             status: "unsupported",
             userId: fetchUserId()
@@ -216,6 +217,7 @@ function save() {
             headers: { 'Authorization': obj.token }
         })
             .done(async (data) => {
+                M.toast({ html: '登録しました！', displayLength: 2000 });
                 // 問合せ一覧表示
                 location.href = "../html/contact_list.html?" + transitionId + "&" + surveyId + "&" + surveyDetailId + "&" + 1;
             })
@@ -282,20 +284,20 @@ function validateRequired(inputdata, column) {
  */
 async function errorProcessByGetContact(responseData) {
     var message = '';
-    var error   = '';
+    var error = '';
     if (responseData.status == 401) {
         message = '申し訳ございません。セッションタイムアウトエラーが発生しました。再度ログインしてから処理を実行してください。';
-        error   = 'セッションタイムアウトエラー';
+        error = 'セッションタイムアウトエラー';
     }
     else if (responseData.status == 0) {
         // API接続なし
         // NW接続なし
         message = 'ネットワークエラーが発生しました。ネットワークに接続されていることを確認し、もう一度件名リンクをクリックしてください。確認後も同一の現象が発生する場合は、管理者へお問合せください。';
-        error   = 'サーバ接続エラー';
+        error = 'サーバ接続エラー';
     }
     else {
         message = '問合せ取得処理が失敗しました。もう一度処理を実行してください。実行後も同一の現象が発生する場合は、管理者へお問合せください。';
-        error   = responseData.responseJSON.message;
+        error = responseData.responseJSON.message;
     }
 
     $('#error').text(error);
@@ -309,20 +311,20 @@ async function errorProcessByGetContact(responseData) {
  */
 async function errorProcessByRegisterContact(responseData) {
     var message = '';
-    var error   = '';
+    var error = '';
     if (responseData.status == 401) {
         message = '申し訳ございません。セッションタイムアウトエラーが発生しました。再度ログインしてから処理を実行してください。';
-        error   = 'セッションタイムアウトエラー';
+        error = 'セッションタイムアウトエラー';
     }
     else if (responseData.status == 0) {
         // API接続なし
         // NW接続なし
         message = 'ネットワークエラーが発生しました。ネットワークに接続されていることを確認し、もう一度「問合せ内容送信」ボタンをクリックしてください。確認後も同一の現象が発生する場合は、管理者へお問合せください。';
-        error   = 'サーバ接続エラー';
+        error = 'サーバ接続エラー';
     }
     else {
         message = '問合せ登録処理が失敗しました。もう一度処理を実行してください。実行後も同一の現象が発生する場合は、管理者へお問合せください。';
-        error   = responseData.responseJSON.message;
+        error = responseData.responseJSON.message;
     }
 
     $('#error').text(error);
