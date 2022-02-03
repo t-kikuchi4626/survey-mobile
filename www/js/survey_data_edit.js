@@ -742,20 +742,20 @@ function validateInModal() {
     }
     // 直径チェック
     if (result) {
-        if ($('#modal-survey-data-mesured-value').val === '') {
+        if ($('#modal-survey-data-mesured-value').val() === '' || $('#modal-survey-data-mesured-value').val() === null) {
             alert("申し訳ございません。\r\n直径の入力は必須です。直径を入力してください。");
             result = false;
         }
     }
     if (result) {
-        if ($('#modal-survey-data-mesured-value').val === 0) {
+        if ($('#modal-survey-data-mesured-value').val() === 0) {
             alert("申し訳ございません。\r\n直径は0以上で入力してください。");
             result = false;
         }
     }
     // 直径の桁数チェック
     if (result) {
-        if (Number($('#modal-survey-data-mesured-value').val) >= 1000) {
+        if (Number($('#modal-survey-data-mesured-value').val()) >= 1000) {
             alert("申し訳ございません。\r\n直径は1000以上は登録できません。1000未満で入力してください。");
             result = false;
         }
