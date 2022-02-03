@@ -595,37 +595,6 @@ function fetchNeedCutBranch(surveyDetailId) {
     });
 }
 
-/**
- * 所在地IDをもとに玉切りありのデータを取得
- * @param 所在地ID 
- */
-function fetchNeedCutDivide(surveyDetailId) {
-    return new Promise(function (resolve) {
-        database.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' AND need_cut_divide = \'true\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
-                resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
-            });
-        });
-    });
-}
-
-/**
- * 所在地IDをもとに集積ありのデータを取得
- * @param 所在地ID 
- */
-function fetchNeedCollect(surveyDetailId) {
-    return new Promise(function (resolve) {
-        database.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' AND need_collect = \'true\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
-                resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
-            });
-        });
-    });
-}
 
 /**
  * 所在地IDと樹種をもとに件数を取得

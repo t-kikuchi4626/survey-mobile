@@ -89,12 +89,6 @@ async function setSurveyDataNote() {
 
     var needNeedCutBranchList = await fetchNeedCutBranch(surveyDetailId);
     $('#need-cut-branch-count').text(needNeedCutBranchList.rows.length);
-
-    var needCutDivideList = await fetchNeedCutDivide(surveyDetailId);
-    $('#need-cut-divide-count').text(needCutDivideList.rows.length);
-
-    var needCollectList = await fetchNeedCollect(surveyDetailId);
-    $('#need-collect-count').text(needCollectList.rows.length);
 }
 
 /**
@@ -150,8 +144,6 @@ function setSurveyDataInfoList(surveyData) {
         'notNeedCutMiddle': surveyData.not_need_cut_middle,
         'isDengerTree': surveyData.is_danger_tree,
         'needCutBranch': surveyData.need_cut_branch,
-        'needCutDivide': surveyData.need_cut_divide,
-        'needCollect': surveyData.need_collect,
         'note': surveyData.note,
         'name': surveyData.name,
         'editFlag': true
@@ -235,10 +227,6 @@ function setDisplayHistoryData(surveyData) {
     tagInfo += setDisplayCheckItem("cell-is-denger-tree-" + surveyData.id, "survey-data-is-denger-tree-" + surveyData.id);
     // 枝払い
     tagInfo += setDisplayCheckItem("cell-need-cut-branch-" + surveyData.id, "survey-data-need-cut-branch-" + surveyData.id);
-    // 玉切り
-    tagInfo += setDisplayCheckItem("cell-need-cut-divide-" + surveyData.id, "survey-data-need-cut-divide-" + surveyData.id);
-    // 集積あり
-    tagInfo += setDisplayCheckItem("cell-need-collect-" + surveyData.id, "survey-data-need-collect-" + surveyData.id);
     // 備考リンク
     tagInfo += setDisplayLinkItem(
         "cell-note-" + surveyData.id,
