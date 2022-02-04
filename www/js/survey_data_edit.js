@@ -173,6 +173,9 @@ function setSurveyHistoryData(texts, surveyData, countRows) {
  * @param 伐採木データ
  */
 function initializeModalData() {
+    //担当者
+    $('#modal-name-modal').val();
+    $('#modal-name').text();
     // 備考
     $('#modal-note-modal').val();
     $('#modal-note').text();
@@ -215,6 +218,9 @@ function initializeModalData() {
  * @param 伐採木データ
  */
 function setSurveyDataInModal(surveyData) {
+    // 担当者名
+    $('#modal-name-modal').val(surveyData.name);
+    $('#modal-name').text(surveyData.name);
     // 備考
     $('#modal-note-modal').val(surveyData.note);
     $('#modal-note').text(surveyData.note);
@@ -223,7 +229,7 @@ function setSurveyDataInModal(surveyData) {
     $('#modal-word').val(surveyData.word);
     $('#modal-number').val(surveyData.number);
     $('#modal-branch-number').val(surveyData.branch_number);
-    setNoInModal(false);
+    setNoInModal();
     // 樹種
     $('#modal-' + surveyData.survey_data_tree_type).removeClass("not-select");
     $('#modalSurveyDataTreeType').text(surveyData.survey_data_tree_type);
@@ -315,8 +321,8 @@ async function modalSetData(id) {
  */
 function setSurveyData(surveyData) {
     // 担当者名
+    $('#name-modal').val(surveyData.name);
     $('#name').text(surveyData.name);
-    $('#name').val(surveyData.name);
     // 備考
     $('#note-modal').val(surveyData.note);
     $('#note').text(surveyData.note);
@@ -393,6 +399,38 @@ function setSurveyData(surveyData) {
 }
 
 /**
+ * 担当者名の表示設定
+ */
+function setName() {
+    $('#name').text($('#name-modal').val());
+    $('#name').val($('#name-modal').val());
+}
+
+/**
+ * 担当者名の表示設定(モーダル内)
+ */
+function setNameInModal() {
+    $('#modal-name').text($('#modal-name-modal').val());
+    $('#modal-name').val($('#modal-name-modal').val());
+    $('#modal-name-target-modal').modal('close');
+}
+
+/**
+ * 備考の表示設定
+ */
+function setNote() {
+    $('#note').text($('#note-modal').val());
+}
+
+/**
+ * 備考の表示設定
+ */
+function setNoteInModal() {
+    $('#modal-note').text($('#modal-note-modal').val());
+    $('#modal-note-target-modal').modal('close');
+}
+
+/**
  * Noの表示設定
  */
 function setNo() {
@@ -417,7 +455,7 @@ function setNo() {
 /**
  * Noの表示設定(モーダル内)
  */
-function setNoInModal(initfFag) {
+function setNoInModal() {
     var color = $('#modal-color').val();
     var word = $('#modal-word').val();
     var number = $('#modal-number').val();
@@ -434,9 +472,7 @@ function setNoInModal(initfFag) {
     }
     no += branchNumber;
     $('#modal-survey-data-no').text(no);
-    if (initfFag === 'true') {
-        $('#modal-number-target-modal').modal('close');
-    }
+    $('#modal-number-target-modal').modal('close');
 }
 
 /**
@@ -461,21 +497,6 @@ function setTreeTypeInModal(surveyData) {
         //選択ボタンを押下状態にする
         inputTreeTypeInModal("#modalSurveyDataTreeType", 'modal-' + surveyData.survey_data_tree_type)
     }
-}
-
-/**
- * 備考の表示設定
- */
-function setNote() {
-    $('#note').text($('#note-modal').val());
-}
-
-/**
- * 備考の表示設定
- */
-function setNoteInModal() {
-    $('#modal-note').text($('#modal-note-modal').val());
-    $('#modal-note-target-modal').modal('close');
 }
 
 /**
@@ -751,8 +772,6 @@ function validateInModal() {
     return result;
 }
 
-
-
 /**
  * 伐採木データ作成
  */
@@ -761,7 +780,7 @@ async function createSurveyData() {
         surveyDetailId,
         generateIdentifyCode(uuid),
         surveyCompanyId,
-        $('#name').val(),
+        $('#name-modal').val(),
         $('#color').val(),
         $('#word').val(),
         $('#number').val(),
@@ -791,6 +810,7 @@ async function createSurveyData() {
 async function createSurveyDataInModal() {
     var id = $('#modal-id').val();
     var param = [
+        $('#modal-name-modal').val(),
         $('#modal-color').val(),
         $('#modal-word').val(),
         $('#modal-number').val(),
@@ -842,14 +862,6 @@ async function fetchTreeTypeCount(treeTypes, specialTree, surveyDetailId) {
         }
     }
     return treeTypesCount;
-}
-
-/**
- * 担当者名の表示設定
- */
-function setName() {
-    $('#name').text($('#name-modal').val());
-    $('#name').val($('#name-modal').val());
 }
 
 /**

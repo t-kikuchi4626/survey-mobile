@@ -622,6 +622,7 @@ function fetchTypeMeasuredValueByTreeType(surveyDetailId, treeType) {
 function updateSurveyDataByIdInModal(param) {
     var updateFlag = true;
     var sql = 'UPDATE survey_data SET ' +
+        'name = ?, ' +
         'color = ?, ' +
         'word = ?, ' +
         'number = ?, ' +
@@ -688,16 +689,18 @@ function generateSurveyDataByIdentifyCodeSQL() {
         'color = ?, ' +
         'word = ?, ' +
         'number = ?, ' +
+        'branch_number = ?, ' +
         'survey_data_tree_type = ?, ' +
         'tree_measured_value = ?, ' +
+        'need_none = ?, ' +
         'need_rope = ?, ' +
         'need_wire = ?, ' +
         'need_cut_middle = ?, ' +
         'not_need_cut_middle = ?, ' +
         'is_danger_tree = ?, ' +
         'need_cut_branch = ?, ' +
-        'need_cut_divide = ?, ' +
-        'need_collect = ?, ' +
+        // 'need_cut_divide = ?, ' +
+        // 'need_collect = ?, ' +
         'note = ?, ' +
         'name = ?, ' +
         'modified_by = ?, ' +

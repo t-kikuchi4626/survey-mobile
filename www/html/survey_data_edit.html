@@ -381,6 +381,12 @@
     <div id="past-history" class="modal-content">
       <h6>履歴情報</h6>
       <div class="container">
+        <!-- 担当者 -->
+        <div class="col s6 display-fixed link-font-size">
+          <a class="modal-trigger btn btn-link-circle btn-shadow enter" href="#modal-name-target-modal"><i
+              class="material-icons create-btn">create</i></a>
+          担当者：<span id="modal-name" name="modal-name"></span>
+        </div>
         <!-- 樹種選択 -->
         <div class="row bottom-0">
           <div class="input-field col s12 bottom-0" style="display:flex;margin-top: initial !important">
@@ -592,7 +598,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <a href="javascript:setNoInModal('true');"
+            <a href="javascript:setNoInModal();"
               class="waves-effect waves-light btn normal-button enter mobile-btn">確定</a>
           </div>
         </div>
@@ -622,26 +628,42 @@
               <input type="hidden" id="modal-key-pad-type" value="table-keypad">
             </div>
           </div>
-          <!-- 備考入力モーダル -->
-          <div id="modal-note-target-modal" class="modal">
-            <div class="modal-content">
-              <h6>備考を入力してください。</h6>
-              <div class="row">
-                <div class="input-field col s12 modal-input">
-                  <textarea id="modal-note-modal" class="materialize-textarea mobile-floating" placeholder="備考"
-                    maxlength="300"></textarea>
-                </div>
+        </div>
+        <!-- 備考入力モーダル -->
+        <div id="modal-note-target-modal" class="modal">
+          <div class="modal-content">
+            <h6>備考を入力してください。</h6>
+            <div class="row">
+              <div class="input-field col s12 modal-input">
+                <textarea id="modal-note-modal" class="materialize-textarea mobile-floating" placeholder="備考"
+                  maxlength="300"></textarea>
               </div>
             </div>
-            <div class="modal-footer">
-              <a href="javascript:setNoteInModal();"
-                class="waves-effect waves-light btn normal-button enter mobile-btn">確定</a>
+          </div>
+          <div class="modal-footer">
+            <a href="javascript:setNoteInModal();"
+              class="waves-effect waves-light btn normal-button enter mobile-btn">確定</a>
+          </div>
+        </div>
+        <!-- 備考入力モーダル -->
+        <!-- 担当者モーダル -->
+        <div id="modal-name-target-modal" class="modal">
+          <div class="modal-content">
+            <h6>担当者を入力してください。</h6>
+            <div class="row">
+              <div class="input-field col s8 modal-input">
+                <input id="modal-name-modal" name="modal-name-modal" type="text" placeholder="担当者" maxlength="100">
+              </div>
             </div>
           </div>
-          <input id="modal-id" val="" type="hidden" />
-          <input id="modal-survey-detail-id" val="" type="hidden" />
-          <!-- 備考入力モーダル -->
+          <div class="modal-footer">
+            <a href="javascript:setNameInModal();"
+              class="waves-effect waves-light btn normal-button enter mobile-btn">確定</a>
+          </div>
         </div>
+        <!-- 担当者モーダル -->
+        <input id="modal-id" val="" type="hidden" />
+        <input id="modal-survey-detail-id" val="" type="hidden" />
       </div>
     </div>
   </div>
