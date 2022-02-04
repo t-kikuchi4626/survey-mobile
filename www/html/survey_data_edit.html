@@ -53,6 +53,12 @@
     <span class="ml-4" style="margin: 10px;display: inline-block;">Webで編集中のため、登録・更新処理はできません。</span>
   </div>
   <div class="container">
+    <!-- 担当者 -->
+    <div class="col s6 display-fixed link-font-size">
+      <a class="modal-trigger btn btn-link-circle btn-shadow enter" href="#name-target-modal"><i
+          class="material-icons create-btn">create</i></a>
+      担当者：<span id="name" name="name"></span>
+    </div>
     <!-- 樹種選択 -->
     <div class="row bottom-0">
       <div class="input-field col s10 bottom-0" style="display:flex;margin-top: initial !important">
@@ -283,10 +289,8 @@
       </div>
       <!-- 履歴データ（2件まで） -->
     </div>
-    <div id="history-list-data" class="row s0.1">
-      <table id="history-list-contents" style="width:100%;table-layout:fixed;">
-        <tbody>
-        </tbody>
+    <div class="row" id="history-list-data">
+      <table id="history-list-contents" style="width:100%;">
       </table>
     </div>
   </div>
@@ -443,72 +447,72 @@
             <table class="centered">
               <tr>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure6', '6')">
-                  <div class="modal-circle" id="modal-mesure6">6</div>
+                  <div class="circle" id="modal-mesure6">6</div>
                 </td>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure16', '16')">
-                  <div class="modal-circle" id="modal-mesure16">16</div>
+                  <div class="circle" id="modal-mesure16">16</div>
                 </td>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure26', '26')">
-                  <div class="modal-circle" id="modal-mesure26">26</div>
+                  <div class="circle" id="modal-mesure26">26</div>
                 </td>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure36', '36')">
-                  <div class="modal-circle" id="modal-mesure36">36</div>
+                  <div class="circle" id="modal-mesure36">36</div>
                 </td>
               </tr>
               <tr>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure8', '8')">
-                  <div class="modal-circle" id="modal-mesure8">8</div>
+                  <div class="circle" id="modal-mesure8">8</div>
                 </td>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure18', '18')">
-                  <div class="modal-circle" id="modal-mesure18">18</div>
+                  <div class="circle" id="modal-mesure18">18</div>
                 </td>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure28', '28')">
-                  <div class="modal-circle" id="modal-mesure28">28</div>
+                  <div class="circle" id="modal-mesure28">28</div>
                 </td>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure38', '38')">
-                  <div class="modal-circle" id="modal-mesure38">38</div>
+                  <div class="circle" id="modal-mesure38">38</div>
                 </td>
               </tr>
               <tr>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure10', '10')">
-                  <div class="modal-circle" id="modal-mesure10">10</div>
+                  <div class="circle" id="modal-mesure10">10</div>
                 </td>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure20', '20')">
-                  <div class="modal-circle" id="modal-mesure20">20</div>
+                  <div class="circle" id="modal-mesure20">20</div>
                 </td>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure30', '30')">
-                  <div class="modal-circle" id="modal-mesure30">30</div>
+                  <div class="circle" id="modal-mesure30">30</div>
                 </td>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure40', '40')">
-                  <div class="modal-circle" id="modal-mesure40">40</div>
+                  <div class="circle" id="modal-mesure40">40</div>
                 </td>
               </tr>
               <tr>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure12', '12')">
-                  <div class="modal-circle" id="modal-mesure12">12</div>
+                  <div class="circle" id="modal-mesure12">12</div>
                 </td>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure22', '22')">
-                  <div class="modal-circle" id="modal-mesure22">22</div>
+                  <div class="circle" id="modal-mesure22">22</div>
                 </td>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure32', '32')">
-                  <div class="modal-circle" id="modal-mesure32">32</div>
+                  <div class="circle" id="modal-mesure32">32</div>
                 </td>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure42', '42')">
-                  <div class="modal-circle" id="modal-mesure42">42</div>
+                  <div class="circle" id="modal-mesure42">42</div>
                 </td>
               </tr>
               <tr>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure14', '14')">
-                  <div class="modal-circle" id="modal-mesure14">14</div>
+                  <div class="circle" id="modal-mesure14">14</div>
                 </td>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure24', '24')">
-                  <div class="modal-circle" id="modal-mesure24">24</div>
+                  <div class="circle" id="modal-mesure24">24</div>
                 </td>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure34', '34')">
-                  <div class="modal-circle" id="modal-mesure34">34</div>
+                  <div class="circle" id="modal-mesure34">34</div>
                 </td>
                 <td onclick="applyMesuredValueOfTableKeypadInModal('#modal-mesure44', '44')">
-                  <div class="modal-circle" id="modal-mesure44">44</div>
+                  <div class="circle" id="modal-mesure44">44</div>
                 </td>
               </tr>
             </table>
@@ -547,7 +551,7 @@
               <a id="modal-tree-measured-value-none-modal"
                 class="btn btn-circle btn-shadow btn-ten-key-font-size enter waves-effect waves-light"><i
                   class="material-icons">clear</i></a>
-              <a id="modal-modal-tree-measured-value-0"
+              <a id="modal-tree-measured-value-0"
                 class="btn btn-circle btn-shadow btn-ten-key-font-size btn-ten-key-margin enter waves-effect waves-light">０</a>
               <a style="visibility:hidden" class="btn btn-circle btn-shadow btn-ten-key-font-size create-button"><i
                   class="material-icons">done</i></a>

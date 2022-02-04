@@ -108,7 +108,7 @@ function setSurveyHistoryData(texts, surveyData, countRows) {
     var needText = "";
     texts += '<tr id="historyTr" style="border:1px solid #e3e3e3!important;">';
     texts += '<td>';
-    texts += '<div class="first col s0.2" style="display:flex;">';
+    texts += '<div class="col s0.2" style="display:flex;">';
     if (countRows === 0) {
         texts += `<a onclick="modalSetData('${surveyData.id}')" class="waves-effect waves-light enter mobile-floating" style="display:flex;">`;
     } else {
@@ -173,9 +173,6 @@ function setSurveyHistoryData(texts, surveyData, countRows) {
  * @param 伐採木データ
  */
 function initializeModalData() {
-    // 担当者名
-    $('#modal-name-modal').val();
-    $('#modal-name').text();
     // 備考
     $('#modal-note-modal').val();
     $('#modal-note').text();
@@ -318,8 +315,8 @@ async function modalSetData(id) {
  */
 function setSurveyData(surveyData) {
     // 担当者名
-    $('#name-modal').val(surveyData.name);
     $('#name').text(surveyData.name);
+    $('#name').val(surveyData.name);
     // 備考
     $('#note-modal').val(surveyData.note);
     $('#note').text(surveyData.note);
@@ -482,14 +479,6 @@ function setNoteInModal() {
 }
 
 /**
- * 担当者名の表示設定
- */
-function setName() {
-    $('#name').text($('#name-modal').val());
-}
-
-
-/**
  * 【expand_less】の矢印を押下したとき（最新の履歴を取得）
  */
 async function newHistoryData(newId) {
@@ -563,8 +552,7 @@ $("[id^=tree-measured-value-]").on('touchstart', function () {
  */
 $("[id^=modal-tree-measured-value-]").on('touchstart', function () {
     var number = $(this).attr("id").replace('modal-tree-measured-value-', "");
-    alert(number)
-    number == 'none' ?
+    number == 'none-modal' ?
         (v => {
             $('#modal-survey-data-mesured-value').text('');
             $('#modal-survey-data-mesured-value').val('');
@@ -773,7 +761,7 @@ async function createSurveyData() {
         surveyDetailId,
         generateIdentifyCode(uuid),
         surveyCompanyId,
-        $('#name-modal').val(),
+        $('#name').val(),
         $('#color').val(),
         $('#word').val(),
         $('#number').val(),
@@ -854,6 +842,14 @@ async function fetchTreeTypeCount(treeTypes, specialTree, surveyDetailId) {
         }
     }
     return treeTypesCount;
+}
+
+/**
+ * 担当者名の表示設定
+ */
+function setName() {
+    $('#name').text($('#name-modal').val());
+    $('#name').val($('#name-modal').val());
 }
 
 /**
@@ -941,7 +937,7 @@ function applyMesuredValueOfTableKeypad(mesuredValueId, value) {
  * @param 直径
  */
 function applyMesuredValueOfTableKeypadInModal(mesuredValueId, value) {
-    $('.modal-circle').removeClass("checked");
+    $('.circle').removeClass("checked");
     $(mesuredValueId).addClass("checked");
     $('#modal-survey-data-mesured-value').text(value);
     $('#modal-survey-data-mesured-value').val(value);
