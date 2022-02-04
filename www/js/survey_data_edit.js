@@ -24,13 +24,18 @@ document.addEventListener("deviceready", async function () {
     createSidenavLink(surveyId, surveyDetailId);
     createContactSidenavLink(3, surveyId, surveyDetailId);
 
+    //樹種ボタンの設定
     var survey = await fetchSurveyById(surveyId);
     var treeTypeValue = await convertSpace(survey.rows.item(0).tree_type_value);
     var specialTree = await convertSpace(survey.rows.item(0).special_tree);
     setTreeTypeButton(treeTypeValue, specialTree, "surveyDataTreeType");
     setTreeTypeButtonInModal(treeTypeValue, specialTree, "modalSurveyDataTreeType");
+
+    //樹種ごとの一覧表作成
     var treeCountArray = await fetchTreeTypeCount(treeTypeValue, specialTree, surveyDetailId);
     setTreeCount(treeCountArray);
+
+    //画面データの初期化
     initializeForm(surveyDetailId);
     await controlEditScreen();
 });
@@ -218,7 +223,7 @@ function initializeModalData() {
  * @param 伐採木データ
  */
 function setSurveyDataInModal(surveyData) {
-    // 担当者名
+    // 担当者
     $('#modal-name-modal').val(surveyData.name);
     $('#modal-name').text(surveyData.name);
     // 備考
@@ -515,10 +520,8 @@ async function newHistoryData(newId) {
         tbTexts = '<table id="history-list-contents" style="width:100%;table-layout:fixed;">';
         for (var i = 0; i < surveyDetailList.rows.length; i++) {
             var rowNum = surveyDetailList.rows.item(i).num;
-            var id = surveyDetailList.rows.item(i).id;
         }
         var surveyDetailNewList = await fetchSurveyNewDataBySurveyIdByrowNum(newId, rowNum);
-
         for (var i = 0; i < surveyDetailNewList.rows.length; i++) {
             texts = setSurveyHistoryData(texts, surveyDetailNewList.rows.item(i), i);
         }
@@ -584,40 +587,45 @@ $("[id^=modal-tree-measured-value-]").on('touchstart', function () {
 });
 
 /**
+ * 画面の履歴を初期化
+ */
+async function initialHistoryArea() {
+    var texts = "";
+    var tbTexts = "";
+    var surveyHistoryItem = $('#history-list-contents');
+    var historyTrItem = $('#history-list-data');
+    tbTexts = '<table id="history-list-contents" style="width:100%;table-layout:fixed;">';
+    var surveyDetailNewList = await fetchSurveyDataBySurveyDetailId(surveyDetailId);
+    for (var i = 0; i < surveyDetailNewList.rows.length; i++) {
+        texts = setSurveyHistoryData(texts, surveyDetailNewList.rows.item(i), i);
+    }
+    tbTexts = tbTexts + texts;
+    tbTexts = tbTexts + '</table>'
+    surveyHistoryItem.remove();
+    historyTrItem.append(tbTexts);
+}
+
+/**
  * 伐採木データ作成および更新
  */
 async function createEditSurveyData() {
-    try {
-        if (validate() == false) {
-            $("#error").get(0).play();
-            return;
-        }
-        var result = await createSurveyData();
-        let count = await editSurveyTrimmingTreeCount();
-        soundMessage(count);
-        M.toast({ html: '登録しました！', displayLength: 2000 });
-
-        //画面の履歴を初期化
-        var texts = "";
-        var tbTexts = "";
-        var surveyHistoryItem = $('#history-list-contents');
-        var historyTrItem = $('#history-list-data');
-        tbTexts = '<table id="history-list-contents" style="width:100%;table-layout:fixed;">';
-        var surveyDetailNewList = await fetchSurveyDataBySurveyDetailId(surveyDetailId);
-        for (var i = 0; i < surveyDetailNewList.rows.length; i++) {
-            texts = setSurveyHistoryData(texts, surveyDetailNewList.rows.item(i), i);
-        }
-        tbTexts = tbTexts + texts;
-        tbTexts = tbTexts + '</table>'
-        surveyHistoryItem.remove();
-        historyTrItem.append(tbTexts);
-
-    } catch (error) {
-        alert(error)
+    if (validate() == false) {
         $("#error").get(0).play();
         return;
     }
+    var result = await createSurveyData();
+    if (result) {
+        let count = await editSurveyTrimmingTreeCount();
+        soundMessage(count);
+        M.toast({ html: '登録しました！', displayLength: 2000 });
+        //画面の履歴を初期化
+        await initialHistoryArea();
 
+    } else {
+        M.toast({ html: '登録に失敗しました。', displayLength: 2000 });
+        $("#error").get(0).play();
+        return;
+    }
 }
 
 /**
@@ -628,34 +636,30 @@ async function createEditSurveyDataInModal() {
         $("#error").get(0).play();
         return;
     }
-    try {
-        var result = await createSurveyDataInModal();
-        let count = await editSurveyTrimmingTreeCount();
-        soundMessage(count);
-        M.toast({ html: '更新しました！', displayLength: 2000 });
 
-        //画面の履歴を初期化
-        var texts = "";
-        var tbTexts = "";
-        var surveyHistoryItem = $('#history-list-contents');
-        var historyTrItem = $('#history-list-data');
-        tbTexts = '<table id="history-list-contents" style="width:100%;table-layout:fixed;">';
-        var suveyDetailId = $("#modal-survey-detail-id").val();
-        var surveyDetailNewList = await fetchSurveyDataBySurveyDetailId(suveyDetailId);
-
-        for (var i = 0; i < surveyDetailNewList.rows.length; i++) {
-            texts = setSurveyHistoryData(texts, surveyDetailNewList.rows.item(i), i);
+    var result = new Promise(function (resolve) {
+        resolve(createSurveyDataInModal());
+    });
+    result.catch(error => {
+        if (error) {
+            M.toast({ html: '更新に失敗しました。', displayLength: 2000 });
+            $("#error").get(0).play();
+            return;
         }
-        tbTexts = tbTexts + texts;
-        tbTexts = tbTexts + '</table>'
-        surveyHistoryItem.remove();
-        historyTrItem.append(tbTexts);
-    } catch (e) {
-        alert(e)
-        $("#error").get(0).play();
-        return;
-    }
-}
+    });
+    result.then(result => async function () {
+        if (result) {
+
+        } else {
+            let count = await editSurveyTrimmingTreeCount();
+            soundMessage(count);
+            M.toast({ html: '更新しました！', displayLength: 2000 });
+            //画面の履歴を初期化
+            await initialHistoryArea();
+        }
+    })
+
+};
 
 
 /**
@@ -800,8 +804,7 @@ async function createSurveyData() {
         fetchUserId(),
         fetchUserId()
     ];
-    var result = insertSurveyData(param);
-    return result;
+    insertSurveyData(param);
 }
 
 /**
@@ -828,8 +831,8 @@ async function createSurveyDataInModal() {
         id,
         id
     ];
-    var result = updateSurveyDataByIdInModal(param);
-    return result;
+    const result = updateSurveyDataByIdInModal(param);
+    return Promise.resolve(result);
 }
 
 /**

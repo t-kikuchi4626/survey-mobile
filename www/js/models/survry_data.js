@@ -1,3 +1,4 @@
+const { exit } = require("browser-sync");
 
 /**
  * 伐採木データを4000件ずつ取得
@@ -129,7 +130,6 @@ function fetchSurveyOldDataBySurveyId(id) {
  * @param 登録データ
  */
 function insertSurveyData(param) {
-    var updateFlag = true;
     var sql = 'INSERT INTO survey_data (' +
         'survey_detail_id, ' +
         'identify_code, ' +
@@ -159,10 +159,8 @@ function insertSurveyData(param) {
     database.transaction(function (transaction) {
         transaction.executeSql(sql, param);
     }, function (error) {
-        updateFlag = false;
         alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
     });
-    return updateFlag;
 }
 
 /**
@@ -620,34 +618,39 @@ function fetchTypeMeasuredValueByTreeType(surveyDetailId, treeType) {
  * @param ユーザID
  */
 function updateSurveyDataByIdInModal(param) {
-    var updateFlag = true;
-    var sql = 'UPDATE survey_data SET ' +
-        'name = ?, ' +
-        'color = ?, ' +
-        'word = ?, ' +
-        'number = ?, ' +
-        'branch_number= ?,' +
-        'survey_data_tree_type = ?, ' +
-        'tree_measured_value = ?, ' +
-        'need_none = ?, ' +
-        'need_rope = ?, ' +
-        'need_wire = ?, ' +
-        'need_cut_middle = ?, ' +
-        'not_need_cut_middle = ?, ' +
-        'is_danger_tree = ?, ' +
-        'need_cut_branch = ?, ' +
-        'note = ?, ' +
-        'modified_by = ?, ' +
-        'modified_date = DATETIME(\'now\', \'localtime\') ' +
-        'WHERE id = ? ';
-    database.transaction(function (transaction) {
-        transaction.executeSql(sql, param);
-    }, function (error) {
-        updateFlag = false;
-        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+    return new Promise((resolve, reject) => {
+        {
+            var returnValue = false;
+            var sql = 'UPDATE survey_data SET ' +
+                'name = ?, ' +
+                'color = ?, ' +
+                'word = ?, ' +
+                'number = ?, ' +
+                'branch_number= ?,' +
+                'survey_data_tree_type = ?, ' +
+                'tree_measured_value = ?, ' +
+                'need_none = ?, ' +
+                'need_rope = ?, ' +
+                'need_wire = ?, ' +
+                'need_cut_middle = ?, ' +
+                'not_need_cut_middle = ?, ' +
+                'is_danger_tree = ?, ' +
+                'need_cut_branch = ?, ' +
+                'note = ?, ' +
+                'modified_by = ?, ' +
+                'modified_date = DATETIME(\'now\', \'localtime\') ' +
+                'WHERE id = ? ';
+            database.transaction(function (transaction) {
+                transaction.executeSql(sql, param);
+            }, function (error) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+                returnValue = false;
+            }), function () {
+                returnValue = true;
+            };
+        }
     });
-    return updateFlag;
-}
+};
 
 /**
  * IDをもとに伐採木更新
