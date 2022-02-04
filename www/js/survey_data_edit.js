@@ -203,8 +203,8 @@ function initializeModalData() {
     $('#modal-survey-data-not-need-cut-middle').addClass("not-select");
     $('input[name="modal-survey-data-not-need-cut-middle"]').val(false);
     // 危険木
-    $('#modal-survey-data-is-denger-tree').addClass("not-select");
-    $('input[name="modal-survey-data-is-denger-tree"]').val(false);
+    $('#modal-survey-data-is-danger-tree').addClass("not-select");
+    $('input[name="modal-survey-data-is-danger-tree"]').val(false);
     // 枝払い
     $('#modal-survey-data-need-cut-branch').addClass("not-select");
     $('input[name="modal-survey-data-need-cut-branch"]').val(false);
@@ -278,11 +278,11 @@ function setSurveyDataInModal(surveyData) {
     }
     // 危険木
     if (surveyData.is_danger_tree === 'true') {
-        $('#modal-survey-data-is-denger-tree').removeClass('not-select');
-        $('input[name="modal-survey-data-is-denger-tree"]').val(true);
+        $('#modal-survey-data-is-danger-tree').removeClass('not-select');
+        $('input[name="modal-survey-data-is-danger-tree"]').val(true);
     } else {
-        $('#modal-survey-data-is-denger-tree').addClass('not-select');
-        $('input[name="modal-survey-data-is-denger-tree"]').val(false);
+        $('#modal-survey-data-is-danger-tree').addClass('not-select');
+        $('input[name="modal-survey-data-is-danger-tree"]').val(false);
     }
     // 枝払い
     if (surveyData.need_cut_branch === 'true') {
@@ -376,11 +376,11 @@ function setSurveyData(surveyData) {
     }
     // 危険木
     if (surveyData.is_danger_tree === 'true') {
-        $("#survey-data-is-denger-tree").removeClass('not-select');
-        $('input[name="survey-data-is-denger-tree"]').val(true);
+        $("#survey-data-is-danger-tree").removeClass('not-select');
+        $('input[name="survey-data-is-danger-tree"]').val(true);
     } else {
-        $("#survey-data-is-denger-tree").addClass('not-select');
-        $('input[name="survey-data-is-denger-tree"]').val(false);
+        $("#survey-data-is-danger-tree").addClass('not-select');
+        $('input[name="survey-data-is-danger-tree"]').val(false);
     }
     // 枝払い
     if (surveyData.need_cut_branch === 'true') {
@@ -773,7 +773,7 @@ async function createSurveyData() {
         $('input[name="survey-data-need-wire"]').val(),
         $('input[name="survey-data-need-cut-middle"]').val(),
         $('input[name="survey-data-need-cut-middle"]').val() ? false : true,
-        $('input[name="survey-data-is-denger-tree"]').val(),
+        $('input[name="survey-data-is-danger-tree"]').val(),
         $('input[name="survey-data-need-cut-branch"]').val(),
         $('#note-modal').val(),
         false,
@@ -802,7 +802,7 @@ async function createSurveyDataInModal() {
         $('input[name="modal-survey-data-need-wire"]').val(),
         $('input[name="modal-survey-data-need-cut-middle"]').val(),
         $('input[name="modal-survey-data-need-cut-middle"]').val() ? false : true,
-        $('input[name="modal-survey-data-is-denger-tree"]').val(),
+        $('input[name="modal-survey-data-is-danger-tree"]').val(),
         $('input[name="modal-survey-data-need-cut-branch"]').val(),
         $('#modal-note-modal').val(),
         id,
