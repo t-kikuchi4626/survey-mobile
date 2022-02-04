@@ -32,7 +32,8 @@
   <!-- Sidenav -->
   <ul id="side-out" class="sidenav">
     <li id="contact-list-link"></li>
-    <li><a class="waves-effect waves-light modal-trigger" href="#modal1"><i class="material-icons">exit_to_app</i>ログアウト</a></li>
+    <li><a class="waves-effect waves-light modal-trigger" href="#modal1"><i
+          class="material-icons">exit_to_app</i>ログアウト</a></li>
   </ul>
 
   <!-- Modal Structure -->
@@ -58,17 +59,20 @@
       </div>
     </div>
     <div class="row center">
-      <button onclick="synchronize()" id="synchronize-button" class="btn waves-effect waves-light btn-large normal-button mb-2 web-edit-mode mobile-btn">
+      <button onclick="synchronize()" id="synchronize-button"
+        class="btn waves-effect waves-light btn-large normal-button mb-2 web-edit-mode mobile-btn">
         <i class="material-icons left">cloud_upload</i>同期処理を開始する
       </button>
     </div>
     <div class="row center">
-      <button onclick="confirmSynchronize()" id="confirmSynchronize" class="btn waves-effect waves-light btn-large normal-button mb-2 web-edit-mode mobile-btn">
+      <button onclick="confirmSynchronize()" id="confirmSynchronize"
+        class="btn waves-effect waves-light btn-large normal-button mb-2 web-edit-mode mobile-btn">
         <i class="material-icons left">cloud_download</i>同期処理を確認する
       </button>
     </div>
     <div class="row center">
-      <button onclick="openWebEditModal()" class="btn waves-effect waves-light btn-large normal-button mb-2 red darken-4 mobile-btn">
+      <button onclick="openWebEditModal()"
+        class="btn waves-effect waves-light btn-large normal-button mb-2 red darken-4 mobile-btn">
         <i class="material-icons left">lock_outline</i>Web編集モードを変更する
       </button>
     </div>
@@ -98,18 +102,19 @@
         <div>
           <p>
             <label>
-              <input name="web-edit-mode" type="radio" value="on" checked />
+              <input id="on-web-edit-mode" name="web-edit-mode" type="radio" value="on" />
               <span><i class="material-icons left">lock_open</i>編集モードON</span>
             </label>
           </p>
           <p>
             <label>
-              <input name="web-edit-mode" type="radio" value="off" />
+              <input id="off-web-edit-mode" name="web-edit-mode" type="radio" value="off" />
               <span><i class="material-icons left">lock_outline</i>編集モードOFF</span>
             </label>
           </p>
         </div>
-        <button onclick="switchWebEditMode()" id="web-edit-button" class="btn waves-effect waves-light btn-large normal-button mb-2 red darken-4 mobile-btn">
+        <button onclick="switchWebEditMode()" id="web-edit-button"
+          class="btn waves-effect waves-light btn-large normal-button mb-2 red darken-4 mobile-btn">
           <i class="material-icons left">lock_outline</i>編集モードを切替える
         </button>
       </div>

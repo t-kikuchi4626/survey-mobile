@@ -3,14 +3,14 @@
  * @param {*} companyId 
  * @return Web編集モード
  */
- function fetchWebEditModeByCompanyId(companyId) {
+function fetchWebEditModeByCompanyId(companyId) {
     return new Promise(function (resolve) {
         database.transaction(async function (transaction) {
-        transaction.executeSql('SELECT * FROM web_edit_mode WHERE survey_company_id = ?', [companyId], function (ignored, resultSet) {
-            resolve(resultSet);
-        })
+            transaction.executeSql('SELECT * FROM web_edit_mode WHERE survey_company_id = ?', [companyId], function (ignored, resultSet) {
+                resolve(resultSet);
+            })
         }, function (error) {
-        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
         });
     });
 }
@@ -22,7 +22,7 @@
 function insertWebEditMode(param) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql(insertWebEditModeSql(),  param, function (ignored, resultSet) {
+            transaction.executeSql(insertWebEditModeSql(), param, function (ignored, resultSet) {
                 resolve(resultSet);
             });
         }, function (error) {

@@ -50,11 +50,11 @@ function updateSynchronizeResult(SynchronizeResult) {
 function fetchLastSynchronizeResultByCompanyId(companyId) {
     return new Promise(function (resolve) {
         database.transaction(async function (transaction) {
-        transaction.executeSql(selectLastSynchronizeResultSql(), [companyId], function (ignored, resultSet) {
-            resolve(resultSet);
-        })
+            transaction.executeSql(selectLastSynchronizeResultSql(), [companyId], function (ignored, resultSet) {
+                resolve(resultSet);
+            })
         }, function (error) {
-        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
         });
     });
 }
@@ -84,4 +84,3 @@ function insertSynchronizeResultSql() {
 function selectLastSynchronizeResultSql() {
     return 'SELECT * FROM synchronize_result WHERE company_id = ? ORDER BY id DESC';
 }
-  

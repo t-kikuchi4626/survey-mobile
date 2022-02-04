@@ -22,6 +22,19 @@ document.addEventListener("deviceready", async function () {
     $('#synchronize-button').prop('disabled', true);
   }
 
+  //現在のWEB編集モードを設定する
+  let nowWebEditMode = await fetchWebEditModeByCompanyId(surveyCompanyId);
+  if (nowWebEditMode.rows.length > 0) {
+    statusWebEditMode = nowWebEditMode.rows.item(0).web_edit_mode;
+  }
+  if (statusWebEditMode === 'on') {
+    $('#on-web-edit-mode').prop('checked', true);
+    $('#off-web-edit-mode').prop('checked', false);
+  } else if (statusWebEditMode === 'off') {
+    $('#on-web-edit-mode').prop('checked', false);
+    $('#off-web-edit-mode').prop('checked', true);
+  }
+
   // サイドナビゲーションリンク作成
   createContactSidenavLink(1, "", "");
 
@@ -95,11 +108,9 @@ async function switchWebEditMode() {
   if (webEditMode.rows.length > 0 && webEditMode.rows.item(0).web_edit_mode === selectedWebEditMode) {
     return;
   }
-
   await updateWebEditModeSurveyDataByCompanyId(selectedWebEditMode, surveyCompanyId);
   await updateWebEditModeSurveyAreaByCompanyId(selectedWebEditMode, surveyCompanyId);
   await createWebEditMode(selectedWebEditMode);
-
   if (selectedWebEditMode === 'on') {
     await generateSynchronizeData(true);
   } else if (selectedWebEditMode === 'off') {
