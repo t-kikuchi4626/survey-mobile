@@ -618,40 +618,35 @@ function fetchTypeMeasuredValueByTreeType(surveyDetailId, treeType) {
  * @param ユーザID
  */
 function updateSurveyDataByIdInModal(param) {
-    return new Promise((resolve, reject) => {
-        {
-            var returnValue = false;
-            var sql = 'UPDATE survey_data SET ' +
-                'name = ?, ' +
-                'color = ?, ' +
-                'word = ?, ' +
-                'number = ?, ' +
-                'branch_number= ?,' +
-                'survey_data_tree_type = ?, ' +
-                'tree_measured_value = ?, ' +
-                'need_none = ?, ' +
-                'need_rope = ?, ' +
-                'need_wire = ?, ' +
-                'need_cut_middle = ?, ' +
-                'not_need_cut_middle = ?, ' +
-                'is_danger_tree = ?, ' +
-                'need_cut_branch = ?, ' +
-                'note = ?, ' +
-                'modified_by = ?, ' +
-                'modified_date = DATETIME(\'now\', \'localtime\') ' +
-                'WHERE id = ? ';
-            database.transaction(function (transaction) {
-                transaction.executeSql(sql, param);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
-                returnValue = false;
-            }), function () {
-                returnValue = true;
-            };
-        }
-    });
-};
-
+    return new Promise(function (resolve, reject) {
+        var sql = 'UPDATE survey_data SET ' +
+            'name = ?, ' +
+            'color = ?, ' +
+            'word = ?, ' +
+            'number = ?, ' +
+            'branch_number= ?,' +
+            'survey_data_tree_type = ?, ' +
+            'tree_measured_value = ?, ' +
+            'need_none = ?, ' +
+            'need_rope = ?, ' +
+            'need_wire = ?, ' +
+            'need_cut_middle = ?, ' +
+            'not_need_cut_middle = ?, ' +
+            'is_danger_tree = ?, ' +
+            'need_cut_branch = ?, ' +
+            'note = ?, ' +
+            'modified_by = ?, ' +
+            'modified_date = DATETIME(\'now\', \'localtime\') ' +
+            'WHERE id = ? ';
+        database.transaction(function (transaction) {
+            transaction.executeSql(sql, param, async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    })
+}
 /**
  * IDをもとに伐採木更新
  * @param 更新データ

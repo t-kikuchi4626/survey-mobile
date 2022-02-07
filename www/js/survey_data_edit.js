@@ -636,29 +636,7 @@ async function createEditSurveyDataInModal() {
         $("#error").get(0).play();
         return;
     }
-
-    var result = new Promise(function (resolve) {
-        resolve(createSurveyDataInModal());
-    });
-    result.catch(error => {
-        if (error) {
-            M.toast({ html: '更新に失敗しました。', displayLength: 2000 });
-            $("#error").get(0).play();
-            return;
-        }
-    });
-    result.then(result => async function () {
-        if (result) {
-
-        } else {
-            let count = await editSurveyTrimmingTreeCount();
-            soundMessage(count);
-            M.toast({ html: '更新しました！', displayLength: 2000 });
-            //画面の履歴を初期化
-            await initialHistoryArea();
-        }
-    })
-
+    await createSurveyDataInModal();
 };
 
 
@@ -831,8 +809,14 @@ async function createSurveyDataInModal() {
         id,
         id
     ];
-    const result = updateSurveyDataByIdInModal(param);
-    return Promise.resolve(result);
+    var result = await updateSurveyDataByIdInModal(param);
+    if (result !== null) {
+        let count = await editSurveyTrimmingTreeCount();
+        soundMessage(count);
+        M.toast({ html: '更新しました！', displayLength: 2000 });
+        //画面の履歴を初期化
+        await initialHistoryArea();
+    }
 }
 
 /**
