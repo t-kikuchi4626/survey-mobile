@@ -35,11 +35,14 @@ function insertSynchronizeResult(SynchronizeResult) {
  * @param {*} SynchronizeResult 
  */
 function updateSynchronizeResult(SynchronizeResult) {
-
-    database.transaction(async function (transaction) {
-        transaction.executeSql(updateSynchronizeResultSql(), SynchronizeResult);
-    }, function (error) {
-        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+    return new Promise(function (resolve, reject) {
+        database.transaction(async function (transaction) {
+            transaction.executeSql(updateSynchronizeResultSql(), SynchronizeResult, async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
     });
 }
 

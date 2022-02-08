@@ -117,10 +117,13 @@ async function fetchSurveyDetailBySurveyIds(surveyIds) {
  * @param 更新する調査状況
  */
 function updateSurveyDetailStatus(surveyDetailId, status) {
-    database.transaction(function (transaction) {
-        transaction.executeSql('UPDATE survey_detail SET status = ?, modified_by = ?, modified_date = DATETIME(\'now\', \'localtime\') WHERE id = ?', [status, fetchUserId(), surveyDetailId]);
-    }, function (error) {
-        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。:' + error.message);
+    return new Promise(function (resolve, reject) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('UPDATE survey_detail SET status = ?, modified_by = ?, modified_date = DATETIME(\'now\', \'localtime\') WHERE id = ?', [status, fetchUserId(), surveyDetailId], async function (ignored, resultSet) {
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。:' + transaction.message);
+            });
+        });
     });
 }
 
@@ -150,10 +153,14 @@ function fetchSNumberingSequence(surveyDetailId) {
  * @param 更新するナンバリング用連番
  */
 function updateSNumberingSequence(surveyDetailId, surveyAreaNumber) {
-    database.transaction(function (transaction) {
-        transaction.executeSql('UPDATE survey_detail SET s_numbering_sequence = ?, modified_by = ?, modified_date = DATETIME(\'now\', \'localtime\') WHERE id = ?', [surveyAreaNumber, fetchUserId(), surveyDetailId]);
-    }, function (error) {
-        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。:' + error.message);
+    return new Promise(function (resolve, reject) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('UPDATE survey_detail SET s_numbering_sequence = ?, modified_by = ?, modified_date = DATETIME(\'now\', \'localtime\') WHERE id = ?', [surveyAreaNumber, fetchUserId(), surveyDetailId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。:' + transaction.message);
+            });
+        });
     });
 }
 
@@ -182,10 +189,14 @@ function fetchNumberingSequence(surveyDetailId) {
  * @param 更新するナンバリング用連番
  */
 function updateNumberingSequence(surveyDetailId, surveyDataNumber) {
-    database.transaction(async function (transaction) {
-        await transaction.executeSql('UPDATE survey_detail SET numbering_sequence = ?, modified_by = ?, modified_date = DATETIME(\'now\', \'localtime\')  WHERE id = ?', [surveyDataNumber, fetchUserId(), surveyDetailId]);
-    }, function (error) {
-        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。:' + error.message);
+    return new Promise(function (resolve, reject) {
+        database.transaction(async function (transaction) {
+            transaction.executeSql('UPDATE survey_detail SET numbering_sequence = ?, modified_by = ?, modified_date = DATETIME(\'now\', \'localtime\')  WHERE id = ?', [surveyDataNumber, fetchUserId(), surveyDetailId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。:' + transaction.message);
+            });
+        });
     });
 }
 
@@ -197,8 +208,14 @@ function insertSurveyDetail(transaction, surveyDetail) {
 
 // 調査明細データ更新（同期処理）
 function updateSurveyDetail(transaction, surveyDetail) {
-    var sql = generateSurveyUpdateDetailSql();
-    transaction.executeSql(sql, surveyDetail);
+    return new Promise(function (resolve, reject) {
+        var sql = generateSurveyUpdateDetailSql();
+        transaction.executeSql(sql, surveyDetail, async function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        });
+    });
 }
 
 // 調査明細データ削除（同期処理）

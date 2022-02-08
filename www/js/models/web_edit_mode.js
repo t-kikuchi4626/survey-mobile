@@ -36,12 +36,16 @@ function insertWebEditMode(param) {
  * @param {*} param 
  */
 function updateWebEditMode(param) {
-    database.transaction(async function (transaction) {
-        transaction.executeSql(updateWebEditModeSql(), param);
-    }, function (error) {
-        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+    return new Promise(function (resolve, reject) {
+        database.transaction(function (transaction) {
+            transaction.executeSql(updateWebEditModeSql(), param, async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
     });
-}
+};
 
 function updateWebEditModeSql() {
     return 'UPDATE web_edit_mode SET ' +

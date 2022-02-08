@@ -206,17 +206,20 @@ function fetchSurveyDataCount(surveyDetailId) {
  * @param 更新するテーブル
  */
 function updateSurveyData(id, inputdata, column) {
-
-    database.transaction(function (transaction) {
-        var sql = 'UPDATE survey_data SET ' +
-            column + ' = ?, ' +
-            'modified_by = ?, ' +
-            'modified_date = DATETIME(\'now\', \'localtime\') ' +
-            'WHERE id = ?';
-        transaction.executeSql(sql, [inputdata, fetchUserId(), id]);
-    }, function (error) {
-        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
-    });
+    return new Promise(function (resolve, reject) {
+        database.transaction(function (transaction) {
+            var sql = 'UPDATE survey_data SET ' +
+                column + ' = ?, ' +
+                'modified_by = ?, ' +
+                'modified_date = DATETIME(\'now\', \'localtime\') ' +
+                'WHERE id = ?';
+            transaction.executeSql(sql, [inputdata, fetchUserId(), id], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        })
+    })
 }
 
 /**
@@ -226,17 +229,21 @@ function updateSurveyData(id, inputdata, column) {
  * @param 更新するカラム
  */
 function updateSurveyData(id, inputdata, column) {
-    database.transaction(function (transaction) {
-        var sql = 'UPDATE survey_data SET ' +
-            column + ' = ?, ' +
-            'modified_by = ?, ' +
-            'modified_date = DATETIME(\'now\', \'localtime\') ' +
-            'WHERE id = ?';
-        transaction.executeSql(sql, [inputdata, fetchUserId(), id]);
-    }, function (error) {
-        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+    return new Promise(function (resolve, reject) {
+        database.transaction(function (transaction) {
+            var sql = 'UPDATE survey_data SET ' +
+                column + ' = ?, ' +
+                'modified_by = ?, ' +
+                'modified_date = DATETIME(\'now\', \'localtime\') ' +
+                'WHERE id = ?';
+            transaction.executeSql(sql, [inputdata, fetchUserId(), id], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
     });
-}
+};
 
 /**
  * 伐採木のWeb編集モードを全件更新
@@ -244,46 +251,65 @@ function updateSurveyData(id, inputdata, column) {
  * @param 調査会社ID
  */
 function updateWebEditModeSurveyDataByCompanyId(webEditMode, companyId) {
-    database.transaction(function (transaction) {
-        var sql = 'UPDATE survey_data SET web_edit_mode = ?,' +
-            'modified_by = ?, ' +
-            'modified_date = DATETIME(\'now\', \'localtime\') ' +
-            'WHERE survey_company_id = ?';
-        transaction.executeSql(sql, [webEditMode, fetchUserId(), companyId]);
-    }, function (error) {
-        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+    return new Promise(function (resolve, reject) {
+        database.transaction(function (transaction) {
+            var sql = 'UPDATE survey_data SET web_edit_mode = ?,' +
+                'modified_by = ?, ' +
+                'modified_date = DATETIME(\'now\', \'localtime\') ' +
+                'WHERE survey_company_id = ?';
+            transaction.executeSql(sql, [webEditMode, fetchUserId(), companyId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
     });
-}
+};
 
 /**
  * 伐採木IDをもとに削除フラグを立てる
  * @param 伐採木ID
  */
 function deleteSurveyDataById(id) {
-    var sql = 'UPDATE survey_data SET is_delete = ? WHERE id = ?';
-    database.transaction(function (transaction) {
-        transaction.executeSql(sql, ['true', id]);
-    }, function (error) {
-        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+    return new Promise(function (resolve, reject) {
+        var sql = 'UPDATE survey_data SET is_delete = ? WHERE id = ?';
+        database.transaction(function (transaction) {
+            transaction.executeSql(sql, ['true', id], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
     });
-}
+};
 
 // 伐採木データを更新（同期処理）
 function updateSurveyDataOfSynchronize(transaction, surveyData) {
-    var sql = generateSurveyDataByIdentifyCodeSQL();
-    transaction.executeSql(sql, surveyData);
+    return new Promise(function (resolve, reject) {
+        var sql = generateSurveyDataByIdentifyCodeSQL();
+        transaction.executeSql(sql, surveyData, async function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+
+        });
+    });
 }
 
 // 伐採木データ同期処理済みフラグを更新（同期処理）
 function updateSurveyDataIsSynchronize(surveyDataIdList) {
-    database.transaction(function (transaction) {
-        var sql = 'UPDATE survey_data SET ' +
-            'modified_by = ?, ' +
-            'modified_date = DATETIME(\'now\', \'localtime\') ' +
-            'WHERE id in (' + surveyDataIdList + ')';
-        transaction.executeSql(sql, [fetchUserId()]);
-    }, function (error) {
-        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+    return new Promise(function (resolve, reject) {
+        database.transaction(function (transaction) {
+            var sql = 'UPDATE survey_data SET ' +
+                'modified_by = ?, ' +
+                'modified_date = DATETIME(\'now\', \'localtime\') ' +
+                'WHERE id in (' + surveyDataIdList + ')';
+            transaction.executeSql(sql, [fetchUserId()], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
     });
 }
 

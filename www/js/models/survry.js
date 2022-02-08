@@ -67,8 +67,14 @@ function insertSurvey(transaction, survey) {
  * @param {*} survey 
  */
 function updateSurvey(transaction, survey) {
-    var sql = generateSurveyUpdateSql();
-    transaction.executeSql(sql, survey);
+    return new Promise(function (resolve, reject) {
+        var sql = generateSurveyUpdateSql();
+        transaction.executeSql(sql, survey, async function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        });
+    });
 }
 
 /**

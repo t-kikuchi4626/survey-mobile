@@ -100,15 +100,19 @@ function insertSurveyArea(param) {
  * @param Web編集モード
  * @param 調査会社ID
  */
- function updateWebEditModeSurveyAreaByCompanyId(webEditMode, companyId) {
-    database.transaction(function (transaction) {
-        var sql = 'UPDATE survey_area SET web_edit_mode = ?,' +
-            'modified_by = ?, ' +
-            'modified_date = DATETIME(\'now\', \'localtime\') ' +
-            'WHERE survey_company_id = ?';
-        transaction.executeSql(sql, [webEditMode, fetchUserId(), companyId]);
-    }, function (error) {
-        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+function updateWebEditModeSurveyAreaByCompanyId(webEditMode, companyId) {
+    return new Promise(function (resolve, reject) {
+        database.transaction(function (transaction) {
+            var sql = 'UPDATE survey_area SET web_edit_mode = ?,' +
+                'modified_by = ?, ' +
+                'modified_date = DATETIME(\'now\', \'localtime\') ' +
+                'WHERE survey_company_id = ?';
+            transaction.executeSql(sql, [webEditMode, fetchUserId(), companyId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
     });
 }
 
@@ -135,11 +139,15 @@ function fetchSurveyAreaCount(surveyDetailId) {
  * @param 小径木ID
  */
 function deleteSurveyAreaById(id) {
-    var sql = 'UPDATE survey_area SET is_delete = ? WHERE id = ?';
-    database.transaction(function (transaction) {
-        transaction.executeSql(sql, ['true', id]);
-    }, function (error) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+    return new Promise(function (resolve, reject) {
+        var sql = 'UPDATE survey_area SET is_delete = ? WHERE id = ?';
+        database.transaction(function (transaction) {
+            transaction.executeSql(sql, ['true', id], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
     });
 }
 
@@ -171,8 +179,14 @@ function deleteSurveyAreaByIdentifyCodes(transaction, IdentifyCodes) {
 
 // 小径木データを更新（同期処理）
 function updateSurveyAreaOfSynchronize(transaction, surveyArea) {
-    var sql = generateSurveyAreaByIdentifyCodeSQL();
-    transaction.executeSql(sql, surveyArea);
+    return new Promise(function (resolve, reject) {
+        var sql = generateSurveyAreaByIdentifyCodeSQL();
+        transaction.executeSql(sql, surveyArea, async function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        });
+    });
 }
 
 // 小径木削除（同期処理）
@@ -187,22 +201,26 @@ function deleteSurveyAreaByDetailId(transaction, surveyDetailIdList) {
 }
 
 function generateSurveyAreaDeleteSql(placeholder) {
-    return 'DELETE FROM survey_area WHERE survey_detail_id IN (' + placeholder +') ';
+    return 'DELETE FROM survey_area WHERE survey_detail_id IN (' + placeholder + ') ';
 }
 
 /**
  * 所在地IDをもとに用材本数更新
  */
 function updateSurveyDataTrimmingTreeCount(count, surveyDetailId) {
-    database.transaction(function (transaction) {
-        var sql = 'UPDATE survey_area SET ' +
-            'trimming_tree_count = ?, ' +
-            'modified_by = ?, ' +
-            'modified_date = DATETIME(\'now\', \'localtime\') ' +
-            'WHERE survey_detail_id = ?';
-        transaction.executeSql(sql, [count, fetchUserId(), surveyDetailId]);
-    }, function (error) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+    return new Promise(function (resolve, reject) {
+        database.transaction(function (transaction) {
+            var sql = 'UPDATE survey_area SET ' +
+                'trimming_tree_count = ?, ' +
+                'modified_by = ?, ' +
+                'modified_date = DATETIME(\'now\', \'localtime\') ' +
+                'WHERE survey_detail_id = ?';
+            transaction.executeSql(sql, [count, fetchUserId(), surveyDetailId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
     });
 }
 
@@ -211,31 +229,34 @@ function updateSurveyDataTrimmingTreeCount(count, surveyDetailId) {
  * @param 更新項目および更新条件
  */
 function updateSurveyArea(param) {
-
-    database.transaction(function (transaction) {
-        var sql = 'UPDATE survey_area SET ' +
-            'tree_type = ?, ' +
-            'trimming_area_value = ?, ' +
-            'trimming_tree_area_value = ?, ' +
-            'trimming_tree_count = ?, ' +
-            'target_area_value = ?, ' +
-            'target_area_value_ten = ?, ' +
-            'need_collect = ?, ' +
-            'is_four_measured = ?, ' +
-            'tree_measured_value = ?, ' +
-            'modified_by = ?, ' +
-            'modified_date = DATETIME(\'now\', \'localtime\') ' +
-            'WHERE id = ?';
-        transaction.executeSql(sql, param);
-    }, function (error) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+    return new Promise(function (resolve, reject) {
+        database.transaction(function (transaction) {
+            var sql = 'UPDATE survey_area SET ' +
+                'tree_type = ?, ' +
+                'trimming_area_value = ?, ' +
+                'trimming_tree_area_value = ?, ' +
+                'trimming_tree_count = ?, ' +
+                'target_area_value = ?, ' +
+                'target_area_value_ten = ?, ' +
+                'need_collect = ?, ' +
+                'is_four_measured = ?, ' +
+                'tree_measured_value = ?, ' +
+                'modified_by = ?, ' +
+                'modified_date = DATETIME(\'now\', \'localtime\') ' +
+                'WHERE id = ?';
+            transaction.executeSql(sql, param, async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
     });
 }
 
 /**
  * identifyCodeをもとに伐採木を更新するSQL
  */
- function generateSurveyAreaByIdentifyCodeSQL() {
+function generateSurveyAreaByIdentifyCodeSQL() {
     return 'UPDATE survey_area SET ' +
         'tree_type = ?, ' +
         'trimming_area_value = ?, ' +
@@ -249,4 +270,4 @@ function updateSurveyArea(param) {
         'modified_by = ?, ' +
         'modified_date = ? ' +
         'WHERE identify_code = ? ';
- }
+}

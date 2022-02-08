@@ -20,14 +20,13 @@ function createSynchronizeResultDetail(param) {
  * @param {*} SynchronizeResult 
  */
 function updateSynchronizeResultDetailById(param) {
-  
   return new Promise(function (resolve) {
     database.transaction(async function (transaction) {
       transaction.executeSql(updateSynchronizeResultDetailSql(), param, function (ignored, resultSet) {
         resolve(resultSet);
-      })
-    }, function (error) {
-      alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+      }, function (error, transaction) {
+        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+      });
     });
   });
 }
@@ -53,7 +52,7 @@ function fetchAllSynchronizeResultDetail(synchronizeId) {
  * @param {*} synchronizeResultId 
  * @return 同期処理結果
  */
- function fetchDetailBySynchronizeResultId(synchronizeResultId) {
+function fetchDetailBySynchronizeResultId(synchronizeResultId) {
   return new Promise(function (resolve) {
     database.transaction(function (transaction) {
       transaction.executeSql('SELECT * FROM synchronize_result_detail where synchronize_id = ? ', [synchronizeResultId], function (ignored, resultSet) {
@@ -93,7 +92,7 @@ function insertSynchronizeResultDetailSql() {
     'message, ' +
     'modified_by, ' +
     'modified_date) ' +
-  'VALUES (?,?,?,?,?,DATETIME(\'now\', \'localtime\')) ';
+    'VALUES (?,?,?,?,?,DATETIME(\'now\', \'localtime\')) ';
 }
 
 /**
