@@ -1,5 +1,3 @@
-const { exit } = require("browser-sync");
-
 /**
  * 伐採木データを4000件ずつ取得
  * @return 伐採木
