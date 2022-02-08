@@ -100,7 +100,6 @@ async function synchronizeWebToMobile(data) {
                     await updateSurveyDataOfSynchronize(transaction, updateSurveyDataList[i]);
                 }
             }
-            alert('synchronizeWebToMobile8')
             // 伐採木データを削除
             if (deleteSurveyDataList != null) {
                 await deleteSurveyDataByIdentifyCodes(transaction, deleteSurveyDataList);
