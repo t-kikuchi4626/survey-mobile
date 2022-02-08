@@ -202,8 +202,14 @@ function updateNumberingSequence(surveyDetailId, surveyDataNumber) {
 
 // 調査明細データ登録（同期処理）
 function insertSurveyDetail(transaction, surveyDetail) {
-    var sql = generateSurveyDetailInsertSql();
-    transaction.executeSql(sql, surveyDetail);
+    return new Promise(function (resolve, reject) {
+        var sql = generateSurveyDetailInsertSql();
+        transaction.executeSql(sql, surveyDetail, async function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        });
+    });
 }
 
 // 調査明細データ更新（同期処理）
@@ -220,24 +226,36 @@ function updateSurveyDetail(transaction, surveyDetail) {
 
 // 調査明細データ削除（同期処理）
 function deleteSurveyDetailById(transaction, surveyDetailIdList) {
-    // 削除IDの数だけプレースホルダを増やす
-    var placeholderTmp = '';
-    surveyDetailIdList.forEach(function (surveyDetailId) {
-        placeholderTmp += '?, ';
-    })
-    var placeholder = placeholderTmp.slice(0, -2);
-    transaction.executeSql(generateSurveyDetailDeleteSql(placeholder), [surveyDetailIdList]);
+    return new Promise(function (resolve, reject) {
+        // 削除IDの数だけプレースホルダを増やす
+        var placeholderTmp = '';
+        surveyDetailIdList.forEach(function (surveyDetailId) {
+            placeholderTmp += '?, ';
+        })
+        var placeholder = placeholderTmp.slice(0, -2);
+        transaction.executeSql(generateSurveyDetailDeleteSql(placeholder), [surveyDetailIdList], async function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        });
+    });
 }
 
 // 調査明細データ削除（同期処理_業務データ非表示）
 function deleteSurveyDetailBySurveyId(transaction, surveyIdList) {
-    // 削除IDの数だけプレースホルダを増やす
-    var placeholderTmp = '';
-    surveyIdList.forEach(function (surveyId) {
-        placeholderTmp += '?, ';
-    })
-    var placeholder = placeholderTmp.slice(0, -2);
-    transaction.executeSql(generateSurveyDetailDeleteBySurveySql(placeholder), surveyIdList);
+    return new Promise(function (resolve, reject) {
+        // 削除IDの数だけプレースホルダを増やす
+        var placeholderTmp = '';
+        surveyIdList.forEach(function (surveyId) {
+            placeholderTmp += '?, ';
+        })
+        var placeholder = placeholderTmp.slice(0, -2);
+        transaction.executeSql(generateSurveyDetailDeleteBySurveySql(placeholder), surveyIdList, async function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        });
+    });
 }
 
 function generateSurveyDetailInsertSql() {

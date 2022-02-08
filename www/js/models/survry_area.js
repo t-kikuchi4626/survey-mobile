@@ -156,25 +156,39 @@ function deleteSurveyAreaById(id) {
  * @param {*} transaction 
  */
 function deleteSurveyAreaIsDetele(transaction, surveyDetailIdList) {
-    // 削除IDの数だけプレースホルダを増やす
-    var placeholderTmp = '';
-    surveyDetailIdList.forEach(function (surveyDetailId) {
-        placeholderTmp += '?, ';
-    })
-    var placeholder = placeholderTmp.slice(0, -2);
-    surveyDetailIdList.unshift('true');
-    transaction.executeSql('DELETE FROM survey_area WHERE is_delete = ? AND survey_detail_id NOT IN (' + placeholder + ') ', surveyDetailIdList);
+    return new Promise(function (resolve, reject) {
+        // 削除IDの数だけプレースホルダを増やす
+        var placeholderTmp = '';
+        surveyDetailIdList.forEach(function (surveyDetailId) {
+            placeholderTmp += '?, ';
+        })
+        var placeholder = placeholderTmp.slice(0, -2);
+        surveyDetailIdList.unshift('true');
+        transaction.executeSql('DELETE FROM survey_area WHERE is_delete = ? AND survey_detail_id NOT IN (' + placeholder + ') ', surveyDetailIdList, async function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        });
+    });
 }
+
 
 // uuidリストを元に小径木削除（同期処理）
 function deleteSurveyAreaByIdentifyCodes(transaction, IdentifyCodes) {
-    // 削除IDの数だけプレースホルダを増やす
-    var placeholderTmp = '';
-    IdentifyCodes.forEach(function () {
-        placeholderTmp += '?, ';
+    return new Promise(function (resolve, reject) {
+
+        // 削除IDの数だけプレースホルダを増やす
+        var placeholderTmp = '';
+        IdentifyCodes.forEach(function () {
+            placeholderTmp += '?, ';
+        })
+        var placeholder = placeholderTmp.slice(0, -2);
+        transaction.executeSql('DELETE FROM survey_area WHERE identify_code IN (' + placeholder + ') ', IdentifyCodes, async function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        });
     })
-    var placeholder = placeholderTmp.slice(0, -2);
-    transaction.executeSql('DELETE FROM survey_area WHERE identify_code IN (' + placeholder + ') ', IdentifyCodes);
 }
 
 // 小径木データを更新（同期処理）
@@ -191,13 +205,19 @@ function updateSurveyAreaOfSynchronize(transaction, surveyArea) {
 
 // 小径木削除（同期処理）
 function deleteSurveyAreaByDetailId(transaction, surveyDetailIdList) {
-    // 削除IDの数だけプレースホルダを増やす
-    var placeholderTmp = '';
-    surveyDetailIdList.forEach(function (surveyDetailId) {
-        placeholderTmp += '?, ';
+    return new Promise(function (resolve, reject) {
+        // 削除IDの数だけプレースホルダを増やす
+        var placeholderTmp = '';
+        surveyDetailIdList.forEach(function (surveyDetailId) {
+            placeholderTmp += '?, ';
+        })
+        var placeholder = placeholderTmp.slice(0, -2);
+        transaction.executeSql(generateSurveyAreaDeleteSql(placeholder), surveyDetailIdList, async function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        });
     })
-    var placeholder = placeholderTmp.slice(0, -2);
-    transaction.executeSql(generateSurveyAreaDeleteSql(placeholder), surveyDetailIdList);
 }
 
 function generateSurveyAreaDeleteSql(placeholder) {

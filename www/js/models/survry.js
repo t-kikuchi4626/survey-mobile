@@ -53,12 +53,14 @@ function fetchSurveyIdAndModifiedDate(surveyCompanyId) {
  * @param {*} survey 
  */
 function insertSurvey(transaction, survey) {
-    try {
+    return new Promise(function (resolve, reject) {
         var sql = generateSurveyInsertSql();
-        transaction.executeSql(sql, survey);
-    } catch (error) {
-        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
-    }
+        transaction.executeSql(sql, survey, async function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        });
+    });
 }
 
 /**

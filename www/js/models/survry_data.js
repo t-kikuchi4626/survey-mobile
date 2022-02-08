@@ -128,36 +128,40 @@ function fetchSurveyOldDataBySurveyId(id) {
  * @param 登録データ
  */
 function insertSurveyData(param) {
-    var sql = 'INSERT INTO survey_data (' +
-        'survey_detail_id, ' +
-        'identify_code, ' +
-        'survey_company_id, ' +
-        'name, ' +
-        'color, ' +
-        'word, ' +
-        'number, ' +
-        'branch_number, ' +
-        'survey_data_tree_type, ' +
-        'tree_measured_value, ' +
-        'need_none, ' +
-        'need_rope, ' +
-        'need_wire, ' +
-        'need_cut_middle, ' +
-        'not_need_cut_middle, ' +
-        'is_danger_tree, ' +
-        'need_cut_branch, ' +
-        'note, ' +
-        'is_delete, ' +
-        'web_edit_mode,' +
-        'modified_by, ' +
-        'created_by, ' +
-        'modified_date,' +
-        'created_date)' +
-        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'), DATETIME(\'now\', \'localtime\'))';
-    database.transaction(function (transaction) {
-        transaction.executeSql(sql, param);
-    }, function (error) {
-        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+    return new Promise(function (resolve, reject) {
+        var sql = 'INSERT INTO survey_data (' +
+            'survey_detail_id, ' +
+            'identify_code, ' +
+            'survey_company_id, ' +
+            'name, ' +
+            'color, ' +
+            'word, ' +
+            'number, ' +
+            'branch_number, ' +
+            'survey_data_tree_type, ' +
+            'tree_measured_value, ' +
+            'need_none, ' +
+            'need_rope, ' +
+            'need_wire, ' +
+            'need_cut_middle, ' +
+            'not_need_cut_middle, ' +
+            'is_danger_tree, ' +
+            'need_cut_branch, ' +
+            'note, ' +
+            'is_delete, ' +
+            'web_edit_mode,' +
+            'modified_by, ' +
+            'created_by, ' +
+            'modified_date,' +
+            'created_date)' +
+            'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'), DATETIME(\'now\', \'localtime\'))';
+        database.transaction(function (transaction) {
+            transaction.executeSql(sql, param, async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
     });
 }
 
@@ -313,24 +317,36 @@ function updateSurveyDataIsSynchronize(surveyDataIdList) {
 
 // 伐採木削除（同期処理）
 function deleteSurveyDataByDetailId(transaction, surveyDetailIdList) {
-    // 削除IDの数だけプレースホルダを増やす
-    var placeholderTmp = '';
-    surveyDetailIdList.forEach(function (surveyDetailId) {
-        placeholderTmp += '?, ';
+    return new Promise(function (resolve, reject) {
+        // 削除IDの数だけプレースホルダを増やす
+        var placeholderTmp = '';
+        surveyDetailIdList.forEach(function (surveyDetailId) {
+            placeholderTmp += '?, ';
+        })
+        var placeholder = placeholderTmp.slice(0, -2);
+        transaction.executeSql(generateSurveyDataDeleteSql(placeholder), surveyDetailIdList, async function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        });
     })
-    var placeholder = placeholderTmp.slice(0, -2);
-    transaction.executeSql(generateSurveyDataDeleteSql(placeholder), surveyDetailIdList);
 }
 
 // uuidリストを元に伐採木削除（同期処理）
 function deleteSurveyDataByIdentifyCodes(transaction, IdentifyCodes) {
-    // 削除IDの数だけプレースホルダを増やす
-    var placeholderTmp = '';
-    IdentifyCodes.forEach(function () {
-        placeholderTmp += '?, ';
-    })
-    var placeholder = placeholderTmp.slice(0, -2);
-    transaction.executeSql('DELETE FROM survey_data WHERE identify_code IN (' + placeholder + ') ', IdentifyCodes);
+    return new Promise(function (resolve, reject) {
+        // 削除IDの数だけプレースホルダを増やす
+        var placeholderTmp = '';
+        IdentifyCodes.forEach(function () {
+            placeholderTmp += '?, ';
+        })
+        var placeholder = placeholderTmp.slice(0, -2);
+        transaction.executeSql('DELETE FROM survey_data WHERE identify_code IN (' + placeholder + ') ', IdentifyCodes, async function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        });
+    });
 }
 
 /**
@@ -338,20 +354,26 @@ function deleteSurveyDataByIdentifyCodes(transaction, IdentifyCodes) {
  * @param {*} transaction
  */
 function deleteSurveyDataIsDetele(transaction, surveyDetailIdList) {
-    // 削除IDの数だけプレースホルダを増やす
-    var placeholderTmp = '';
-    surveyDetailIdList.forEach(function (surveyDetailId) {
-        placeholderTmp += '?, ';
+    return new Promise(function (resolve, reject) {
+        // 削除IDの数だけプレースホルダを増やす
+        var placeholderTmp = '';
+        surveyDetailIdList.forEach(function (surveyDetailId) {
+            placeholderTmp += '?, ';
+        })
+        var placeholder = placeholderTmp.slice(0, -2);
+        sql = '';
+        if (surveyDetailIdList.length > 0) {
+            sql = 'DELETE FROM survey_data WHERE is_delete = ? AND survey_detail_id NOT IN (' + placeholder + ') ';
+        } else {
+            sql = 'DELETE FROM survey_data WHERE is_delete = ? ';
+        }
+        surveyDetailIdList.unshift('true');
+        transaction.executeSql(sql, surveyDetailIdList, async function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        });
     })
-    var placeholder = placeholderTmp.slice(0, -2);
-    sql = '';
-    if (surveyDetailIdList.length > 0) {
-        sql = 'DELETE FROM survey_data WHERE is_delete = ? AND survey_detail_id NOT IN (' + placeholder + ') ';
-    } else {
-        sql = 'DELETE FROM survey_data WHERE is_delete = ? ';
-    }
-    surveyDetailIdList.unshift('true');
-    transaction.executeSql(sql, surveyDetailIdList);
 }
 
 function generateSurveyDataUpdateSql() {

@@ -613,19 +613,7 @@ async function createEditSurveyData() {
         $("#error").get(0).play();
         return;
     }
-    var result = await createSurveyData();
-    if (result) {
-        let count = await editSurveyTrimmingTreeCount();
-        soundMessage(count);
-        M.toast({ html: '登録しました！', displayLength: 2000 });
-        //画面の履歴を初期化
-        await initialHistoryArea();
-
-    } else {
-        M.toast({ html: '登録に失敗しました。', displayLength: 2000 });
-        $("#error").get(0).play();
-        return;
-    }
+    await createSurveyData();
 }
 
 /**
@@ -782,7 +770,14 @@ async function createSurveyData() {
         fetchUserId(),
         fetchUserId()
     ];
-    insertSurveyData(param);
+    var result = await insertSurveyData(param);;
+    if (result !== null) {
+        let count = await editSurveyTrimmingTreeCount();
+        soundMessage(count);
+        M.toast({ html: '更新しました！', displayLength: 2000 });
+        //画面の履歴を初期化
+        await initialHistoryArea();
+    }
 }
 
 /**
