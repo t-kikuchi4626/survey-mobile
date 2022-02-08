@@ -284,7 +284,6 @@ function deleteSurveyDataById(id) {
 // 伐採木データを更新（同期処理）
 function updateSurveyDataOfSynchronize(transaction, surveyData) {
     return new Promise(function (resolve, reject) {
-        alert(surveyData)
         var sql = generateSurveyDataByIdentifyCodeSQL();
         transaction.executeSql(sql, surveyData, async function (ignored, resultSet) {
             resolve(resultSet);
