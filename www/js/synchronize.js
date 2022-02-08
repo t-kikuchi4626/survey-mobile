@@ -3,7 +3,6 @@
  * @param {*} data 
  */
 async function synchronizeWebToMobile(data) {
-
     try {
         var surveyList = await convertSurveyList(data.insertSurveyList);
         var updateSurveyList = await convertSurveyList(data.updateSurveyList);
@@ -35,6 +34,7 @@ async function synchronizeWebToMobile(data) {
         }
 
         database.transaction(async function (transaction) {
+
             // 調査業務登録
             if (insertSurveyList != null) {
                 for (var i = 0; i < insertSurveyList.length; i++) {
@@ -100,7 +100,7 @@ async function synchronizeWebToMobile(data) {
                     await updateSurveyDataOfSynchronize(transaction, updateSurveyDataList[i]);
                 }
             }
-
+            alert('synchronizeWebToMobile8')
             // 伐採木データを削除
             if (deleteSurveyDataList != null) {
                 await deleteSurveyDataByIdentifyCodes(transaction, deleteSurveyDataList);
@@ -120,6 +120,7 @@ async function synchronizeWebToMobile(data) {
 
             // 伐採木データ削除処理（調査業務が未完了の場合のみ）
             await deleteSurveyDataIsDetele(transaction, surveyDetailIdIsSurveyIsStatusTrue);
+
             // 小径木データ削除処理（調査業務が未完了の場合のみ）
             await deleteSurveyAreaIsDetele(transaction, surveyDetailIdIsSurveyIsStatusTrue);
 
@@ -222,15 +223,14 @@ function convertSurveyDataList(list) {
             surveyData['branchNumber'],
             surveyData['treeType'],
             surveyData['treeMeasuredValue'],
+            surveyData['needNone'],
             surveyData['needRope'],
             surveyData['needWire'],
             surveyData['needCutMiddle'],
             surveyData['notNeedCutMiddle'],
-            surveyData['needCutBanch'],
+            surveyData['needCutBranch'],
             //surveyData['needCutDivide'],
-            true,
             //surveyData['needCollect'],
-            true,
             surveyData['isDangerTree'],
             surveyData['note'],
             surveyData['name'],

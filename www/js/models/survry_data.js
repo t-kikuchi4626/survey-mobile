@@ -284,6 +284,7 @@ function deleteSurveyDataById(id) {
 // 伐採木データを更新（同期処理）
 function updateSurveyDataOfSynchronize(transaction, surveyData) {
     return new Promise(function (resolve, reject) {
+        alert(surveyData)
         var sql = generateSurveyDataByIdentifyCodeSQL();
         transaction.executeSql(sql, surveyData, async function (ignored, resultSet) {
             resolve(resultSet);
@@ -719,10 +720,10 @@ function generateSurveyDataByIdentifyCodeSQL() {
         'need_wire = ?, ' +
         'need_cut_middle = ?, ' +
         'not_need_cut_middle = ?, ' +
-        'is_danger_tree = ?, ' +
         'need_cut_branch = ?, ' +
         // 'need_cut_divide = ?, ' +
         // 'need_collect = ?, ' +
+        'is_danger_tree = ?, ' +
         'note = ?, ' +
         'name = ?, ' +
         'modified_by = ?, ' +
