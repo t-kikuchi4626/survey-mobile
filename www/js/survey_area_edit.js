@@ -119,12 +119,12 @@ function setTargetSurveyArea(surveyArea) {
 /**
  * 樹種の表示設定
  */
-function setTreeTypeInArea(surveyData) {
-    if (surveyData.tree_type !== null) {
-        $('#survey-area-tree-type').text(surveyData.tree_type);
-        $('#survey-area-tree-type').val(surveyData.tree_type);
+function setTreeTypeInArea(surveyArea) {
+    if (surveyArea.tree_type !== null) {
+        $('#survey-area-tree-type').text(surveyArea.tree_type);
+        $('#survey-area-tree-type').val(surveyArea.tree_type);
         //選択ボタンを押下状態にする
-        inputTreeType("#survey-area-tree-type", surveyData.tree_type)
+        inputTreeType("#survey-area-tree-type", surveyArea.tree_type)
     }
 }
 
