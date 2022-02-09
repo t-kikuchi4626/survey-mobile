@@ -54,7 +54,7 @@ async function initView() {
         isUpdate = true;
         targetId = surveyAreaList.rows.item(0).id;
         setTargetSurveyArea(surveyAreaList.rows.item(0));
-        //削除ボタンの処理がキックされる削除モーダルへのリンクを無効化する
+        //削除ボタンの処理がキックされる削除モーダルへのリンクを有効化する
         $('#delete-btn').css('pointer-events', 'auto');
     } else {
         // 小径木データ初期表示
