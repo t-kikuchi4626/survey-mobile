@@ -49,13 +49,11 @@ async function initView() {
     $('#trimming-tree-count').val(surveyDataCount);
     // 小径木データ取得
     var surveyAreaList = await fetchSurveyAreaBySurveyDetailId(surveyDetailId);
-    alert(surveyAreaList.rows.length)
     if (surveyAreaList.rows.length > 0) {
         // 小径木データ設定
         isUpdate = true;
         targetId = surveyAreaList.rows.item(0).id;
         setTargetSurveyArea(surveyAreaList.rows.item(0));
-        alert('This')
         //削除ボタンの処理がキックされる削除モーダルへのリンクを無効化する
         $('#delete-btn').css('pointer-events', 'auto');
     } else {
