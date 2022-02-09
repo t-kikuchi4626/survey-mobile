@@ -7,8 +7,8 @@ function fetchSurveyAll(surveyCompanyId) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey WHERE survey_company_id = ? order by id desc', [surveyCompanyId], async function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -24,8 +24,8 @@ function fetchSurveyById(id) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey WHERE id = ?', [id], function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -40,8 +40,8 @@ function fetchSurveyIdAndModifiedDate(surveyCompanyId) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT id, modified_date FROM survey WHERE survey_company_id = ?', [surveyCompanyId], function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
