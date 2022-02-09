@@ -26,7 +26,10 @@ document.addEventListener("deviceready", async function () {
   let nowWebEditMode = await fetchWebEditModeByCompanyId(surveyCompanyId);
   if (nowWebEditMode.rows.length > 0) {
     statusWebEditMode = nowWebEditMode.rows.item(0).web_edit_mode;
+  } else if (nowWebEditMode.rows.length === 0) {
+    statusWebEditMode = 'off'
   }
+
   if (statusWebEditMode === 'on') {
     $('#on-web-edit-mode').prop('checked', true);
     $('#off-web-edit-mode').prop('checked', false);
