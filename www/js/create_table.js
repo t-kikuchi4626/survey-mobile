@@ -4,7 +4,7 @@ document.addEventListener("deviceready", function () {
 
 function executeQuery(tx) {
     // tx.executeSql('DROP TABLE survey_area');
-    //tx.executeSql('DROP TABLE survey_data');
+    // tx.executeSql('DROP TABLE survey_data');
     // tx.executeSql('DROP TABLE survey');
     // tx.executeSql('DROP TABLE survey_detail');
     // tx.executeSql('DROP TABLE synchronize_result');

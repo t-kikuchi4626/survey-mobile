@@ -5,12 +5,12 @@
  */
 function createSynchronizeResultDetail(param) {
   return new Promise(function (resolve) {
-    database.transaction(async function (transaction) {
-      await transaction.executeSql(insertSynchronizeResultDetailSql(), param, function (ignored, resultSet) {
+    database.transaction(function (transaction) {
+      transaction.executeSql(insertSynchronizeResultDetailSql(), param, async function (ignored, resultSet) {
         resolve(resultSet);
-      })
-    }, function (error) {
-      alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+      }, function (error, transaction) {
+        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+      });
     });
   });
 }

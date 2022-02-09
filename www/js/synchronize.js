@@ -16,7 +16,6 @@ async function synchronizeWebToMobile(data) {
         var updateSurveyAreaList = await convertSurveyAreaList(data.surveyAreaList);
         var deleteSurveyAreaList = await convertDeleteList(data.surveyAreaList);
 
-
         // 既に登録済みの場合は登録対象外
         let insertSurveyList = [];
         let insertSurveyDetailList = [];
@@ -26,6 +25,7 @@ async function synchronizeWebToMobile(data) {
                 insertSurveyList.push(surveyList[i]);
             }
         }
+
         for (var i = 0; i < surveyDetailList.length; i++) {
             let surveyDitail = await fetchSurveyDetailById(surveyDetailList[i][0]);
             if (surveyDitail.rows.length == 0) {
@@ -42,7 +42,6 @@ async function synchronizeWebToMobile(data) {
                     await insertSurvey(transaction, insertSurveyList[i]);
                 }
             }
-
             // 調査業務更新
             if (updateSurveyList != null) {
                 for (var i = 0; i < updateSurveyList.length; i++) {
@@ -51,7 +50,6 @@ async function synchronizeWebToMobile(data) {
                     await updateSurvey(transaction, updateSurveyList[i]);
                 }
             }
-
             // 調査業務削除
             if (data.deleteSurveyList.length > 0) {
                 await deleteSurvey(transaction, data.deleteSurveyList);
@@ -67,11 +65,11 @@ async function synchronizeWebToMobile(data) {
                 await deleteSurvey(transaction, data.isShowFalseList);
                 await deleteSurveyDetailBySurveyId(transaction, data.isShowFalseList);
             }
+
             if (surveyDeatilIdIfIsNotShow.length > 0) {
                 await deleteSurveyDataByDetailId(transaction, surveyDeatilIdIfIsNotShow);
                 await deleteSurveyAreaByDetailId(transaction, surveyDeatilIdIfIsNotShow);
             }
-
             // 調査明細データ新規登録
             if (insertSurveyDetailList != null) {
                 for (var i = 0; i < insertSurveyDetailList.length; i++) {
@@ -86,7 +84,6 @@ async function synchronizeWebToMobile(data) {
                     await updateSurveyDetail(transaction, updateSurveyDetailList[i]);
                 }
             }
-
             // 調査明細データ削除
             if (data.deleteSurveyDetailList.length > 0) {
                 await deleteSurveyDetailById(transaction, data.deleteSurveyDetailList);
@@ -100,11 +97,11 @@ async function synchronizeWebToMobile(data) {
                     await updateSurveyDataOfSynchronize(transaction, updateSurveyDataList[i]);
                 }
             }
+
             // 伐採木データを削除
             if (deleteSurveyDataList != null) {
                 await deleteSurveyDataByIdentifyCodes(transaction, deleteSurveyDataList);
             }
-
             // 小径木データ更新
             if (updateSurveyAreaList != null) {
                 for (var i = 0; i < updateSurveyAreaList.length; i++) {

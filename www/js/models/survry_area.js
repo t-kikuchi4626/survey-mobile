@@ -166,10 +166,12 @@ function deleteSurveyAreaIsDetele(transaction, surveyDetailIdList) {
         })
         var placeholder = placeholderTmp.slice(0, -2);
         surveyDetailIdList.unshift('true');
-        transaction.executeSql('DELETE FROM survey_area WHERE is_delete = ? AND survey_detail_id NOT IN (' + placeholder + ') ', surveyDetailIdList, async function (ignored, resultSet) {
-            resolve(resultSet);
-        }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        database.transaction(function (transaction) {
+            transaction.executeSql('DELETE FROM survey_area WHERE is_delete = ? AND survey_detail_id NOT IN (' + placeholder + ') ', surveyDetailIdList, async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
         });
     });
 }
@@ -185,22 +187,26 @@ function deleteSurveyAreaByIdentifyCodes(transaction, IdentifyCodes) {
             placeholderTmp += '?, ';
         })
         var placeholder = placeholderTmp.slice(0, -2);
-        transaction.executeSql('DELETE FROM survey_area WHERE identify_code IN (' + placeholder + ') ', IdentifyCodes, async function (ignored, resultSet) {
-            resolve(resultSet);
-        }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        database.transaction(function (transaction) {
+            transaction.executeSql('DELETE FROM survey_area WHERE identify_code IN (' + placeholder + ') ', IdentifyCodes, async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
         });
-    })
+    });
 }
 
 // 小径木データを更新（同期処理）
 function updateSurveyAreaOfSynchronize(transaction, surveyArea) {
     return new Promise(function (resolve, reject) {
         var sql = generateSurveyAreaByIdentifyCodeSQL();
-        transaction.executeSql(sql, surveyArea, async function (ignored, resultSet) {
-            resolve(resultSet);
-        }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        database.transaction(function (transaction) {
+            transaction.executeSql(sql, surveyArea, async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
         });
     });
 }
@@ -214,12 +220,14 @@ function deleteSurveyAreaByDetailId(transaction, surveyDetailIdList) {
             placeholderTmp += '?, ';
         })
         var placeholder = placeholderTmp.slice(0, -2);
-        transaction.executeSql(generateSurveyAreaDeleteSql(placeholder), surveyDetailIdList, async function (ignored, resultSet) {
-            resolve(resultSet);
-        }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        database.transaction(function (transaction) {
+            transaction.executeSql(generateSurveyAreaDeleteSql(placeholder), surveyDetailIdList, async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
         });
-    })
+    });
 }
 
 function generateSurveyAreaDeleteSql(placeholder) {

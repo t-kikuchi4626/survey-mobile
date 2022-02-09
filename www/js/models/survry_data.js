@@ -14,8 +14,8 @@ function fetchSurveyDataAll(surveyDetailIdList, offset) {
         database.transaction(function (transaction) {
             transaction.executeSql(`SELECT * FROM survey_data WHERE survey_detail_id IN (${placeholder})  ORDER BY id ASC limit 4000 offset ${offset}`, surveyDetailIdList, function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -30,8 +30,8 @@ function fetchSurveyDataAllNoSurveyDetail() {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey_data', [], function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -47,8 +47,8 @@ function fetchSurveyDataBySurveyDetailId(surveyDetailId) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = ? order by created_date desc limit 2', [surveyDetailId, 'false'], function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -64,8 +64,8 @@ function fetchSurveyNewDataBySurveyId(id) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT  ROW_NUMBER() OVER(ORDER BY created_date ASC) num,* FROM survey_data WHERE id >= ? AND is_delete = ? order by created_date desc limit 2', [id, 'false'], function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -81,8 +81,8 @@ function fetchSurveyNewDataBySurveyIdByrowNum(id, rowNum) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey_data WHERE id >= ? AND is_delete = ? order by created_date desc limit ? offset ?', [id, 'false', rowNum + 2, rowNum - 1], function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -99,8 +99,8 @@ function fetchSurveyDataBySurveyId(id) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey_data WHERE id = ? AND is_delete = ? order by created_date desc limit 2', [id, 'false'], function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -115,8 +115,8 @@ function fetchSurveyOldDataBySurveyId(id) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey_data WHERE id <= ? AND is_delete = ? order by created_date desc limit 2', [id, 'false'], function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -175,8 +175,8 @@ function fetchSurveyDataByNumbering(numbering) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey_data WHERE survey_data_number = ?', [numbering], async function (ignored, resultSet) {
                 resolve(resultSet.rows.item(0));
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -194,8 +194,8 @@ function fetchSurveyDataCount(surveyDetailId) {
             transaction.executeSql(sql, [surveyDetailId, false], function (ignored, resultSet) {
                 resolve(resultSet.rows.item(0).count);
             });
-        }, function (error) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
         });
     });
 }
@@ -289,11 +289,12 @@ function deleteSurveyDataById(id) {
 function updateSurveyDataOfSynchronize(transaction, surveyData) {
     return new Promise(function (resolve, reject) {
         var sql = generateSurveyDataByIdentifyCodeSQL();
-        transaction.executeSql(sql, surveyData, async function (ignored, resultSet) {
-            resolve(resultSet);
-        }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
-
+        database.transaction(function (transaction) {
+            transaction.executeSql(sql, surveyData, async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
         });
     });
 }
@@ -324,10 +325,12 @@ function deleteSurveyDataByDetailId(transaction, surveyDetailIdList) {
             placeholderTmp += '?, ';
         })
         var placeholder = placeholderTmp.slice(0, -2);
-        transaction.executeSql(generateSurveyDataDeleteSql(placeholder), surveyDetailIdList, async function (ignored, resultSet) {
-            resolve(resultSet);
-        }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        database.transaction(function (transaction) {
+            transaction.executeSql(generateSurveyDataDeleteSql(placeholder), surveyDetailIdList, async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
         });
     })
 }
@@ -341,10 +344,12 @@ function deleteSurveyDataByIdentifyCodes(transaction, IdentifyCodes) {
             placeholderTmp += '?, ';
         })
         var placeholder = placeholderTmp.slice(0, -2);
-        transaction.executeSql('DELETE FROM survey_data WHERE identify_code IN (' + placeholder + ') ', IdentifyCodes, async function (ignored, resultSet) {
-            resolve(resultSet);
-        }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        database.transaction(function (transaction) {
+            transaction.executeSql('DELETE FROM survey_data WHERE identify_code IN (' + placeholder + ') ', IdentifyCodes, async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
         });
     });
 }
@@ -368,10 +373,12 @@ function deleteSurveyDataIsDetele(transaction, surveyDetailIdList) {
             sql = 'DELETE FROM survey_data WHERE is_delete = ? ';
         }
         surveyDetailIdList.unshift('true');
-        transaction.executeSql(sql, surveyDetailIdList, async function (ignored, resultSet) {
-            resolve(resultSet);
-        }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        database.transaction(function (transaction) {
+            transaction.executeSql(sql, surveyDetailIdList, async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
         });
     })
 }
@@ -396,8 +403,8 @@ function fetchSurveyDataList(surveyDetailId) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT survey_detail_id, survey_data_tree_type FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' GROUP BY survey_data_tree_type', [surveyDetailId], async function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -416,8 +423,8 @@ function fetchBeforeTerrTypeMeasuredValue(surveyDetailId, treeType, measuredValu
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT COUNT(*) AS count FROM survey_data WHERE survey_detail_id = ? AND survey_data_tree_type = ? AND tree_measured_value <= ? AND is_delete = \'false\'', [surveyDetailId, treeType, measuredValue], async function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -436,8 +443,8 @@ function fetchBeforeAndAfterTerrTypeMeasuredValue(surveyDetailId, treeType, minM
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT COUNT(*) AS count FROM survey_data WHERE survey_detail_id = ? AND survey_data_tree_type = ? AND tree_measured_value > ? AND tree_measured_value <= ? AND is_delete = \'false\'', [surveyDetailId, treeType, minMeasuredValue, maxMeasuredValue], async function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -456,8 +463,8 @@ function fetchAfterTerrTypeMeasuredValue(surveyDetailId, treeType, measuredValue
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT COUNT(*) AS count FROM survey_data WHERE survey_detail_id = ? AND survey_data_tree_type = ? AND tree_measured_value > ? AND is_delete = \'false\'', [surveyDetailId, treeType, measuredValue], async function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -472,8 +479,8 @@ function fetchNewSurveyData(surveyDetailId) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' ORDER BY id DESC', [surveyDetailId], async function (ignored, resultSet) {
                 resolve(resultSet.rows.item(0));
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -488,8 +495,8 @@ function fetchNewSurveyHistoryDataById(id) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey_data WHERE id = ? AND is_delete = \'false\' ORDER BY id DESC', [id], async function (ignored, resultSet) {
                 resolve(resultSet.rows.item(0));
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -503,8 +510,8 @@ function fetchNotDeleteSurveyDataCount(surveyDetailId) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT COUNT(*) AS count FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\'', [surveyDetailId], async function (ignored, resultSet) {
                 resolve(resultSet.rows.item(0).count);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -520,8 +527,8 @@ function fetchSurveyDataHistoryList(surveyDetailId, skip) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' ORDER BY created_date ASC LIMIT 50 OFFSET ?', [surveyDetailId, skip], async function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -536,8 +543,8 @@ function fetchAllSurveyDataHistoryList(surveyDetailId) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -552,8 +559,8 @@ function fetchNeedRope(surveyDetailId) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' AND need_rope = \'true\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -568,8 +575,8 @@ function fetchNeedWire(surveyDetailId) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' AND need_wire = \'true\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });
@@ -584,8 +591,8 @@ function fetchNeedCutMiddle(surveyDetailId) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' AND need_cut_middle = \'true\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
                 resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
     });

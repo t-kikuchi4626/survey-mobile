@@ -266,7 +266,6 @@ async function generateSynchronizeData(isWebEditMode) {
     [surveyArray, surveyIdList] = await fetchForSynchronizeSurvey(surveyList);
     [surveyDetailArray, surveyDetailIdList] = await fetchForSynchronizeSurveyDetail(surveyIdList);
     surveyAreaArray = await fetchForSynchronizeSurveyArea(surveyDetailIdList);
-
     // 伐採木データを4000件ずつサーバへリクエストする
     if (surveyDetailIdList.length > 0) {
       let offset = 0;

@@ -204,10 +204,12 @@ function updateNumberingSequence(surveyDetailId, surveyDataNumber) {
 function insertSurveyDetail(transaction, surveyDetail) {
     return new Promise(function (resolve, reject) {
         var sql = generateSurveyDetailInsertSql();
-        transaction.executeSql(sql, surveyDetail, async function (ignored, resultSet) {
-            resolve(resultSet);
-        }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        database.transaction(async function (transaction) {
+            transaction.executeSql(sql, surveyDetail, async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
         });
     });
 }
@@ -216,10 +218,12 @@ function insertSurveyDetail(transaction, surveyDetail) {
 function updateSurveyDetail(transaction, surveyDetail) {
     return new Promise(function (resolve, reject) {
         var sql = generateSurveyUpdateDetailSql();
-        transaction.executeSql(sql, surveyDetail, async function (ignored, resultSet) {
-            resolve(resultSet);
-        }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        database.transaction(async function (transaction) {
+            transaction.executeSql(sql, surveyDetail, async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
         });
     });
 }
@@ -233,10 +237,12 @@ function deleteSurveyDetailById(transaction, surveyDetailIdList) {
             placeholderTmp += '?, ';
         })
         var placeholder = placeholderTmp.slice(0, -2);
-        transaction.executeSql(generateSurveyDetailDeleteSql(placeholder), [surveyDetailIdList], async function (ignored, resultSet) {
-            resolve(resultSet);
-        }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        database.transaction(async function (transaction) {
+            transaction.executeSql(generateSurveyDetailDeleteSql(placeholder), [surveyDetailIdList], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
         });
     });
 }
@@ -250,10 +256,12 @@ function deleteSurveyDetailBySurveyId(transaction, surveyIdList) {
             placeholderTmp += '?, ';
         })
         var placeholder = placeholderTmp.slice(0, -2);
-        transaction.executeSql(generateSurveyDetailDeleteBySurveySql(placeholder), surveyIdList, async function (ignored, resultSet) {
-            resolve(resultSet);
-        }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        database.transaction(async function (transaction) {
+            transaction.executeSql(generateSurveyDetailDeleteBySurveySql(placeholder), surveyIdList, async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
         });
     });
 }
