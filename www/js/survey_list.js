@@ -352,7 +352,9 @@ async function synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArra
  * 同期結果を確認するボタン押下時
  */
 async function confirmSynchronize() {
+  $('#synchronize-request').modal({ close: true });
   if (surveyCompanyId == null) {
+    $('#modalLocation').modal('close');
     var error = '同期処理実行権限エラー';
     $('#error').text(error);
     $('#errorMessage').text('申し訳ございません。調査会社情報が取得できません。調査会社アカウントで再度ログインしてから処理を実行してください。');
@@ -367,33 +369,36 @@ async function confirmSynchronize() {
  * 同期処理結果をサーバへ確認する
  */
 async function requestSynchronizeResult() {
-
   $('#modalLocation').modal('open');
 
   let latestSynchronizeResult = await fetchLastSynchronizeResultByCompanyId(surveyCompanyId);
   let synchronizeResultDetailList = null;
+  if (latestSynchronizeResult.rows.length === 0) {
+    $('#modalLocation').modal('close');
+    var error = '最新の同期処理データ取得エラー';
+    $('#error').text(error);
+    $('#errorMessage').text('申し訳ございません。最新の同期処理データがないようです。「同期処理を開始する」ボタンを押下後に、本ボタンで確認してください。');
+    $('#synchronizeError').modal('open');
+    return;
+  }
   let latestSynchronizeResultId = latestSynchronizeResult.rows.item(0).id;
   if (latestSynchronizeResult.rows.length > 0) {
     synchronizeResultDetailList = await fetchAllSynchronizeResultDetail(latestSynchronizeResult.rows.item(0).id);
   }
-
   if (synchronizeResultDetailList.rows.length == 0 || synchronizeResultDetailList == null) {
     $('#modalLocation').modal({ close: true });
     $('#synchronize-success').modal('open');
     return;
   }
-
   let cloudSynchronizeId = [];
   for (var i = 0; i < synchronizeResultDetailList.rows.length; i++) {
     cloudSynchronizeId.push(synchronizeResultDetailList.rows.item(i).cloud_synchronize_id);
   }
-
   let item = localStorage.getItem(KEY);
   let obj = JSON.parse(item);
   let JSONdata = {
     cloudSynchronizeId: cloudSynchronizeId,
   };
-
   $.ajax({
     type: 'post',
     url: path + 'synchronize/result',
@@ -419,12 +424,9 @@ async function requestSynchronizeResult() {
         $('#modalLocation').modal('close');
         return alert("現在同期処理実行中です。しばらくしてから再度確認ボタンを押してください。");
       }
-
       let status = await updateSynchronizeResultDetail(responseData.synchronizeWebToMobile);
       let error = await updateSynchronizeResultStatus(status, latestSynchronizeResultId);
-
       await applySynchronizeResult();
-
       if (status === STATUS.error) {
         applyErrorModal(status, error);
         $('#synchronizeError').modal('open');
@@ -433,9 +435,8 @@ async function requestSynchronizeResult() {
           let ResponseDataTmp = responseData.synchronizeWebToMobile[i];
           await synchronizeWebToMobile(JSON.parse(ResponseDataTmp.synchronizeToMobile));
         }
-        $('#synchronize-request').modal('open');
+        $('#synchronize-request').modal({ open: true });
       }
-
       $('#modalLocation').modal({ close: true });
       // 同期処理結果を画面表示
       await showSurveyList();

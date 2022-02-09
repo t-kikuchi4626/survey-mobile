@@ -3,135 +3,122 @@
  * @param {*} data 
  */
 async function synchronizeWebToMobile(data) {
-    try {
-        var surveyList = await convertSurveyList(data.insertSurveyList);
-        var updateSurveyList = await convertSurveyList(data.updateSurveyList);
-        var surveyDetailList = await convertSurveyDetailList(data.insertSurveyDetailList);
-        var updateSurveyDetailList = await convertSurveyDetailList(data.updateSurveyDetailList);
-        var surveyDeatilIdIfIsNotShow = await fetchsurveyDeatilIdIfIsNotShow(data.isShowFalseList);
-        var surveyDetailIdIsSurveyIsDelete = await fetchSurveyDetailIdIsSurveyIsDelete(data.deleteSurveyList);
-        var surveyDetailIdIsSurveyIsStatusTrue = await fetchSurveyDetailIdBySurveyStatusIsTrue(data.updateSurveyList);
-        var updateSurveyDataList = await convertSurveyDataList(data.surveyDataList);
-        var deleteSurveyDataList = await convertDeleteList(data.surveyDataList);
-        var updateSurveyAreaList = await convertSurveyAreaList(data.surveyAreaList);
-        var deleteSurveyAreaList = await convertDeleteList(data.surveyAreaList);
+    var surveyList = await convertSurveyList(data.insertSurveyList);
+    var updateSurveyList = await convertSurveyList(data.updateSurveyList);
+    var surveyDetailList = await convertSurveyDetailList(data.insertSurveyDetailList);
+    var updateSurveyDetailList = await convertSurveyDetailList(data.updateSurveyDetailList);
+    var surveyDeatilIdIfIsNotShow = await fetchsurveyDeatilIdIfIsNotShow(data.isShowFalseList);
+    var surveyDetailIdIsSurveyIsDelete = await fetchSurveyDetailIdIsSurveyIsDelete(data.deleteSurveyList);
+    var surveyDetailIdIsSurveyIsStatusTrue = await fetchSurveyDetailIdBySurveyStatusIsTrue(data.updateSurveyList);
+    var updateSurveyDataList = await convertSurveyDataList(data.surveyDataList);
+    var deleteSurveyDataList = await convertDeleteList(data.surveyDataList);
+    var updateSurveyAreaList = await convertSurveyAreaList(data.surveyAreaList);
+    var deleteSurveyAreaList = await convertDeleteList(data.surveyAreaList);
 
-        // 既に登録済みの場合は登録対象外
-        let insertSurveyList = [];
-        let insertSurveyDetailList = [];
-        for (var i = 0; i < surveyList.length; i++) {
-            let survey = await fetchSurveyById(surveyList[i][0]);
-            if (survey.rows.length == 0) {
-                insertSurveyList.push(surveyList[i]);
-            }
+    // 既に登録済みの場合は登録対象外
+    let insertSurveyList = [];
+    let insertSurveyDetailList = [];
+    for (var i = 0; i < surveyList.length; i++) {
+        let survey = await fetchSurveyById(surveyList[i][0]);
+        if (survey.rows.length == 0) {
+            insertSurveyList.push(surveyList[i]);
         }
-
-        for (var i = 0; i < surveyDetailList.length; i++) {
-            let surveyDitail = await fetchSurveyDetailById(surveyDetailList[i][0]);
-            if (surveyDitail.rows.length == 0) {
-                insertSurveyDetailList.push(surveyDetailList[i]);
-            }
-        }
-
-        database.transaction(async function (transaction) {
-
-            // 調査業務登録
-            if (insertSurveyList != null) {
-                for (var i = 0; i < insertSurveyList.length; i++) {
-                    // 既に登録済みの場合は登録対象外
-                    await insertSurvey(transaction, insertSurveyList[i]);
-                }
-            }
-            // 調査業務更新
-            if (updateSurveyList != null) {
-                for (var i = 0; i < updateSurveyList.length; i++) {
-                    // WHERE句用のIDを末尾に付与
-                    updateSurveyList[i].push(updateSurveyList[i][0]);
-                    await updateSurvey(transaction, updateSurveyList[i]);
-                }
-            }
-            // 調査業務削除
-            if (data.deleteSurveyList.length > 0) {
-                await deleteSurvey(transaction, data.deleteSurveyList);
-                await deleteSurveyDetailBySurveyId(transaction, data.deleteSurveyList);
-            }
-            if (surveyDetailIdIsSurveyIsDelete.length > 0) {
-                await deleteSurveyDataByDetailId(transaction, surveyDetailIdIsSurveyIsDelete);
-                await deleteSurveyAreaByDetailId(transaction, surveyDetailIdIsSurveyIsDelete);
-            }
-
-            // 調査業務非表示
-            if (data.isShowFalseList.length > 0) {
-                await deleteSurvey(transaction, data.isShowFalseList);
-                await deleteSurveyDetailBySurveyId(transaction, data.isShowFalseList);
-            }
-
-            if (surveyDeatilIdIfIsNotShow.length > 0) {
-                await deleteSurveyDataByDetailId(transaction, surveyDeatilIdIfIsNotShow);
-                await deleteSurveyAreaByDetailId(transaction, surveyDeatilIdIfIsNotShow);
-            }
-            // 調査明細データ新規登録
-            if (insertSurveyDetailList != null) {
-                for (var i = 0; i < insertSurveyDetailList.length; i++) {
-                    await insertSurveyDetail(transaction, insertSurveyDetailList[i]);
-                }
-            }
-
-            // 調査明細データ更新
-            if (updateSurveyDetailList != null) {
-                for (var i = 0; i < updateSurveyDetailList.length; i++) {
-                    updateSurveyDetailList[i].push(updateSurveyDetailList[i][0]);
-                    await updateSurveyDetail(transaction, updateSurveyDetailList[i]);
-                }
-            }
-            // 調査明細データ削除
-            if (data.deleteSurveyDetailList.length > 0) {
-                await deleteSurveyDetailById(transaction, data.deleteSurveyDetailList);
-                await deleteSurveyDataByDetailId(transaction, data.deleteSurveyDetailList);
-                await deleteSurveyAreaByDetailId(transaction, data.deleteSurveyDetailList);
-            }
-
-            // 伐採木データ更新
-            if (updateSurveyDataList != null) {
-                for (var i = 0; i < updateSurveyDataList.length; i++) {
-                    await updateSurveyDataOfSynchronize(transaction, updateSurveyDataList[i]);
-                }
-            }
-
-            // 伐採木データを削除
-            if (deleteSurveyDataList != null) {
-                await deleteSurveyDataByIdentifyCodes(transaction, deleteSurveyDataList);
-            }
-            // 小径木データ更新
-            if (updateSurveyAreaList != null) {
-                for (var i = 0; i < updateSurveyAreaList.length; i++) {
-                    await updateSurveyAreaOfSynchronize(transaction, updateSurveyAreaList[i]);
-                }
-            }
-
-            // 小径木データを削除
-            if (deleteSurveyAreaList != null) {
-                await deleteSurveyAreaByIdentifyCodes(transaction, deleteSurveyAreaList);
-            }
-
-            // 伐採木データ削除処理（調査業務が未完了の場合のみ）
-            await deleteSurveyDataIsDetele(transaction, surveyDetailIdIsSurveyIsStatusTrue);
-
-            // 小径木データ削除処理（調査業務が未完了の場合のみ）
-            await deleteSurveyAreaIsDetele(transaction, surveyDetailIdIsSurveyIsStatusTrue);
-
-        },
-            function (error) {
-                $('#error').text('DB接続中にエラーが発生しました。管理者へお問い合わせください。');
-                $('#errorMessage').text(error.message);
-                $('#synchronizeError').modal('open');
-                reject(error);
-            });
-    } catch (error) {
-        $('#error').text('DB接続中にエラーが発生しました。管理者へお問い合わせください。');
-        $('#errorMessage').text(error.message);
-        $('#synchronizeError').modal('open');
     }
+
+    for (var i = 0; i < surveyDetailList.length; i++) {
+        let surveyDitail = await fetchSurveyDetailById(surveyDetailList[i][0]);
+        if (surveyDitail.rows.length == 0) {
+            insertSurveyDetailList.push(surveyDetailList[i]);
+        }
+    }
+    return new Promise(function (resolve, reject) {
+        database.transaction(async function (transaction) {
+            transaction.executeSql('SELECT * FROM survey order by id desc', [], async function (ignored, resultSet) {
+                // 調査業務登録
+                if (insertSurveyList != null) {
+                    for (var i = 0; i < insertSurveyList.length; i++) {
+                        // 既に登録済みの場合は登録対象外
+                        await insertSurvey(transaction, insertSurveyList[i]);
+                    }
+                }
+                // 調査業務更新
+                if (updateSurveyList != null) {
+                    for (var i = 0; i < updateSurveyList.length; i++) {
+                        // WHERE句用のIDを末尾に付与
+                        updateSurveyList[i].push(updateSurveyList[i][0]);
+                        await updateSurvey(transaction, updateSurveyList[i]);
+                    }
+                }
+                // 調査業務削除
+                if (data.deleteSurveyList.length > 0) {
+                    await deleteSurvey(transaction, data.deleteSurveyList);
+                    await deleteSurveyDetailBySurveyId(transaction, data.deleteSurveyList);
+                }
+                if (surveyDetailIdIsSurveyIsDelete.length > 0) {
+                    await deleteSurveyDataByDetailId(transaction, surveyDetailIdIsSurveyIsDelete);
+                    await deleteSurveyAreaByDetailId(transaction, surveyDetailIdIsSurveyIsDelete);
+                }
+                // 調査業務非表示
+                if (data.isShowFalseList.length > 0) {
+                    await deleteSurvey(transaction, data.isShowFalseList);
+                    await deleteSurveyDetailBySurveyId(transaction, data.isShowFalseList);
+                }
+                if (surveyDeatilIdIfIsNotShow.length > 0) {
+                    await deleteSurveyDataByDetailId(transaction, surveyDeatilIdIfIsNotShow);
+                    await deleteSurveyAreaByDetailId(transaction, surveyDeatilIdIfIsNotShow);
+                }
+                // 調査明細データ新規登録
+                if (insertSurveyDetailList != null) {
+                    for (var i = 0; i < insertSurveyDetailList.length; i++) {
+                        await insertSurveyDetail(transaction, insertSurveyDetailList[i]);
+                    }
+                }
+                // 調査明細データ更新
+                if (updateSurveyDetailList != null) {
+                    for (var i = 0; i < updateSurveyDetailList.length; i++) {
+                        updateSurveyDetailList[i].push(updateSurveyDetailList[i][0]);
+                        await updateSurveyDetail(transaction, updateSurveyDetailList[i]);
+                    }
+                }
+                // 調査明細データ削除
+                if (data.deleteSurveyDetailList.length > 0) {
+                    await deleteSurveyDetailById(transaction, data.deleteSurveyDetailList);
+                    await deleteSurveyDataByDetailId(transaction, data.deleteSurveyDetailList);
+                    await deleteSurveyAreaByDetailId(transaction, data.deleteSurveyDetailList);
+                }
+                // 伐採木データ更新
+                if (updateSurveyDataList != null) {
+                    for (var i = 0; i < updateSurveyDataList.length; i++) {
+                        await updateSurveyDataOfSynchronize(transaction, updateSurveyDataList[i]);
+                    }
+                }
+                // 伐採木データを削除
+                if (deleteSurveyDataList != null) {
+                    await deleteSurveyDataByIdentifyCodes(transaction, deleteSurveyDataList);
+                }
+                // 小径木データ更新
+                if (updateSurveyAreaList != null) {
+                    for (var i = 0; i < updateSurveyAreaList.length; i++) {
+                        await updateSurveyAreaOfSynchronize(transaction, updateSurveyAreaList[i]);
+                    }
+                }
+                // 小径木データを削除
+                if (deleteSurveyAreaList != null) {
+                    await deleteSurveyAreaByIdentifyCodes(transaction, deleteSurveyAreaList);
+                }
+                // 伐採木データ削除処理（調査業務が未完了の場合のみ）
+                await deleteSurveyDataIsDetele(transaction, surveyDetailIdIsSurveyIsStatusTrue);
+                // 小径木データ削除処理（調査業務が未完了の場合のみ）
+                await deleteSurveyAreaIsDetele(transaction, surveyDetailIdIsSurveyIsStatusTrue);
+                resolve(resultSet);
+            }, function (error, transaction) {
+                $('#error').text('DB接続中にエラーが発生しました。管理者へお問い合わせください。');
+                $('#errorMessage').text(transaction.message);
+                $('#synchronizeError').modal('open');
+                reject(transaction);
+            });
+        });
+    });
 }
 
 /**

@@ -22,7 +22,7 @@ function createSynchronizeResultDetail(param) {
 function updateSynchronizeResultDetailById(param) {
   return new Promise(function (resolve) {
     database.transaction(async function (transaction) {
-      transaction.executeSql(updateSynchronizeResultDetailSql(), param, function (ignored, resultSet) {
+      transaction.executeSql(updateSynchronizeResultDetailSql(), param, async function (ignored, resultSet) {
         resolve(resultSet);
       }, function (error, transaction) {
         alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
@@ -38,11 +38,11 @@ function updateSynchronizeResultDetailById(param) {
 function fetchAllSynchronizeResultDetail(synchronizeId) {
   return new Promise(function (resolve) {
     database.transaction(function (transaction) {
-      transaction.executeSql('SELECT * FROM synchronize_result_detail where status == \'processing\' and synchronize_id = ? ', [synchronizeId], function (ignored, resultSet) {
+      transaction.executeSql('SELECT * FROM synchronize_result_detail where status == \'processing\' and synchronize_id = ? ', [synchronizeId], async function (ignored, resultSet) {
         resolve(resultSet);
+      }, function (error, transaction) {
+        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
       });
-    }, function (error) {
-      alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
     });
   });
 }
@@ -57,9 +57,9 @@ function fetchDetailBySynchronizeResultId(synchronizeResultId) {
     database.transaction(function (transaction) {
       transaction.executeSql('SELECT * FROM synchronize_result_detail where synchronize_id = ? ', [synchronizeResultId], function (ignored, resultSet) {
         resolve(resultSet);
+      }, function (error, transaction) {
+        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
       });
-    }, function (error) {
-      alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
     });
   });
 }
@@ -72,9 +72,9 @@ function deleteSynchronizeResultDetail() {
     database.transaction(function (transaction) {
       transaction.executeSql('DELETE FROM synchronize_result_detail', [], function (ignored, resultSet) {
         resolve(resultSet);
+      }, function (error, transaction) {
+        alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
       });
-    }, function (error) {
-      alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
     });
   });
 }

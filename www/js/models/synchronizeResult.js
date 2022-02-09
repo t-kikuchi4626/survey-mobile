@@ -5,11 +5,11 @@
 function fetchSynchronizeResult() {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM synchronize_result', [], function (ignored, resultSet) {
+            transaction.executeSql('SELECT * FROM synchronize_result', [], async function (ignored, resultSet) {
                 resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
-        }, function (error) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
         });
     });
 }
@@ -21,11 +21,11 @@ function fetchSynchronizeResult() {
 function insertSynchronizeResult(SynchronizeResult) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql(insertSynchronizeResultSql(), SynchronizeResult, function (ignored, resultSet) {
+            transaction.executeSql(insertSynchronizeResultSql(), SynchronizeResult, async function (ignored, resultSet) {
                 resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
-        }, function (error) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
         });
     });
 }
@@ -52,12 +52,12 @@ function updateSynchronizeResult(SynchronizeResult) {
  */
 function fetchLastSynchronizeResultByCompanyId(companyId) {
     return new Promise(function (resolve) {
-        database.transaction(async function (transaction) {
-            transaction.executeSql(selectLastSynchronizeResultSql(), [companyId], function (ignored, resultSet) {
+        database.transaction(function (transaction) {
+            transaction.executeSql(selectLastSynchronizeResultSql(), [companyId], async function (ignored, resultSet) {
                 resolve(resultSet);
-            })
-        }, function (error) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
         });
     });
 }

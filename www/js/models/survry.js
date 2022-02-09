@@ -22,7 +22,7 @@ function fetchSurveyAll(surveyCompanyId) {
 function fetchSurveyById(id) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM survey WHERE id = ?', [id], function (ignored, resultSet) {
+            transaction.executeSql('SELECT * FROM survey WHERE id = ?', [id], async function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
