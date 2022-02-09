@@ -72,7 +72,7 @@ function insertSurveyArea(param) {
         'target_area_value_ten, ' +
         'need_collect, ' +
         'is_four_measured, ' +
-        'tree_measured_value = ?, ' +
+        'tree_measured_value , ' +
         'is_delete, ' +
         'web_edit_mode,' +
         'modified_by, ' +
@@ -83,16 +83,18 @@ function insertSurveyArea(param) {
 
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql(sql, param, function (_ignored, resultSet) {
-                transaction.executeSql('SELECT * FROM survey_area WHERE rowid = last_insert_rowid()', [], async function (ignored, resultSet) {
-                    var count = await fetchSurveyAreaCount(surveyDetailId);
-                    resolve([resultSet.rows.item(0), count]);
-                }, function (error) {
-                    alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
-                });
+            transaction.executeSql(sql, param, async function (ignored, resultSet) {
+                // transaction.executeSql('SELECT * FROM survey_area WHERE rowid = last_insert_rowid()', [], async function (ignored, resultSet) {
+                //     var count = await fetchSurveyAreaCount(surveyDetailId);
+                // resolve([resultSet.rows.item(0), count]);
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             });
         });
-    });
+
+        // });
+    })
 }
 
 /**

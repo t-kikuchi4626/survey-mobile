@@ -35,19 +35,20 @@
     <!-- Sidenav -->
     <ul id="side-out" class="sidenav">
         <li id="contact-list-link"></li>
-        <li><a class="menu waves-effect waves-light modal-trigger" href="#modal1"><i class="material-icons">exit_to_app</i>ログアウト</a></li>
+        <li><a class="menu waves-effect waves-light modal-trigger" href="#modal1"><i
+                    class="material-icons">exit_to_app</i>ログアウト</a></li>
     </ul>
 
-  <!-- Modal Structure -->
-  <div id="modal1" class="modal">
-    <div class="modal-content">
-      <p>ログアウトします。よろしいでしょうか？</p>
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <p>ログアウトします。よろしいでしょうか？</p>
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:logout();" class="modal-close waves-effect waves-green btn normal-button">ログアウトする</a>
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">閉じる</a>
+        </div>
     </div>
-    <div class="modal-footer">
-      <a href="javascript:logout();" class="modal-close waves-effect waves-green btn normal-button">ログアウトする</a>
-      <a href="#!" class="modal-close waves-effect waves-green btn-flat">閉じる</a>
-    </div>
-  </div>
 
     <div class="container">
         <div class="row">
@@ -66,8 +67,8 @@
                                     <div class="row bottom-0">
                                         <div class="input-field col s10 bottom-0">
                                             <small class="active contactNameLabel">件名</small>
-                                            <input id="contact-name" name="contactName" type="text"
-                                                class="contactName" maxlength="100"
+                                            <input id="contact-name" name="contactName" type="text" class="contactName"
+                                                maxlength="100"
                                                 onchange="updateInputTextArea(this.form.contactName, 'contact_name', true)">
                                         </div>
                                         <div class="input-field col s2 bottom-0"></div>
@@ -79,8 +80,8 @@
                                     <div class="row bottom-0">
                                         <div class="input-field col s6 bottom-0">
                                             <small class="active userNameLabel">氏名（任意）</small>
-                                            <input id="user-name" name="userName" type="text"
-                                                class="userName" maxlength="800">
+                                            <input id="user-name" name="userName" type="text" class="userName"
+                                                maxlength="800">
                                         </div>
                                         <div class="input-field col s6 bottom-0"></div>
                                     </div>
@@ -88,7 +89,7 @@
                                     <div class="row bottom-0">
                                         <div class="input-field col s11 bottom-0">
                                             <small for="contact-class" class="active">問合せ区分</small>
-                                            <select id="contact-class" name="contactClass">
+                                            <select id="contact-class" name="contactClass" class="browser-default">
                                                 <option value="question" selected>質問</option>
                                                 <option value="fault">障害</option>
                                                 <option value="request">要望</option>
@@ -102,7 +103,8 @@
                                     <div class="row">
                                         <div class="input-field col s11 bottom-0">
                                             <small for="contact-function" class="active">問合せ画面</small>
-                                            <select id="contact-function" name="contactFunction">
+                                            <select id="contact-function" name="contactFunction"
+                                                class="browser-default">
                                                 <option value="survey-list">調査業務一覧</option>
                                                 <option value="survey-detail-list">所在地一覧</option>
                                                 <option value="survey-data-edit">毎木調査登録</option>
@@ -120,7 +122,8 @@
                                             <textarea id="contact-message" name="contactMessage"
                                                 class="materialize-textarea contactMessage"
                                                 onchange="updateInputTextArea(this.form.contactMessage, 'contact_message', true)"></textarea>
-                                            <small id="contact-message-description" for="contact-message-placeholder" class="active">
+                                            <small id="contact-message-description" for="contact-message-placeholder"
+                                                class="active">
                                                 例：調査業務の変更ができないのですが、どのように操作する必要があるのか教えてください。
                                             </small>
                                         </div>
@@ -145,19 +148,23 @@
                                                 <small for="status" class="active">問合せ状態</small>
                                                 <div class="row ml-3" style="margin-left: 20px;">
                                                     <label class="mx-2 mr-4">
-                                                        <input id="unsupported" name="status" type="radio" value="unsupported" />
+                                                        <input id="unsupported" name="status" type="radio"
+                                                            value="unsupported" />
                                                         <span>未対応</span>
                                                     </label>
                                                     <label class="mx-2 mr-4">
-                                                        <input id="in_supported" name="status" type="radio" value="in_supported" />
+                                                        <input id="in_supported" name="status" type="radio"
+                                                            value="in_supported" />
                                                         <span>対応中</span>
                                                     </label>
                                                     <label class="mx-2 mr-4">
-                                                        <input id="resolved" name="status" type="radio" value="resolved" />
+                                                        <input id="resolved" name="status" type="radio"
+                                                            value="resolved" />
                                                         <span>解決済</span>
                                                     </label>
                                                     <label class="mx-2 mr-4">
-                                                        <input id="pending" name="status" type="radio" value="pending" />
+                                                        <input id="pending" name="status" type="radio"
+                                                            value="pending" />
                                                         <span>保留</span>
                                                     </label>
                                                 </div>
@@ -171,7 +178,8 @@
                     <div id="register-field" class="row">
                         <div class="col s12">
                             <p style="text-align: left; float: center;">
-                                <a onclick="javascript:save()" class="btn waves-effect waves-light btn-large normal-button blue-grey red">
+                                <a onclick="javascript:save()"
+                                    class="btn waves-effect waves-light btn-large normal-button blue-grey red">
                                     <i class="material-icons left">send</i>問合せ内容を送信する
                                 </a>
                             </p>
@@ -184,18 +192,18 @@
 
     <div id="contactError" class="modal">
         <div class="modal-content">
-          <div>
-            <b class="error">問合せ取得および登録処理中にエラーが発生しました。</b>
-          </div>
-          <div>
-            <b>【エラー】</b><span id="error"></span>
-          </div>
-          <div>
-            <b>【詳細】　</b><span id="errorMessage"></span>
-          </div>
+            <div>
+                <b class="error">問合せ取得および登録処理中にエラーが発生しました。</b>
+            </div>
+            <div>
+                <b>【エラー】</b><span id="error"></span>
+            </div>
+            <div>
+                <b>【詳細】　</b><span id="errorMessage"></span>
+            </div>
         </div>
         <div class="modal-footer">
-          <a href="#!" class="modal-close waves-effect waves-green btn-flat">閉じる</a>
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">閉じる</a>
         </div>
     </div>
 

@@ -9,7 +9,7 @@ var targetId = null;
 // 端末番号
 var uuid = "";
 
-$(document).ready(function(){
+$(document).ready(function () {
     $('select').formSelect();
 });
 
@@ -47,19 +47,25 @@ async function initView() {
     // 用材本数取得
     var surveyDataCount = await fetchNotDeleteSurveyDataCount(surveyDetailId);
     $('#trimming-tree-count').val(surveyDataCount);
-
     // 小径木データ取得
     var surveyAreaList = await fetchSurveyAreaBySurveyDetailId(surveyDetailId);
+    alert(surveyAreaList.rows.length)
     if (surveyAreaList.rows.length > 0) {
         // 小径木データ設定
         isUpdate = true;
         targetId = surveyAreaList.rows.item(0).id;
         setTargetSurveyArea(surveyAreaList.rows.item(0));
+        alert('This')
+        //削除ボタンの処理がキックされる削除モーダルへのリンクを無効化する
+        $('#delete-btn').css('pointer-events', 'auto');
     } else {
         // 小径木データ初期表示
         setInitTargetSurveyArea();
+        //削除ボタンの処理がキックされる削除モーダルへのリンクを無効化する
+        $('#delete-btn').css('pointer-events', 'none');
     }
 }
+
 /**
  * 小径木データの初期表示
  */
@@ -116,6 +122,7 @@ function setTargetSurveyArea(surveyArea) {
 async function createEditSurveyArea() {
     //2件以上更新される不具合の対応
     var param = [];
+    var result = null;
     // 入力チェック
     if (validate()) {
 
@@ -135,7 +142,7 @@ async function createEditSurveyArea() {
                 fetchUserId(),
                 targetId
             ];
-            updateSurveyArea(param);
+            result = await updateSurveyArea(param);
         } else {
             // 登録項目
             param = [
@@ -155,10 +162,15 @@ async function createEditSurveyArea() {
                 'off',
                 fetchUserId(),
             ];
-            insertSurveyArea(param);
+            result = await insertSurveyArea(param);
         }
-        M.toast({ html: '登録しました！', displayLength: 2000 });
+        if (result !== null) {
+            M.toast({ html: '登録しました！', displayLength: 2000 });
+            initView();
+        }
+
     }
+
 }
 
 /**
