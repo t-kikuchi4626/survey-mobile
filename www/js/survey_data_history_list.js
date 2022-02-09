@@ -127,7 +127,12 @@ function setSurveyDataInfoList(surveyData) {
     if (surveyData.word != "") {
         no += surveyData.word + "-";
     }
-    no += surveyData.number;
+    //枝番追加
+    if (surveyData.number != "") {
+        no += surveyData.number + "-";
+    }
+    no += surveyData.branch_number;
+    // no += surveyData.number;
 
     // データ情報設定
     idList.push(surveyData.id);
