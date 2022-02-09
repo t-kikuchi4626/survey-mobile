@@ -44,7 +44,11 @@ function setSurvey(survey) {
     $('#survey-name').text(convertSpace(survey.survey_name));
     $('#survey-company-id').text(convertSpace(survey.survey_company_name));
     $('#note').text(convertSpace(survey.note));
-    $('#modified-date').text(convertSpace(survey.modified_date));
+    var dateObj = convertSpace(survey.modified_date);
+    if (dateObj != null) {
+        $('#modified-date').text(dateObj.substr(0, 10));
+    }
+
 }
 
 /**
