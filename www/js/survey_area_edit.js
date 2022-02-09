@@ -54,7 +54,7 @@ async function initView() {
         isUpdate = true;
         targetId = surveyAreaList.rows.item(0).id;
         setTargetSurveyArea(surveyAreaList.rows.item(0));
-        //削除ボタンの処理がキックされる削除モーダルへのリンクを有効化する
+        //削除ボタンの処理がキックされる削除モーダルへのリンクを化する
         $('#delete-btn').css('pointer-events', 'auto');
     } else {
         // 小径木データ初期表示
@@ -91,6 +91,8 @@ function setInitTargetSurveyArea() {
 function setTargetSurveyArea(surveyArea) {
     // 樹種
     $('#survey-area-tree-type').val(surveyArea.tree_type);
+    //樹種ボタンを押下状態にする
+    setTreeTypeInArea(surveyArea);
     // 伐採面積
     $('#trimming-area-value').val(surveyArea.trimming_area_value);
     // 用材面積
@@ -111,6 +113,18 @@ function setTargetSurveyArea(surveyArea) {
         // 集積なし/4cm以上
     } else if (surveyArea.need_collect == 'false' && surveyArea.is_four_measured == 'false') {
         $('input[name=len]:eq(3)').prop("checked", true);
+    }
+}
+
+/**
+ * 樹種の表示設定
+ */
+function setTreeTypeInArea(surveyData) {
+    if (surveyData.tree_type !== null) {
+        $('#survey-area-tree-type').text(surveyData.tree_type);
+        $('#survey-area-tree-type').val(surveyData.tree_type);
+        //選択ボタンを押下状態にする
+        inputTreeType("#survey-area-tree-type", surveyData.tree_type)
     }
 }
 
