@@ -166,13 +166,14 @@ function deleteSurveyAreaIsDetele(transaction, surveyDetailIdList) {
         })
         var placeholder = placeholderTmp.slice(0, -2);
         surveyDetailIdList.unshift('true');
-        database.transaction(function (transaction) {
-            transaction.executeSql('DELETE FROM survey_area WHERE is_delete = ? AND survey_detail_id NOT IN (' + placeholder + ') ', surveyDetailIdList, async function (ignored, resultSet) {
-                resolve(resultSet);
-            }, function (error, transaction) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
-            });
+        transaction.executeSql('DELETE FROM survey_area WHERE is_delete = ? AND survey_detail_id NOT IN (' + placeholder + ') ', surveyDetailIdList, function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            errorHandler(transaction);
+            reject(false);
         });
+        resolve();
     });
 }
 
@@ -180,20 +181,19 @@ function deleteSurveyAreaIsDetele(transaction, surveyDetailIdList) {
 // uuidリストを元に小径木削除（同期処理）
 function deleteSurveyAreaByIdentifyCodes(transaction, IdentifyCodes) {
     return new Promise(function (resolve, reject) {
-
         // 削除IDの数だけプレースホルダを増やす
         var placeholderTmp = '';
         IdentifyCodes.forEach(function () {
             placeholderTmp += '?, ';
         })
         var placeholder = placeholderTmp.slice(0, -2);
-        database.transaction(function (transaction) {
-            transaction.executeSql('DELETE FROM survey_area WHERE identify_code IN (' + placeholder + ') ', IdentifyCodes, async function (ignored, resultSet) {
-                resolve(resultSet);
-            }, function (error, transaction) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
-            });
+        transaction.executeSql('DELETE FROM survey_area WHERE identify_code IN (' + placeholder + ') ', IdentifyCodes, function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            reject(false);
         });
+        resolve();
     });
 }
 
@@ -201,13 +201,14 @@ function deleteSurveyAreaByIdentifyCodes(transaction, IdentifyCodes) {
 function updateSurveyAreaOfSynchronize(transaction, surveyArea) {
     return new Promise(function (resolve, reject) {
         var sql = generateSurveyAreaByIdentifyCodeSQL();
-        database.transaction(function (transaction) {
-            transaction.executeSql(sql, surveyArea, async function (ignored, resultSet) {
-                resolve(resultSet);
-            }, function (error, transaction) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
-            });
+        transaction.executeSql(sql, surveyArea, function (transaction) {
+            resolve();
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            errorHandler(transaction);
+            reject(false);
         });
+        resolve();
     });
 }
 
@@ -220,13 +221,14 @@ function deleteSurveyAreaByDetailId(transaction, surveyDetailIdList) {
             placeholderTmp += '?, ';
         })
         var placeholder = placeholderTmp.slice(0, -2);
-        database.transaction(function (transaction) {
-            transaction.executeSql(generateSurveyAreaDeleteSql(placeholder), surveyDetailIdList, async function (ignored, resultSet) {
-                resolve(resultSet);
-            }, function (error, transaction) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
-            });
+        transaction.executeSql(generateSurveyAreaDeleteSql(placeholder), surveyDetailIdList, function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            errorHandler(transaction);
+            reject(false);
         });
+        resolve();
     });
 }
 

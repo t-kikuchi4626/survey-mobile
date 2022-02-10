@@ -55,13 +55,14 @@ function fetchSurveyIdAndModifiedDate(surveyCompanyId) {
 function insertSurvey(transaction, survey) {
     return new Promise(function (resolve, reject) {
         var sql = generateSurveyInsertSql();
-        database.transaction(function (transaction) {
-            transaction.executeSql(sql, survey, async function (ignored, resultSet) {
-                resolve(resultSet);
-            }, function (error, transaction) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
-            });
+        transaction.executeSql(sql, survey, function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            errorHandler(transaction);
+            reject(false);
         });
+        resolve();
     });
 }
 
@@ -73,13 +74,14 @@ function insertSurvey(transaction, survey) {
 function updateSurvey(transaction, survey) {
     return new Promise(function (resolve, reject) {
         var sql = generateSurveyUpdateSql();
-        database.transaction(function (transaction) {
-            transaction.executeSql(sql, survey, async function (ignored, resultSet) {
-                resolve(resultSet);
-            }, function (error, transaction) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
-            });
+        transaction.executeSql(sql, survey, function (ignored, resultSet) {
+            resolve(resultSet);
+        }, function (error, transaction) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            errorHandler(transaction);
+            reject(false);
         });
+        resolve();
     });
 }
 
@@ -98,12 +100,14 @@ function deleteSurvey(transaction, surveyIdList) {
             placeholderTmp += '?, ';
         })
         var placeholder = placeholderTmp.slice(0, -2);
-        database.transaction(function (transaction) {
-            transaction.executeSql(generateSurveyDeleteSql(placeholder), surveyIdList);
+        transaction.executeSql(generateSurveyDeleteSql(placeholder), surveyIdList, function (ignored, resultSet) {
             resolve(resultSet);
         }, function (error, transaction) {
             alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            errorHandler(transaction);
+            reject(false);
         });
+        resolve();
     });
 }
 
@@ -142,7 +146,7 @@ function test() {
 
 function generateSurveyInsertSql() {
     return 'INSERT INTO survey (' +
-        'id, ' +
+        'id , ' +
         'center_id, ' +
         'survey_name, ' +
         'survey_company_id, ' +

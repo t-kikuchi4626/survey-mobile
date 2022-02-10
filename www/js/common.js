@@ -126,6 +126,16 @@ function convertSpace(target) {
 }
 
 /**
+ * DB（同期処理）でのエラー処理
+ * @param {*} transaction
+ */
+function errorHandler(transaction) {
+    $('#modalLocation').modal('close');
+    $('#error').text('DB接続中にエラーが発生しました。管理者へお問い合わせください。');
+    $('#errorMessage').text(transaction.message);
+    $('#synchronizeError').modal('open');
+}
+/**
  * 問合せサイドナビゲーションのリンク作成
  * @param {number} id 遷移元番号
  * @param {string} surveyId 調査ID
