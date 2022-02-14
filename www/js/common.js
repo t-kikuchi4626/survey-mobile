@@ -144,7 +144,7 @@ async function errorHandler(transaction) {
     // 同期処理結果へエラー情報を更新する
     let latestSynchronizeResult = await fetchLastSynchronizeResultByCompanyId(surveyCompanyId);
     await updateSynchronizeResult(['error', error, fetchUserId(), latestSynchronizeResult.rows.item(0).id]);
-    await applySynchronizeResult(surveyCompanyId);
+    await applySynchronizeResult();
     await showSurveyList();
 
     $('#modalLocation').modal({ close: true });
