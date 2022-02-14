@@ -199,8 +199,7 @@ function save() {
             contact_name: $('#contact-name').val(),
             user_name: $('#user-name').val(),
             contact_class: $('#contact-class').val(),
-            //contact_function: contactFunctionNameList.get($('#contact-function').val()),
-            contact_function: $('#contact-function').val(),
+            contact_function: contactFunctionNameList[$('#contact-function').val()],
             contact_message: $('#contact-message').val(),
             status: "unsupported",
             userId: fetchUserId()
