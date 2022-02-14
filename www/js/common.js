@@ -129,10 +129,25 @@ function convertSpace(target) {
  * DB（同期処理）でのエラー処理
  * @param {*} transaction
  */
-function errorHandler(transaction) {
+async function errorHandler(transaction) {
     $('#modalLocation').modal('close');
     $('#error').text('DB接続中にエラーが発生しました。管理者へお問い合わせください。');
     $('#errorMessage').text(transaction.message);
+
+    //surveyCompanyIdをセットする
+    var item = localStorage.getItem(KEY);
+    var obj = JSON.parse(item);
+    if (obj.user != null) {
+        surveyCompanyId = obj.user.survey_company_id;
+    }
+    var error = '同期中のエラー';
+    // 同期処理結果へエラー情報を更新する
+    let latestSynchronizeResult = await fetchLastSynchronizeResultByCompanyId(surveyCompanyId);
+    await updateSynchronizeResult(['error', error, fetchUserId(), latestSynchronizeResult.rows.item(0).id]);
+    await applySynchronizeResult(surveyCompanyId);
+    await showSurveyList();
+
+    $('#modalLocation').modal({ close: true });
     $('#synchronizeError').modal('open');
 }
 /**

@@ -4,12 +4,13 @@
  * @param 同期処理明細結果
  */
 function createSynchronizeResultDetail(param) {
-  return new Promise(function (resolve) {
+  return new Promise(function (resolve, reject) {
     database.transaction(function (transaction) {
-      transaction.executeSql(insertSynchronizeResultDetailSql(), param, async function (ignored, resultSet) {
-        resolve(resultSet);
+      transaction.executeSql(insertSynchronizeResultDetailSql(), param, async function (transaction) {
+        resolve();
       }, function (error, transaction) {
         alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+        reject(false);
       });
     });
   });

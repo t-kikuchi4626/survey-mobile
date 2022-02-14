@@ -6,9 +6,8 @@ document.addEventListener("deviceready", async function () {
   if (obj.user != null) {
     surveyCompanyId = obj.user.survey_company_id;
   }
-
   showSurveyList();
-  applySynchronizeResult();
+  // applySynchronizeResult();
   $('.modal').modal();
   instance = M.Modal.getInstance('#synchronizeError');
 
@@ -238,7 +237,12 @@ async function webEditModeOffProcess(surveyCompanyId, surveyArray, surveyDetailA
     .fail(async (jqXHR, textStatus, errorThrown) => {
       var jsonData = JSON.stringify(jqXHR);
       var responseData = JSON.parse(jsonData);
-      errorProcess(responseData);
+      var item = localStorage.getItem(KEY);
+      var obj = JSON.parse(item);
+      if (obj.user != null) {
+        surveyCompanyId = obj.user.survey_company_id;
+      }
+      errorProcess(responseData, surveyCompanyId);
     })
 }
 
@@ -335,7 +339,7 @@ async function synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArra
       if (synchronizeResultInsertId != 0) {
         let param = [synchronizeResultInsertId, responseData.synchronizeHistory.id, 'processing', '', fetchUserId()]
         await createSynchronizeResultDetail(param);
-        applySynchronizeResult();
+        await applySynchronizeResult();
       }
 
       $('#modalLocation').modal({ close: true });
@@ -344,7 +348,12 @@ async function synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArra
     .fail(async (jqXHR, textStatus, errorThrown) => {
       var jsonData = JSON.stringify(jqXHR);
       var responseData = JSON.parse(jsonData);
-      errorProcess(responseData);
+      var item = localStorage.getItem(KEY);
+      var obj = JSON.parse(item);
+      if (obj.user != null) {
+        surveyCompanyId = obj.user.survey_company_id;
+      }
+      errorProcess(responseData, surveyCompanyId);
     })
 }
 
@@ -361,14 +370,14 @@ async function confirmSynchronize() {
     $('#synchronizeError').modal('open');
     return;
   } else {
-    await requestSynchronizeResult();
+    await requestSynchronizeResult(surveyCompanyId);
   }
 }
 
 /**
  * 同期処理結果をサーバへ確認する
  */
-async function requestSynchronizeResult() {
+async function requestSynchronizeResult(surveyCompanyId) {
   $('#modalLocation').modal('open');
 
   let latestSynchronizeResult = await fetchLastSynchronizeResultByCompanyId(surveyCompanyId);
@@ -378,6 +387,14 @@ async function requestSynchronizeResult() {
     var error = '最新の同期処理データ取得エラー';
     $('#error').text(error);
     $('#errorMessage').text('申し訳ございません。最新の同期処理データがないようです。「同期処理を開始する」ボタンを押下後に、本ボタンで確認してください。');
+    $('#synchronizeError').modal('open');
+    return;
+  }
+  if (latestSynchronizeResult.rows.item(0).status === STATUS.error) {
+    var error = '前回の同期結果がエラー';
+    $('#modalLocation').modal('close');
+    $('#error').text(error);
+    $('#errorMessage').text('前回の同期結果がエラーです。申し訳ございませんが、再度「同期処理を開始する」ボタンを押下後に、本ボタンで確認してください。');
     $('#synchronizeError').modal('open');
     return;
   }
@@ -444,7 +461,12 @@ async function requestSynchronizeResult() {
     .fail(async (jqXHR, textStatus, errorThrown) => {
       var jsonData = JSON.stringify(jqXHR);
       var responseData = JSON.parse(jsonData);
-      errorProcess(responseData);
+      var item = localStorage.getItem(KEY);
+      var obj = JSON.parse(item);
+      if (obj.user != null) {
+        surveyCompanyId = obj.user.survey_company_id;
+      }
+      errorProcess(responseData, surveyCompanyId);
     });
 }
 
@@ -565,8 +587,9 @@ async function fetchForSynchronizeSurveyArea(surveyDetailIdList) {
 /**
  * 同期処理結果がエラーだった場合の共通処理
  * @param {*} responseData
+ * @param {*} surveyCompanyId
  */
-async function errorProcess(responseData) {
+async function errorProcess(responseData, surveyCompanyId) {
   var message = '';
   var error = '';
   if (responseData.status == 401) {
@@ -583,7 +606,7 @@ async function errorProcess(responseData) {
 
   // 同期処理結果へエラー情報を更新する
   let latestSynchronizeResult = await fetchLastSynchronizeResultByCompanyId(surveyCompanyId);
-  await updateSynchronizeResult(['error', error, fetchUserId(), latestSynchronizeResult.rows.item(0)]);
+  await updateSynchronizeResult(['error', error, fetchUserId(), latestSynchronizeResult.rows.item(0).id]);
   await showSurveyList();
   await applySynchronizeResult();
 
