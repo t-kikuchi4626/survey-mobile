@@ -2,8 +2,6 @@
 var surveyId = null;
 // 所在地ID
 var surveyDetailId = null;
-// アップデートフラグ
-var isUpdate = false;
 // 対象ID
 var targetId = null;
 // 端末番号
@@ -25,7 +23,7 @@ document.addEventListener("deviceready", async function () {
     surveyDetailListLink.append(detailListLinkText);
 
     // サイドナビゲーションリンク作成
-    createContactSidenavLink(6, surveyId, surveyDetailId);
+    createContactSidenavLink(contactFunction[5], surveyId, surveyDetailId);
 
     // 初期表示
     initView();
@@ -51,7 +49,6 @@ async function initView() {
     var surveyAreaList = await fetchSurveyAreaBySurveyDetailId(surveyDetailId);
     if (surveyAreaList.rows.length > 0) {
         // 小径木データ設定
-        isUpdate = true;
         targetId = surveyAreaList.rows.item(0).id;
         setTargetSurveyArea(surveyAreaList.rows.item(0));
         //削除ボタンの処理がキックされる削除モーダルへのリンクを化する
@@ -76,10 +73,12 @@ function setInitTargetSurveyArea() {
     $('#trimming-tree-area-value').val("");
     // 補償面積
     $('#target-area-value').val("");
-    // 補償面積（10）
+    // 補償面積（100）
     $('#target-area-value-ten').val("");
     // 集積あり/4cm未満
     $('#need-collect-is-not-four-measured').prop("checked", true);
+    // 胸高直径
+    $('#tree-measured-value').val("3");
 }
 
 /**
@@ -99,7 +98,7 @@ function setTargetSurveyArea(surveyArea) {
     $('#trimming-tree-area-value').val(surveyArea.trimming_tree_area_value);
     // 補償面積
     $('#target-area-value').val(surveyArea.target_area_value);
-    // 補償面積（10）
+    // 補償面積（100）
     $('#target-area-value-ten').val(surveyArea.target_area_value_ten);
     // 集積あり/4cm未満
     if (surveyArea.need_collect == 'true' && surveyArea.is_four_measured == 'true') {
@@ -114,6 +113,7 @@ function setTargetSurveyArea(surveyArea) {
     } else if (surveyArea.need_collect == 'false' && surveyArea.is_four_measured == 'false') {
         $('input[name=len]:eq(3)').prop("checked", true);
     }
+    $('#tree-measured-value').val(surveyArea.tree_measured_value);
 }
 
 /**
@@ -132,14 +132,20 @@ function setTreeTypeInArea(surveyArea) {
  * 小径木データ登録および更新
  */
 async function createEditSurveyArea() {
-    //2件以上更新される不具合の対応
+
     var param = [];
     var result = null;
+    var surveyAreaId = null;
+
+    var surveyAreaList = await fetchSurveyAreaBySurveyDetailId(surveyDetailId);
+    if (surveyAreaList.rows.length > 0) {
+        surveyAreaId = surveyAreaList.rows.item(0).id;
+    }
     // 入力チェック
     if (validate()) {
 
         let [needCollect, isFourMeasured] = applyLen();
-        if (isUpdate) {
+        if (surveyAreaId != null) {
             // 更新項目
             param = [
                 $('#survey-area-tree-type').val(),
@@ -152,7 +158,7 @@ async function createEditSurveyArea() {
                 isFourMeasured,
                 $('#tree-measured-value').val(),
                 fetchUserId(),
-                targetId
+                surveyAreaId
             ];
             result = await updateSurveyArea(param);
         } else {
@@ -173,6 +179,7 @@ async function createEditSurveyArea() {
                 false,
                 'off',
                 fetchUserId(),
+                fetchUserId(),
             ];
             result = await insertSurveyArea(param);
         }
@@ -180,9 +187,7 @@ async function createEditSurveyArea() {
             M.toast({ html: '登録しました！', displayLength: 2000 });
             initView();
         }
-
     }
-
 }
 
 /**
@@ -274,14 +279,14 @@ function validate() {
     // 補償面積(10㎡)チェック
     if (result) {
         if ($('#target-area-value-ten').val() == '') {
-            alert("申し訳ございません。\n補償面積(10㎡)の入力は必須です。補償面積(10㎡)を入力してください。");
+            alert("申し訳ございません。\n補償面積(100㎡)の入力は必須です。補償面積(100㎡)を入力してください。");
             result = false;
         }
     }
     // 補償面積積(10㎡)の半角数字と小数点チェック
     if (result) {
         if (!$('#target-area-value-ten').val().match(/^[-]?([1-9]\d*|0)(\.\d+)?$/)) {
-            alert("申し訳ございません。\n補償面積(10㎡)は半角数字と小数点のみ有効です。半角数字と小数点のみ入力してください。");
+            alert("申し訳ございません。\n補償面積(100㎡)は半角数字と小数点のみ有効です。半角数字と小数点のみ入力してください。");
             result = false;
         }
     }
@@ -317,7 +322,7 @@ function calculation(inputdata, form) {
 
     // 補償面積(㎡) = 伐採面積(㎡) - (用材本数(本) × 用材面積(㎡/本))
     var targetAreaValue = trimmingAreaValue - (trimmingTreeCount * trimmingTreeAreaValue);
-    var targetAreaValueTen = targetAreaValue / 10;
+    var targetAreaValueTen = targetAreaValue / 100;
 
     form.targetAreaValue.value = targetAreaValue;
     form.targetAreaValueTen.value = targetAreaValueTen;

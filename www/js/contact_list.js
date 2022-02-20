@@ -11,7 +11,7 @@ document.addEventListener("deviceready", function () {
   var param = location.search.substring(1).split("&");
 
   // 遷移元ID取得
-  transitionId = parseInt(param[0]);
+  transitionId = param[0];
   // 調査ID取得
   if (param.length > 1) {
     surveyId = param[1];
@@ -108,7 +108,7 @@ function showContactList() {
           texts += '<div class="col s12 m6">';
           texts += '問合せ状態：' + contactStatus;
           texts += '<br>';
-          texts += '問合せ日時：' + contact.created_date;
+          texts += '問合せ日：' + contact.created_date;
           texts += '</div>';
           texts += '</div>';
           texts += '</div>';
@@ -174,27 +174,27 @@ function createBackLink() {
   var backLink     = $('#transition-view-link');
   var backLinkText = '';
   switch (transitionId) {
-    case 1:
+    case contactFunction[0]:
       // 調査業務一覧へ遷移
       backLinkText = '<a href="../html/survey_list.html"><i class="material-icons">arrow_back_ios</i></a>';
       break;
-    case 2:
+    case contactFunction[1]:
       // 所在地一覧へ遷移
       backLinkText = '<a href="../html/survey_detail_list.html?' + surveyId + '"><i class="material-icons">arrow_back_ios</i></a>';
       break;
-    case 3:
+    case contactFunction[2]:
       // 毎木調査登録へ遷移
       backLinkText = '<a href="../html/survey_data_edit.html?' + surveyId + '&' + surveyDetailId + '"><i class="material-icons">arrow_back_ios</i></a>';
       break;
-    case 4:
+    case contactFunction[3]:
       // 伐採木データ履歴一覧へ遷移
       backLinkText = '<a href="../html/survey_data_history_list.html?' + surveyId + '&' + surveyDetailId + '"><i class="material-icons">arrow_back_ios</i></a>';
       break;
-    case 5:
+    case contactFunction[4]:
       // 伐採木一覧へ遷移
       backLinkText = '<a href="../html/survey_data_list.html?' + surveyId + '&' + surveyDetailId + '"><i class="material-icons">arrow_back_ios</i></a>';
       break;
-    case 6:
+    case contactFunction[5]:
       // 小径木登録へ遷移
       backLinkText = '<a href="../html/survey_area_edit.html?' + surveyId + '&' + surveyDetailId + '"><i class="material-icons">arrow_back_ios</i></a>';
   }

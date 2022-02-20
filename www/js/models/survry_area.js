@@ -191,6 +191,7 @@ function deleteSurveyAreaByIdentifyCodes(transaction, IdentifyCodes) {
             resolve(resultSet);
         }, function (error, transaction) {
             alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            errorHandler(transaction);
             reject(false);
         });
         resolve();

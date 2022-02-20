@@ -125,6 +125,8 @@ function setTreeTypeButtonInModal(treeTypes, specialTree, input) {
  * @param 連想配列（樹種、カウント数）
  */
 function setTreeCount(treeCountArray) {
+    $('#tree-type-list-count-header').empty();
+    $('#tree-type-list-count-value').empty();
     Object.keys(treeCountArray).forEach(function (value) {
         var html = `<th>${value}</th>`;
         $('#tree-type-list-count-header').append(html);

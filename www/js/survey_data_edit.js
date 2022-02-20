@@ -6,6 +6,8 @@ var surveyDetailId = null;
 var uuid = "";
 var id = null;
 var isHistoryFlag = false;
+var treeTypeValue= null;
+var specialTree = null;
 document.addEventListener("deviceready", async function () {
     var param = location.search.substring(1).split("&");
     uuid = device.uuid;
@@ -22,12 +24,12 @@ document.addEventListener("deviceready", async function () {
 
     // サイドナビゲーションリンク作成
     createSidenavLink(surveyId, surveyDetailId);
-    createContactSidenavLink(3, surveyId, surveyDetailId);
+    createContactSidenavLink(contactFunction[2], surveyId, surveyDetailId);
 
     //樹種ボタンの設定
     var survey = await fetchSurveyById(surveyId);
-    var treeTypeValue = await convertSpace(survey.rows.item(0).tree_type_value);
-    var specialTree = await convertSpace(survey.rows.item(0).special_tree);
+    treeTypeValue = await convertSpace(survey.rows.item(0).tree_type_value);
+    specialTree = await convertSpace(survey.rows.item(0).special_tree);
     setTreeTypeButton(treeTypeValue, specialTree, "surveyDataTreeType");
     setTreeTypeButtonInModal(treeTypeValue, specialTree, "modalSurveyDataTreeType");
 
@@ -120,35 +122,31 @@ function setSurveyHistoryData(texts, surveyData, countRows) {
         texts += `<a onclick="modalSetData('${surveyData.id}')" class="waves-effect waves-light enter mobile-floating" style="display:flex;">`;
     }
     texts += '<li id="history-data" class="collection-item" style="display:flex;">';
-    texts += `<span style="margin-right: 0.5rem;">${surveyData.color}-${surveyData.word}-${surveyData.number}</span>`
+    texts += `<span style="margin-right: 0.5rem;">${generateNumbering(surveyData.color, surveyData.word, surveyData.number, surveyData.branch_number)}</span>`
     surveyData.survey_data_tree_type !== null ?
         texts += `<span style="margin-right: 0.5rem;">${surveyData.survey_data_tree_type}</span>` :
         texts += `<span style="margin-right: 0.5rem;">樹種データなし</span>`
 
     texts += `<span style="margin-right: 0.5rem;">${surveyData.tree_measured_value}cm</span>`
-    if (surveyData.need_none === 'true') {
-        needText += `なし`;
-        needText += `,`;
+
+    if (surveyData.need_rope === 'true') {
+        needText += `ロ有, `;
     };
 
     if (surveyData.need_wire === 'true') {
-        needText += `ワイヤ`;
-        needText += `,`;
-    };
-
-    if (surveyData.need_cut_middle === 'true') {
-        needText += `中`;
-        needText += `,`;
+        needText += `ワ有, `;
     };
 
     if (surveyData.is_danger_tree === 'true') {
-        needText += `危`;
-        needText += `,`;
+        needText += `危, `;
+    };
+
+    if (surveyData.need_cut_middle === 'true') {
+        needText += `中, `;
     };
 
     if (surveyData.need_cut_branch === 'true') {
-        needText += `枝`;
-        needText += `,`;
+        needText += `枝, `;
     };
 
     texts += `<span style="margin-right: 0.5rem;">${needText}</span>`;
@@ -171,6 +169,30 @@ function setSurveyHistoryData(texts, surveyData, countRows) {
     texts += '</td>';
     texts += '</tr>';
     return texts;
+}
+
+/**
+ * ナンバリングを画面表示用に生成する
+ * @param 色
+ * @param 文字
+ * @param 連番
+ * @param 枝番
+ */
+function generateNumbering(color, word, number, branchNumber) {
+    var no = "";
+    if (color != "") {
+        no += color + "-";
+    }
+    if (word != "") {
+        no += word + "-";
+    }
+    if (number != "") {
+        no += number;
+    }
+    if (branchNumber != "" && branchNumber != null) {
+        no += "-" + branchNumber;
+    }
+    return no;
 }
 
 /**
@@ -243,6 +265,7 @@ function setSurveyDataInModal(surveyData) {
     // 直径
     $('#modal-survey-data-mesured-value').val(surveyData.tree_measured_value);
     $('#modal-survey-data-mesured-value').text(surveyData.tree_measured_value);
+    applyMesuredValueOfTableKeypadInModal(`#modal-mesure${surveyData.tree_measured_value}`, surveyData.tree_measured_value);
 
     //なし
     if (surveyData.need_none === 'true') {
@@ -334,7 +357,7 @@ function setSurveyData(surveyData) {
     // No
     $('#color').val(surveyData.color);
     $('#word').val(surveyData.word);
-    $('#number').val(surveyData.number);
+    $('#number').val(surveyData.number + 1);
     $('#branch-number').val(surveyData.branch_number);
     setNo();
     // 樹種
@@ -345,6 +368,7 @@ function setSurveyData(surveyData) {
     // 直径
     $('#survey-data-mesured-value').val(surveyData.tree_measured_value);
     $('#survey-data-mesured-value').text(surveyData.tree_measured_value);
+    applyMesuredValueOfTableKeypad(`#mesure${surveyData.tree_measured_value}`, surveyData.tree_measured_value);
     // なし
     if (surveyData.need_none === 'true') {
         $("#survey-data-need-none").removeClass("not-select");
@@ -443,18 +467,7 @@ function setNo() {
     var word = $('#word').val();
     var number = $('#number').val();
     var branchNumber = $('#branch-number').val();
-    var no = "";
-    if (color != "") {
-        no += color + "-";
-    }
-    if (word != "") {
-        no += word + "-";
-    }
-    if (number != "") {
-        no += number + "-";
-    }
-    no += branchNumber;
-    $('#survey-data-no').text(no);
+    $('#survey-data-no').text(generateNumbering(color, word, number, branchNumber));
 }
 
 /**
@@ -465,18 +478,7 @@ function setNoInModal() {
     var word = $('#modal-word').val();
     var number = $('#modal-number').val();
     var branchNumber = $('#modal-branch-number').val();
-    var no = "";
-    if (color != "") {
-        no += color + "-";
-    }
-    if (word != "") {
-        no += word + "-";
-    }
-    if (number != "") {
-        no += number + "-";
-    }
-    no += branchNumber;
-    $('#modal-survey-data-no').text(no);
+    $('#modal-survey-data-no').text(generateNumbering(color, word, number, branchNumber));
     $('#modal-number-target-modal').modal('close');
 }
 
@@ -775,7 +777,10 @@ async function createSurveyData() {
         let count = await editSurveyTrimmingTreeCount();
         soundMessage(count);
         M.toast({ html: '更新しました！', displayLength: 2000 });
-        //画面の履歴を初期化
+        //画面を初期化
+        var treeCountArray = await fetchTreeTypeCount(treeTypeValue, specialTree, surveyDetailId);
+        setTreeCount(treeCountArray);
+        initializeForm(surveyDetailId);
         await initialHistoryArea();
     }
 }
@@ -967,6 +972,9 @@ function applyMesuredValueOfNumericKeypadInModal(value) {
  * 直径入力欄をテンキーかテーブル形式か変換する
  */
 function changeKeyPad() {
+    $('#survey-data-mesured-value').text('');
+    $('#survey-data-mesured-value').val('');
+    $('.circle').removeClass("checked");
     if ($('#key-pad-type').val() === 'table-keypad') {
         $('#table-keypad').hide();
         $('#numeric-keypad').show();

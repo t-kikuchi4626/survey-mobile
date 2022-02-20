@@ -81,7 +81,6 @@ function fetchSurveyDetailById(surveyDetailId) {
             transaction.executeSql('SELECT * FROM survey_detail WHERE id = ? order by id asc', [surveyDetailId], function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error) {
-                alert(1);
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
             });
         });

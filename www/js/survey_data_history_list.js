@@ -31,7 +31,7 @@ async function initialize() {
     createRegisterLink(surveyId, surveyDetailId);
     // サイドナビゲーションリンク作成
     createSidenavLink(surveyId, surveyDetailId);
-    createContactSidenavLink(4, surveyId, surveyDetailId);
+    createContactSidenavLink(contactFunction[3], surveyId, surveyDetailId);
     // 樹種ボタン取得
     var survey = await fetchSurveyById(surveyId);
     // 樹種ボタン設定
@@ -81,8 +81,8 @@ async function setSurveyDataNote() {
     var needCutMiddleList = await fetchNeedCutMiddle(surveyDetailId);
     $('#need-cut-middle-count').text(needCutMiddleList.rows.length);
 
-    var notNeedCutMiddleList = await fetchNotNeedCutMiddle(surveyDetailId);
-    $('#not-need-cut-middle-count').text(notNeedCutMiddleList.rows.length);
+    // var notNeedCutMiddleList = await fetchNotNeedCutMiddle(surveyDetailId);
+    // $('#not-need-cut-middle-count').text(notNeedCutMiddleList.rows.length);
 
     var isDangerTreeList = await fetchIsDangerTree(surveyDetailId);
     $('#is-danger-tree-count').text(isDangerTreeList.rows.length);
@@ -129,10 +129,11 @@ function setSurveyDataInfoList(surveyData) {
     }
     //枝番追加
     if (surveyData.number != "") {
-        no += surveyData.number + "-";
+        no += surveyData.number;
     }
-    no += surveyData.branch_number;
-    // no += surveyData.number;
+    if (surveyData.branch_number != "" && surveyData.branch_number != null) {
+        no += "-" + surveyData.branch_number;
+    }
 
     // データ情報設定
     idList.push(surveyData.id);
@@ -202,8 +203,8 @@ function setDisplayHistoryData(surveyData) {
     var tagInfo = '<tr class="border-style">';
     // Noリンク
     tagInfo += '<td id="cell-no-' + surveyData.id + '" class="border-style-no">';
-    tagInfo += '<a class="modal-trigger" id="survey-data-no-link-' + surveyData.id + '" href="#number-target-modal" onclick="setModalNo(' + surveyData.id + ');">';
-    tagInfo += '<span id="survey-data-no-' + surveyData.id + '"></span></a></td>';
+    // tagInfo += '<a class="modal-trigger" id="survey-data-no-link-' + surveyData.id + '" href="#number-target-modal" onclick="setModalNo(' + surveyData.id + ');">';
+    tagInfo += '<span id="survey-data-no-' + surveyData.id + '"></span></td>';
     // 樹種リンク
     tagInfo += setDisplayLinkItem(
         "cell-tree-type-" + surveyData.id,
@@ -227,7 +228,7 @@ function setDisplayHistoryData(surveyData) {
     // 中断切りロープあり
     tagInfo += setDisplayCheckItem("cell-need-cut-middle-" + surveyData.id, "survey-data-need-cut-middle-" + surveyData.id);
     // 中断切りロープなし
-    tagInfo += setDisplayCheckItem("cell-not-need-cut-middle-" + surveyData.id, "survey-data-not-need-cut-middle-" + surveyData.id);
+    // tagInfo += setDisplayCheckItem("cell-not-need-cut-middle-" + surveyData.id, "survey-data-not-need-cut-middle-" + surveyData.id);
     // 危険木
     tagInfo += setDisplayCheckItem("cell-is-denger-tree-" + surveyData.id, "survey-data-is-denger-tree-" + surveyData.id);
     // 枝払い
@@ -304,7 +305,7 @@ function setDisplayInfo() {
         // 中断切りロープあり
         setDIsplayCheckInfo("survey-data-need-cut-middle-" + idList[i], dataInfo.needCutMiddle);
         // 中断切りロープなし
-        setDIsplayCheckInfo("survey-data-not-need-cut-middle-" + idList[i], dataInfo.notNeedCutMiddle);
+        // setDIsplayCheckInfo("survey-data-not-need-cut-middle-" + idList[i], dataInfo.notNeedCutMiddle);
         // 危険木
         setDIsplayCheckInfo("survey-data-is-denger-tree-" + idList[i], dataInfo.isDengerTree);
         // 枝払い
@@ -326,7 +327,7 @@ function setDisplayInfo() {
             $('#survey-data-name-' + idList[i]).text(dataInfo.name[0]);
         }
         // 編集不可設定
-        changeTargetLineDisable(idList[i]);
+        // changeTargetLineDisable(idList[i]);
     }
 }
 
@@ -343,18 +344,6 @@ function setDIsplayCheckInfo(tagId, data) {
         $('#' + tagId).addClass("hidden");
         $('input[name="' + tagId + '"]').val(false);
     }
-    // タッチイベント設定
-    $("." + tagId).on('touchstart', function () {
-        var changeId = this.id;
-        changeId = changeId.replace("cell", "survey-data");
-        if ($("#" + changeId).hasClass('hidden')) {
-            $("#" + changeId).removeClass('hidden');
-            $('input[name="' + changeId + '"]').val(true);
-        } else {
-            $("#" + changeId).addClass('hidden');
-            $('input[name="' + changeId + '"]').val(false);
-        }
-    });
 }
 
 /**
@@ -389,9 +378,9 @@ function changeTargetLineDisable(targetId) {
     // 担当者リンク
     changeTargetLinkItemDisable("#cell-name-" + targetId, "#survey-data-name-link-" + targetId);
     // 編集反映
-    $('#cell-edit-' + targetId).css("background-color", "darkgray");
+    // $('#cell-edit-' + targetId).css("background-color", "darkgray");
     // 削除
-    $('#cell-delete-' + targetId).css("background-color", "darkgray");
+    // $('#cell-delete-' + targetId).css("background-color", "darkgray");
     // フラグ設定
     surveyDataInfoList[targetId].editFlag = true;
 }
@@ -402,9 +391,9 @@ function changeTargetLineDisable(targetId) {
  * @param リンクタグID
  */
 function changeTargetLinkItemDisable(cellTagId, linkTagId) {
-    $(cellTagId).css("background-color", "darkgray");
-    $(linkTagId).css("pointer-events", "none");
-    $(linkTagId).css("color", "gray");
+    // $(cellTagId).css("background-color", "darkgray");
+    // $(linkTagId).css("pointer-events", "none");
+    // $(linkTagId).css("color", "gray");
 }
 
 /**
@@ -412,9 +401,9 @@ function changeTargetLinkItemDisable(cellTagId, linkTagId) {
  * @param タグID
  */
 function changeTargetCheckItemDisable(tagId) {
-    $(tagId).css("background-color", "darkgray");
-    $(tagId).css("pointer-events", "none");
-    $(tagId).css("color", "gray");
+    // $(tagId).css("background-color", "darkgray");
+    // $(tagId).css("pointer-events", "none");
+    // $(tagId).css("color", "gray");
 }
 
 /**

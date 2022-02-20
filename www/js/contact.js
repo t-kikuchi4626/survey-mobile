@@ -2,16 +2,6 @@ $(document).ready(function () {
     $('select').formSelect();
 });
 
-// 問合せ画面名
-const contactFunctionNameList = {
-    "survey-list": "調査業務一覧",
-    "survey-detail-list": "所在地一覧",
-    "survey-data-edit": "毎木調査登録",
-    "survey-data-history": "伐採木データ履歴一覧",
-    "survey-data-list": "伐採木一覧",
-    "survey-area-edit": "小径木登録"
-};
-
 // 遷移元画面ID
 var transitionId = 0;
 // 調査ID
@@ -24,7 +14,7 @@ document.addEventListener("deviceready", async function () {
     var param = location.search.substring(1).split("&");
     let contactId = param[0];
 
-    transitionId = parseInt(param[1]);
+    transitionId = param[1];
 
     if (param.length > 2) {
         surveyId = param[2];
@@ -33,36 +23,13 @@ document.addEventListener("deviceready", async function () {
         surveyDetailId = param[3];
     }
 
-    // 遷移元画面名
-    var functionName = "";
-    switch (transitionId) {
-        case 1:
-            functionName = "survey-list";
-            break;
-        case 2:
-            functionName = "survey-detail-list";
-            break;
-        case 3:
-            functionName = "survey-data-edit";
-            break;
-        case 4:
-            functionName = "survey-data-history";
-            break;
-        case 5:
-            functionName = "survey-data-list";
-            break;
-        case 6:
-            functionName = "survey-area-edit";
-            break;
-    }
-
     // 問合せ一覧画面遷移タグ作成
     var contactListLink = $('#contact-list-link');
     var contactListLinkText = '<a href="../html/contact_list.html?' + transitionId + '&' + surveyId + '&' + surveyDetailId + '&0"><i class="material-icons">arrow_back_ios</i></a>';
     contactListLink.append(contactListLinkText);
 
     // 初期表示
-    initView(contactId, functionName);
+    initView(contactId, transitionId);
 });
 
 /**
@@ -88,20 +55,14 @@ async function initView(contactId, functionName) {
 function setInitContact(functionName) {
     // 件名
     $('#contact-name').val("");
-    $('#contact-name').prop("disabled", false);
     // 氏名
     $('#user-name').val("");
-    $('#user-name').prop("disabled", false);
     // 問合せ区分
     $('#contact-class').val("question");
-    $('#contact-class').prop("disabled", false);
     // 問合せ画面
-    // setContactFunctionOption();
-    $('#contact-function').val(functionName);
-    $(`#contact-function option[value='${functionName}']`).prop("selected", true);
+    $('#contact-function').val(contactFunctionNameList.get(functionName));
     // 問合せ内容
     $('#contact-message').val("");
-    $('#contact-message').prop("disabled", false);
     // 問合せ回答非表示
     $('#contact-answer-field').hide();
     // 問合せ状態非表示
@@ -138,26 +99,24 @@ function setTargetContact(contactId) {
             var contactInfo = responseData.contactInfo;
 
             // 件名
-            $('#contact-name').val(contactInfo.contact_name);
-            $('#contact-name').prop("disabled", true);
+            $('#contact-name-text').text(contactInfo.contact_name);
+            $('#contact-name').hide();
             // 氏名
-            $('#user-name').val(contactInfo.user_name);
-            $('#user-name').prop("disabled", true);
+            $('#user-name-text').text(contactInfo.user_name);
+            $('#user-name').hide();
             // 問合せ区分
             $('#contact-class').val(contactInfo.contact_class);
             $('#contact-class').prop("disabled", true);
             // 問合せ画面
-            // setContactFunctionOption();
-            $('#contact-function').val(contactInfo.contact_function);
-            $(`#contact-function option[value='${contactInfo.contact_function}']`).prop("selected", true);
+            $('#contact-function-text').text(contactInfo.contact_function);
+            $('#contact-function').hide();
             // 問合せ内容
-            $('#contact-message').val(contactInfo.contact_message);
-            $('#contact-message').prop("disabled", true);
+            $('#contact-message-text').text(contactInfo.contact_message);
+            $('#contact-message').hide();
             // 問合せ内容説明文非表示
             $('#contact-message-description').hide();
             // 問合せ回答
-            $('#contact-answer').val(contactInfo.contact_answer);
-            $('#contact-answer').prop("disabled", true);
+            $('#contact-answer-text').text(contactInfo.contact_answer);
             // 問合せ状態
             $('#' + contactInfo.status).prop("checked", true);
             $('#unsupported').prop("disabled", true);
@@ -166,25 +125,14 @@ function setTargetContact(contactId) {
             $('#pending').prop("disabled", true);
             // 問合せ内容送信ボタン非表示
             $('#register-field').hide();
-            // select 属性をdisabledへ設定
-            $('select').prop("disabled", true);
+            // select 属性をreadonlyへ設定
+            $('select').prop("readonly", true);
         })
         .fail(async (jqXHR, textStatus, errorThrown) => {
             var jsonData = JSON.stringify(jqXHR);
             var responseData = JSON.parse(jsonData);
             errorProcessByGetContact(responseData);
         })
-}
-
-/**
- * 問合せ画面の選択項目設定
- */
-function setContactFunctionOption() {
-    contactFunctionNameList.forEach(function (contactFunctionName) {
-        console.log(contactFunctionName)
-        alert(contactFunctionName)
-        $('#contact-function').append($('<option>').html(contactFunctionName).val(contactFunctionName));
-    });
 }
 
 /**
@@ -199,7 +147,7 @@ function save() {
             contact_name: $('#contact-name').val(),
             user_name: $('#user-name').val(),
             contact_class: $('#contact-class').val(),
-            contact_function: contactFunctionNameList[$('#contact-function').val()],
+            contact_function: $('#contact-function').val(),
             contact_message: $('#contact-message').val(),
             status: "unsupported",
             userId: fetchUserId()
@@ -233,13 +181,13 @@ function save() {
 function validate() {
     var result = true;
     // 件名チェック
-    if ($('#contact-name').val() == '') {
+    if ($.trim($('#contact-name').val()) == '') {
         alert("申し訳ございません。\n件名の入力は必須です。件名を入力してください。");
         result = false;
     }
     // 問合せ内容チェック
     if (result) {
-        if ($('#contact-message').val() == '') {
+        if ($.trim($('#contact-message').val()) == '') {
             alert("申し訳ございません。\n問合せ内容の入力は必須です。問合せ内容を入力してください。");
             result = false;
         }

@@ -5,7 +5,7 @@ var appPass = '#t2IOj4rVl2lQ%_$7)7pXeoGE/Jg#0&0-/$X-Suojg)!21RCLel#4Q%322BtS148'
 // var path = 'http://survey-develop.japanwest.cloudapp.azure.com:80/';
 // var path = 'https://develop-survey.japaneast.cloudapp.azure.com:8443/';
 // var path = 'http://172.21.144.1:8443/';
-var path = 'http://172.18.41.145:8443/';
+var path = 'http://192.168.3.140:8443/';
 
 var surveyCompanyId = null;
 
@@ -52,6 +52,26 @@ pagetop.click(function () {
     $('body, html').animate({ scrollTop: 0 }, 500);
     return false;
 });
+
+// 問合せ画面名ラベル
+var contactFunction = [
+    "survey-list",
+    "survey-detail-list",
+    "survey-data-edit",
+    "survey-data-history",
+    "survey-data-list",
+    "survey-area-edit"
+];
+
+// 問合せ画面名のmapを生成
+var contactFunctionNameList = new Map([
+    [contactFunction[0], "調査業務一覧"],
+    [contactFunction[1], "所在地一覧"],
+    [contactFunction[2], "毎木調査登録"],
+    [contactFunction[3], "伐採木データ履歴一覧"],
+    [contactFunction[4], "伐採木一覧"],
+    [contactFunction[5], "小径木登録"]
+]);
 
 /**
  * ログアウト
@@ -152,32 +172,29 @@ async function errorHandler(transaction) {
 }
 /**
  * 問合せサイドナビゲーションのリンク作成
- * @param {number} id 遷移元番号
+ * @param {number} contactFunction 遷移元番号
  * @param {string} surveyId 調査ID
  * @param {string} surveyDetailId 調査明細ID
  */
-function createContactSidenavLink(id, surveyId, surveyDetailId) {
+function createContactSidenavLink(contactFunction, surveyId, surveyDetailId) {
     // 問合せ一覧画面遷移タグ作成
     var contactListLink = $('#contact-list-link');
     var linkText = '';
-    switch (id) {
-        case 1:
+    switch (contactFunction) {
+        case contactFunction[0]:
             // 調査業務一覧より表示
-            linkText = '<a href="../html/contact_list.html?' + id + '"><i class="material-icons">send</i>問合せ</a>';
+            linkText = '<a href="../html/contact_list.html?' + contactFunction + '"><i class="material-icons">send</i>問合せ</a>';
             break;
-        case 2:
+        case contactFunction[1]:
             // 所在地一覧より表示
-            linkText = '<a href="../html/contact_list.html?' + id + '&' + surveyId + '"><i class="material-icons">send</i>問合せ</a>';
+            linkText = '<a href="../html/contact_list.html?' + contactFunction + '&' + surveyId + '"><i class="material-icons">send</i>問合せ</a>';
             break;
-        case 3:
-        case 4:
-        case 5:
-        case 6:
+        default:
             // 毎木調査登録より表示
             // 伐採木データ履歴一覧より表示
             // 伐採木一覧より表示
             // 小径木登録より表示
-            linkText = '<a href="../html/contact_list.html?' + id + '&' + surveyId + '&' + surveyDetailId + '"><i class="material-icons">send</i>問合せ</a>';
+            linkText = '<a href="../html/contact_list.html?' + contactFunction + '&' + surveyId + '&' + surveyDetailId + '"><i class="material-icons">send</i>問合せ</a>';
             break;
     }
     contactListLink.append(linkText);

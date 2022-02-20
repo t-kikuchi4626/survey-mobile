@@ -38,7 +38,7 @@ document.addEventListener("deviceready", async function () {
   }
 
   // サイドナビゲーションリンク作成
-  createContactSidenavLink(1, "", "");
+  createContactSidenavLink(contactFunction[0], "", "");
 
   await controlEditScreen();
 });
@@ -105,6 +105,14 @@ async function synchronize() {
  * Web編集モード切り替えボタン押下時
  */
 async function switchWebEditMode() {
+  if (surveyCompanyId == null) {
+    $('#modalLocation').modal('close');
+    var error = '同期処理実行権限エラー';
+    $('#error').text(error);
+    $('#errorMessage').text('申し訳ございません。調査会社情報が取得できません。調査会社アカウントで再度ログインしてから処理を実行してください。');
+    $('#synchronizeError').modal('open');
+    return;
+  }
   const selectedWebEditMode = $('input[name="web-edit-mode"]:checked').val();
   const webEditMode = await fetchWebEditModeByCompanyId(surveyCompanyId);
   if (webEditMode.rows.length > 0 && webEditMode.rows.item(0).web_edit_mode === selectedWebEditMode) {
@@ -112,15 +120,11 @@ async function switchWebEditMode() {
   }
   await updateWebEditModeSurveyDataByCompanyId(selectedWebEditMode, surveyCompanyId);
   await updateWebEditModeSurveyAreaByCompanyId(selectedWebEditMode, surveyCompanyId);
-  await createWebEditMode(selectedWebEditMode);
   if (selectedWebEditMode === 'on') {
     await generateSynchronizeData(true);
   } else if (selectedWebEditMode === 'off') {
     await generateWebEditModeOffData();
   }
-
-  // web編集モードが「ON」の場合、mobileの画面をロックする
-  await controlEditScreen();
 }
 
 /**
@@ -155,18 +159,19 @@ async function generateWebEditModeOffData() {
   let surveyArray = [];
   let surveyDetailArray = [];
   let surveyAreaArray = [];
+  let surveyAreaIdList = [];
+  let surveyDataIdList = [];
 
   var surveyList = await fetchSurveyIdAndModifiedDate(surveyCompanyId);
   if (surveyList.rows.length > 0) {
 
     let surveyIdList = [];
     let surveyDetailIdList = [];
-    let surveyDataIdList = [];
 
     [surveyArray, surveyIdList] = await fetchForSynchronizeSurvey(surveyList);
     [surveyDetailArray, surveyDetailIdList] = await fetchForSynchronizeSurveyDetail(surveyIdList);
     surveyAreaArray = await fetchForSynchronizeSurveyArea(surveyDetailIdList);
-    let surveyAreaIdList = await surveyAreaArray.map(function (element) { return element['identify_code']; });
+    surveyAreaIdList = await surveyAreaArray.map(function (element) { return element['identify_code']; });
 
     // 伐採木IDデータを4000件ずつサーバへリクエストする
     if (surveyDetailIdList.length > 0) {
@@ -212,6 +217,7 @@ async function webEditModeOffProcess(surveyCompanyId, surveyArray, surveyDetailA
     surveyDataIdList: surveyDataIdList
   };
 
+
   $.ajax({
     type: 'post',
     url: path + 'synchronize/change-web-edit-mode-off',
@@ -232,7 +238,12 @@ async function webEditModeOffProcess(surveyCompanyId, surveyArray, surveyDetailA
       await synchronizeWebToMobile(responseData.synchronizeToMobile);
 
       $('#modalLocation').modal({ close: true });
-      $('#synchronize').modal('open');
+      $('#web-edit-mode-off').modal('open');
+
+      // web編集モードが「ON」の場合、mobileの画面をロックする
+      await createWebEditMode('off');
+      await controlEditScreen();
+
     })
     .fail(async (jqXHR, textStatus, errorThrown) => {
       var jsonData = JSON.stringify(jqXHR);
@@ -280,7 +291,7 @@ async function generateSynchronizeData(isWebEditMode) {
         surveyDataArray = [];
         let surveyDataList = await fetchSurveyDataAll(surveyDetailIdList, offset);
         if (surveyDataList.rows.length == 0 && offset == 0) {
-          await synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaArray, surveyDataArray, (!isWebEditMode) ? synchronizeResult.insertId : 0);
+          await synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaArray, surveyDataArray, (!isWebEditMode) ? synchronizeResult.insertId : 0, isWebEditMode);
           break;
         } else if (surveyDataList.rows.length == 0 && offset != 0) {
           break;
@@ -288,13 +299,13 @@ async function generateSynchronizeData(isWebEditMode) {
           for (var i = 0; i < surveyDataList.rows.length; i++) {
             surveyDataArray.push(surveyDataList.rows.item(i));
           }
-          await synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaArray, surveyDataArray, (!isWebEditMode) ? synchronizeResult.insertId : 0);
+          await synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaArray, surveyDataArray, (!isWebEditMode) ? synchronizeResult.insertId : 0, isWebEditMode);
           offset = offset + 4000;
         }
       }
     }
   } else {
-    await synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaArray, surveyDataArray, (!isWebEditMode) ? synchronizeResult.insertId : 0);
+    await synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaArray, surveyDataArray, (!isWebEditMode) ? synchronizeResult.insertId : 0, isWebEditMode);
   }
 };
 
@@ -306,12 +317,14 @@ async function generateSynchronizeData(isWebEditMode) {
  * @param surveyAreaArray 小径木データ
  * @param surveyDataArray 伐採木データ
  * @param synchronizeResultInsertId 同期処理ID
+ * @param isWebEditMode Web編集モードか否か
  */
-async function synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaArray, surveyDataArray, synchronizeResultInsertId) {
+async function synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaArray, surveyDataArray, synchronizeResultInsertId, isWebEditMode) {
 
   var item = localStorage.getItem(KEY);
   var obj = JSON.parse(item);
   var JSONdata = {
+    userId: fetchUserId(),
     surveyCompanyId: surveyCompanyId,
     survey: surveyArray,
     surveyDetail: surveyDetailArray,
@@ -335,15 +348,22 @@ async function synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArra
 
       var jsonData = JSON.stringify(data);
       var responseData = JSON.parse(jsonData);
-
+      await applySynchronizeResult();
       if (synchronizeResultInsertId != 0) {
         let param = [synchronizeResultInsertId, responseData.synchronizeHistory.id, 'processing', '', fetchUserId()]
         await createSynchronizeResultDetail(param);
-        await applySynchronizeResult();
+      }
+      $('#modalLocation').modal({ close: true });
+
+      // web編集モードが「ON」の場合、mobileの画面をロックする
+      if (isWebEditMode) {
+        await createWebEditMode('on');
+        await controlEditScreen();
+        $('#web-edit-mode-on').modal('open');
+      } else {
+        $('#synchronize').modal('open');
       }
 
-      $('#modalLocation').modal({ close: true });
-      $('#synchronize').modal('open');
     })
     .fail(async (jqXHR, textStatus, errorThrown) => {
       var jsonData = JSON.stringify(jqXHR);
@@ -452,9 +472,9 @@ async function requestSynchronizeResult(surveyCompanyId) {
           let ResponseDataTmp = responseData.synchronizeWebToMobile[i];
           await synchronizeWebToMobile(JSON.parse(ResponseDataTmp.synchronizeToMobile));
         }
-        $('#synchronize-request').modal({ open: true });
+        $('#synchronize-request').modal('open');
       }
-      $('#modalLocation').modal({ close: true });
+      $('#modalLocation').modal('close');
       // 同期処理結果を画面表示
       await showSurveyList();
     })
