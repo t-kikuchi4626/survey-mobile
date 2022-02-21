@@ -47,6 +47,7 @@ document.addEventListener("deviceready", async function () {
  */
 async function initializeForm(surveyDetailId) {
     //地権者モーダル表示
+    var surveyDetailItemParent = $('#area-ower-modal');
     var surveyDetailItem = $('#area-info');
     var surveyDetailList = await fetchSurveyDetailById(surveyDetailId);
     var texts = '';
@@ -60,7 +61,8 @@ async function initializeForm(surveyDetailId) {
     } else {
         texts = setSurveyDetailModal(texts, surveyDetailList.rows.item(0));
     }
-    surveyDetailItem.append(texts);
+    surveyDetailItem.remove();
+    surveyDetailItemParent.append(texts);
     //履歴2件ずつページングで表示
     var surveyHistoryItem = $('#history-list-contents');
     var surveyDetailList = await fetchSurveyDataBySurveyDetailId(surveyDetailId);
@@ -91,6 +93,7 @@ async function initializeForm(surveyDetailId) {
  * @param 所在地データ
  */
 function setSurveyDetailModal(texts, surveyDetail) {
+    texts += '<div id="area-info" class="modal-content">'
     texts += '所在地No：' + convertSpace(surveyDetail.detail_number);
     texts += '<br>';
     texts += '線路名：' + convertSpace(surveyDetail.line_name)
@@ -776,7 +779,7 @@ async function createSurveyData() {
     if (result !== null) {
         let count = await editSurveyTrimmingTreeCount();
         soundMessage(count);
-        M.toast({ html: '更新しました！', displayLength: 2000 });
+        M.toast({ html: '登録しました！', displayLength: 2000 });
         //画面を初期化
         var treeCountArray = await fetchTreeTypeCount(treeTypeValue, specialTree, surveyDetailId);
         setTreeCount(treeCountArray);
@@ -806,7 +809,7 @@ async function createSurveyDataInModal() {
         $('input[name="modal-survey-data-is-danger-tree"]').val(),
         $('input[name="modal-survey-data-need-cut-branch"]').val(),
         $('#modal-note-modal').val(),
-        id,
+        fetchUserId(),
         id
     ];
     var result = await updateSurveyDataByIdInModal(param);
