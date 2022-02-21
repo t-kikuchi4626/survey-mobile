@@ -206,7 +206,6 @@ function insertSurveyDetail(transaction, surveyDetail) {
         transaction.executeSql(sql, surveyDetail, function (transaction) {
             resolve();
         }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             errorHandler(transaction);
             reject(false);
         });
@@ -221,7 +220,6 @@ function updateSurveyDetail(transaction, surveyDetail) {
         transaction.executeSql(sql, surveyDetail, function (transaction) {
             resolve();
         }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             errorHandler(transaction);
             reject(false);
         });
@@ -241,7 +239,6 @@ function deleteSurveyDetailById(transaction, surveyDetailIdList) {
         transaction.executeSql(generateSurveyDetailDeleteSql(placeholder), [surveyDetailIdList], function (transaction) {
             resolve();
         }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             errorHandler(transaction);
             reject(false);
         });
@@ -262,7 +259,6 @@ function deleteSurveyDetailBySurveyId(transaction, surveyIdList) {
             transaction.executeSql(generateSurveyDetailDeleteBySurveySql(placeholder), surveyIdList, function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
                 errorHandler(transaction);
                 reject(false);
             });

@@ -169,7 +169,6 @@ function deleteSurveyAreaIsDetele(transaction, surveyDetailIdList) {
         transaction.executeSql('DELETE FROM survey_area WHERE is_delete = ? AND survey_detail_id NOT IN (' + placeholder + ') ', surveyDetailIdList, function (ignored, resultSet) {
             resolve(resultSet);
         }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             errorHandler(transaction);
             reject(false);
         });
@@ -190,7 +189,6 @@ function deleteSurveyAreaByIdentifyCodes(transaction, IdentifyCodes) {
         transaction.executeSql('DELETE FROM survey_area WHERE identify_code IN (' + placeholder + ') ', IdentifyCodes, function (ignored, resultSet) {
             resolve(resultSet);
         }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             errorHandler(transaction);
             reject(false);
         });
@@ -205,7 +203,6 @@ function updateSurveyAreaOfSynchronize(transaction, surveyArea) {
         transaction.executeSql(sql, surveyArea, function (transaction) {
             resolve();
         }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             errorHandler(transaction);
             reject(false);
         });
@@ -225,7 +222,6 @@ function deleteSurveyAreaByDetailId(transaction, surveyDetailIdList) {
         transaction.executeSql(generateSurveyAreaDeleteSql(placeholder), surveyDetailIdList, function (ignored, resultSet) {
             resolve(resultSet);
         }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             errorHandler(transaction);
             reject(false);
         });

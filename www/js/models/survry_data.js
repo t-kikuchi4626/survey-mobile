@@ -292,7 +292,6 @@ function updateSurveyDataOfSynchronize(transaction, surveyData) {
         transaction.executeSql(sql, surveyData, function (transaction) {
             resolve();
         }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             errorHandler(transaction);
             reject(false);
         });
@@ -331,7 +330,6 @@ function deleteSurveyDataByDetailId(transaction, surveyDetailIdList) {
         transaction.executeSql(generateSurveyDataDeleteSql(placeholder), surveyDetailIdList, function (ignored, resultSet) {
             resolve(resultSet);
         }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             errorHandler(transaction);
             reject(false);
         });
@@ -351,7 +349,6 @@ function deleteSurveyDataByIdentifyCodes(transaction, IdentifyCodes) {
         transaction.executeSql('DELETE FROM survey_data WHERE identify_code IN (' + placeholder + ') ', IdentifyCodes, function (transaction) {
             resolve();
         }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             errorHandler(transaction);
             reject(false);
         });
@@ -381,7 +378,6 @@ function deleteSurveyDataIsDetele(transaction, surveyDetailIdList) {
         transaction.executeSql(sql, surveyDetailIdList, function (ignored, resultSet) {
             resolve(resultSet);
         }, function (error, transaction) {
-            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
             errorHandler(transaction);
             reject(false);
         });

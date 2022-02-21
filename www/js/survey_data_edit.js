@@ -6,7 +6,7 @@ var surveyDetailId = null;
 var uuid = "";
 var id = null;
 var isHistoryFlag = false;
-var treeTypeValue= null;
+var treeTypeValue = null;
 var specialTree = null;
 document.addEventListener("deviceready", async function () {
     var param = location.search.substring(1).split("&");
