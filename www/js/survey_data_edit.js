@@ -663,10 +663,17 @@ function validate() {
         alert("申し訳ございません。\r\n連番の入力は必須です。連番を入力してください。");
         result = false;
     }
-    // Noの数字チェック
+    // No（連番）の数字チェック
     if (result) {
         if (!$('#number').val().match(/^\d+$/)) {
             alert("申し訳ございません。\r\n連番は半角数字のみ有効です。半角数字のみ入力してください。");
+            result = false;
+        }
+    }
+    //No(枝番)の数字チェック
+    if (result) {
+        if (!$('#branch-number').val().match(/^\d+$/)) {
+            alert("申し訳ございません。\r\n枝番は半角数字のみ有効です。半角数字のみ入力してください。");
             result = false;
         }
     }
@@ -818,6 +825,7 @@ async function createSurveyDataInModal() {
         soundMessage(count);
         M.toast({ html: '更新しました！', displayLength: 2000 });
         //画面の履歴を初期化
+        initializeForm(surveyDetailId);
         await initialHistoryArea();
     }
 }
