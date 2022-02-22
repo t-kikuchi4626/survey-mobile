@@ -840,13 +840,12 @@ async function createSurveyDataInModal() {
         var treeCountArray = await fetchTreeTypeCount(surveyDataList, surveyDetailId);
         setTreeCount(treeCountArray);
 
-        //画面の履歴を初期化
-        await initialHistoryArea();
-        //値をセットする（登録画面）
-        await initializeForm(surveyDetailId);
         //モーダル内を最後にセットする
         var surveyDetailList = await fetchSurveyDataBySurveyDetailId(surveyDetailId);
+        setSurveyData(surveyDetailList.rows.item(0));
         setSurveyDataInModal(surveyDetailList.rows.item(0));
+        //画面の履歴を初期化
+        await initialHistoryArea();
     }
 }
 
@@ -1031,6 +1030,8 @@ $(document).ready(function () {
         onCloseStart() {
             //値をセットする（登録画面）
             initializeForm(surveyDetailId);
+            //画面の履歴を初期化
+            initialHistoryArea();
         }
     });
 });
