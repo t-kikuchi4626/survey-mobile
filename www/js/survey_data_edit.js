@@ -34,7 +34,8 @@ document.addEventListener("deviceready", async function () {
     setTreeTypeButtonInModal(treeTypeValue, specialTree, "modalSurveyDataTreeType");
 
     //樹種ごとの一覧表作成
-    var treeCountArray = await fetchTreeTypeCount(treeTypeValue, specialTree, surveyDetailId);
+    var surveyDataList = await fetchSurveyDataList(surveyDetailId);
+    var treeCountArray = await fetchTreeTypeCount(surveyDataList, surveyDetailId);
     setTreeCount(treeCountArray);
 
     //画面データの初期化
@@ -791,8 +792,11 @@ async function createSurveyData() {
         soundMessage(count);
         M.toast({ html: '登録しました！', displayLength: 2000 });
         //画面を初期化
-        var treeCountArray = await fetchTreeTypeCount(treeTypeValue, specialTree, surveyDetailId);
+        //樹種ごとの一覧表作成
+        var surveyDataList = await fetchSurveyDataList(surveyDetailId);
+        var treeCountArray = await fetchTreeTypeCount(surveyDataList, surveyDetailId);
         setTreeCount(treeCountArray);
+        //画面の履歴を初期化
         initializeForm(surveyDetailId);
         await initialHistoryArea();
     }
@@ -831,6 +835,10 @@ async function createSurveyDataInModal() {
         soundMessage(count);
         M.toast({ html: '更新しました！', displayLength: 2000 });
         //画面の履歴を初期化
+        //樹種ごとの一覧表作成
+        var surveyDataList = await fetchSurveyDataList(surveyDetailId);
+        var treeCountArray = await fetchTreeTypeCount(surveyDataList, surveyDetailId);
+        setTreeCount(treeCountArray);
         initializeForm(surveyDetailId);
         await initialHistoryArea();
     }
@@ -849,21 +857,12 @@ $(".enter").on('touchstart', function () {
     $("#input").get(0).play();
 });
 
-async function fetchTreeTypeCount(treeTypes, specialTree, surveyDetailId) {
-    if (treeTypes) {
-        var treeTypesCount = {};
-        var arrayTreeTypes = treeTypes.split(',');
-        for (let i in arrayTreeTypes) {
-            var count = await fetchTypeMeasuredValueByTreeType(surveyDetailId, arrayTreeTypes[i]);
-            treeTypesCount[arrayTreeTypes[i]] = count.rows.item(0).count;
-        }
-    }
-    if (specialTree) {
-        var arraySpecialTreeTypes = specialTree.split(',');
-        for (let i in arraySpecialTreeTypes) {
-            var count = await fetchTypeMeasuredValueByTreeType(surveyDetailId, arraySpecialTreeTypes[i]);
-            treeTypesCount[arraySpecialTreeTypes[i]] = count.rows.item(0).count;
-        }
+async function fetchTreeTypeCount(surveyDataList, surveyDetailId) {
+    var treeTypesCount = {};
+    for (var i = 0; i < surveyDataList.rows.length; i++) {
+        var surveyData = surveyDataList.rows.item(i);
+        var count = await fetchTypeMeasuredValueByTreeType(surveyDetailId, surveyData.survey_data_tree_type);
+        treeTypesCount[surveyData.survey_data_tree_type] = count.rows.item(0).count;
     }
     return treeTypesCount;
 }
