@@ -97,7 +97,7 @@ function fetchSurveyNewDataBySurveyIdByrowNum(id, rowNum) {
 function fetchSurveyDataBySurveyId(id) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM survey_data WHERE id = ? AND is_delete = ? order by created_date desc limit 2', [id, 'false'], function (ignored, resultSet) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE id = ? AND is_delete = ? order by created_date desc limit 1', [id, 'false'], function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);

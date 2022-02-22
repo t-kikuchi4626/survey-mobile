@@ -593,7 +593,7 @@ $("[id^=modal-tree-measured-value-]").on('touchstart', function () {
 });
 
 /**
- * 画面の履歴を初期化
+ * 登録画面の履歴を初期化
  */
 async function initialHistoryArea() {
     var texts = "";
@@ -834,13 +834,19 @@ async function createSurveyDataInModal() {
         let count = await editSurveyTrimmingTreeCount();
         soundMessage(count);
         M.toast({ html: '更新しました！', displayLength: 2000 });
-        //画面の履歴を初期化
+
         //樹種ごとの一覧表作成
         var surveyDataList = await fetchSurveyDataList(surveyDetailId);
         var treeCountArray = await fetchTreeTypeCount(surveyDataList, surveyDetailId);
         setTreeCount(treeCountArray);
-        initializeForm(surveyDetailId);
+
+        //画面の履歴を初期化
         await initialHistoryArea();
+        //値をセットする（登録画面）
+        await initializeForm(surveyDetailId);
+        //モーダル内を最後にセットする
+        var surveyDetailList = await fetchSurveyDataBySurveyDetailId(surveyDetailId);
+        setSurveyDataInModal(surveyDetailList.rows.item(0));
     }
 }
 
@@ -959,7 +965,7 @@ function applyMesuredValueOfTableKeypadInModal(mesuredValueId, value) {
 }
 
 /**
- * 直径ボタンをタップした際に、選択した直径の背景色を変更する（テンキー形式の場合）
+ * 直径ボタンをタップした際に、直径の値を変更する（テンキー形式の場合）
  * @param {*} value 設定する直径
  */
 function applyMesuredValueOfNumericKeypad(value) {
@@ -972,7 +978,7 @@ function applyMesuredValueOfNumericKeypad(value) {
 }
 
 /**
- * 直径ボタンをタップした際に、選択した直径の背景色を変更する（テンキー形式の場合）(モーダル内)
+ * 直径ボタンをタップした際に、直径の値を変更する（テンキー形式の場合）(モーダル内)
  * @param {*} value 設定する直径
  */
 function applyMesuredValueOfNumericKeypadInModal(value) {
@@ -1016,3 +1022,15 @@ function changeKeyPadInModal() {
         $('#modal-key-pad-type').val('table-keypad');
     }
 }
+
+/**
+ * モーダル内を閉じたときに初期値をセットする
+ */
+$(document).ready(function () {
+    $('#history-modal').modal({
+        onCloseStart() {
+            //値をセットする（登録画面）
+            initializeForm(surveyDetailId);
+        }
+    });
+});
