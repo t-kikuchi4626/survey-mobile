@@ -206,7 +206,6 @@ async function generateWebEditModeOffData() {
  * @param surveyDataIdList 伐採木IDデータ
  */
 async function webEditModeOffProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaIdList, surveyDataIdList) {
-
   var item = localStorage.getItem(KEY);
   var obj = JSON.parse(item);
   var JSONdata = {
@@ -216,7 +215,6 @@ async function webEditModeOffProcess(surveyCompanyId, surveyArray, surveyDetailA
     surveyAreaIdList: surveyAreaIdList,
     surveyDataIdList: surveyDataIdList
   };
-
 
   $.ajax({
     type: 'post',
@@ -626,7 +624,11 @@ async function errorProcess(responseData, surveyCompanyId) {
 
   // 同期処理結果へエラー情報を更新する
   let latestSynchronizeResult = await fetchLastSynchronizeResultByCompanyId(surveyCompanyId);
-  await updateSynchronizeResult(['error', error, fetchUserId(), latestSynchronizeResult.rows.item(0).id]);
+  if (latestSynchronizeResult.rows.length > 0) {
+    await updateSynchronizeResult(['error', error, fetchUserId(), latestSynchronizeResult.rows.item(0).id]);
+  } else {
+    await updateSynchronizeResult(['error', error, fetchUserId(), 1]);
+  }
   await showSurveyList();
   await applySynchronizeResult();
 
