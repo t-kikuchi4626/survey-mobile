@@ -758,6 +758,9 @@ function validateInModal() {
  * 伐採木データ作成
  */
 async function createSurveyData() {
+    //inputの値はString型になってしまうので、String型からBooleanに変換する
+    var needCutMiddle = JSON.parse($('input[name="survey-data-need-cut-middle"]').val().toLowerCase());
+
     var param = [
         surveyDetailId,
         generateIdentifyCode(uuid),
@@ -773,7 +776,7 @@ async function createSurveyData() {
         $('input[name="survey-data-need-rope"]').val(),
         $('input[name="survey-data-need-wire"]').val(),
         $('input[name="survey-data-need-cut-middle"]').val(),
-        $('input[name="survey-data-need-cut-middle"]').val() ? false : true,
+        String(!needCutMiddle),
         $('input[name="survey-data-is-danger-tree"]').val(),
         $('input[name="survey-data-need-cut-branch"]').val(),
         $('#note-modal').val(),
@@ -782,7 +785,7 @@ async function createSurveyData() {
         fetchUserId(),
         fetchUserId()
     ];
-    var result = await insertSurveyData(param);;
+    var result = await insertSurveyData(param);
     if (result !== null) {
         let count = await editSurveyTrimmingTreeCount();
         soundMessage(count);
@@ -799,6 +802,9 @@ async function createSurveyData() {
  * 伐採木データ作成(モーダル)
  */
 async function createSurveyDataInModal() {
+    //inputの値はString型になってしまうので、String型からBooleanに変換する
+    var needCutMiddle = JSON.parse($('input[name="modal-survey-data-need-cut-middle"]').val().toLowerCase());
+
     var id = $('#modal-id').val();
     var param = [
         $('#modal-name-modal').val(),
@@ -812,7 +818,7 @@ async function createSurveyDataInModal() {
         $('input[name="modal-survey-data-need-rope"]').val(),
         $('input[name="modal-survey-data-need-wire"]').val(),
         $('input[name="modal-survey-data-need-cut-middle"]').val(),
-        $('input[name="modal-survey-data-need-cut-middle"]').val() ? false : true,
+        String(!needCutMiddle),
         $('input[name="modal-survey-data-is-danger-tree"]').val(),
         $('input[name="modal-survey-data-need-cut-branch"]').val(),
         $('#modal-note-modal').val(),
