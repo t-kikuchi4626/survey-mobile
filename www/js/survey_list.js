@@ -626,9 +626,7 @@ async function errorProcess(responseData, surveyCompanyId) {
   let latestSynchronizeResult = await fetchLastSynchronizeResultByCompanyId(surveyCompanyId);
   if (latestSynchronizeResult.rows.length > 0) {
     await updateSynchronizeResult(['error', error, fetchUserId(), latestSynchronizeResult.rows.item(0).id]);
-  } else {
-    await updateSynchronizeResult(['error', error, fetchUserId(), 1]);
-  }
+  };
   await showSurveyList();
   await applySynchronizeResult();
 
