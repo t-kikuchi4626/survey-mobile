@@ -3,13 +3,13 @@ document.addEventListener("deviceready", function () {
 });
 
 function executeQuery(tx) {
-    tx.executeSql('DROP TABLE survey_area');
-    tx.executeSql('DROP TABLE survey_data');
-    tx.executeSql('DROP TABLE survey');
-    tx.executeSql('DROP TABLE survey_detail');
-    tx.executeSql('DROP TABLE synchronize_result');
-    tx.executeSql('DROP TABLE synchronize_result_detail');
-    tx.executeSql('DROP TABLE web_edit_mode');
+    // tx.executeSql('DROP TABLE survey_area');
+    // tx.executeSql('DROP TABLE survey_data');
+    // tx.executeSql('DROP TABLE survey');
+    // tx.executeSql('DROP TABLE survey_detail');
+    // tx.executeSql('DROP TABLE synchronize_result');
+    // tx.executeSql('DROP TABLE synchronize_result_detail');
+    // tx.executeSql('DROP TABLE web_edit_mode');
     tx.executeSql(createSurveyTable);
     tx.executeSql(createSurveySetailTable);
     tx.executeSql(createSurveyAreaTable);
@@ -17,9 +17,68 @@ function executeQuery(tx) {
     tx.executeSql(createsSnchronizeResultTable);
     tx.executeSql(createsSnchronizeResultDetailTable);
     tx.executeSql(createsWebEditModeTable);
-    // for (var i = 0; i < 10; i++) {
-    //   tx.executeSql('INSERT INTO survey_data (is_synchronize, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch, need_cut_divide, need_collect, is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [false, '赤', 'AA', i, 1070, 'ひのき', 50, true, true, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    // tx.executeSql('delete from survey_data');
+
+    // for (var i = 0; i < 4000; i++) {
+    //   tx.executeSql('INSERT INTO survey_data (identify_code, web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i, 'off', '赤', 'AA', i, 1007, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
     // }
+    // for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code, web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'a', 'off', '赤', 'AA', i, 1008, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
+    //     for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code, web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'ab', 'off', '赤', 'AA', i, 1009, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
+    //     for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code, web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'ac', 'off', '赤', 'AA', i, 1010, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
+    //     for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code, web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'ad', 'off', '赤', 'AA', i, 1011, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
+    //     for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code, web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'ae', 'off', '赤', 'AA', i, 1012, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
+    //     for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code, web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'af', 'off', '赤', 'AA', i, 1013, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
+    //     for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code, web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'ag', 'off', '赤', 'AA', i, 1014, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
+    //     for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code, web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'ah', 'off', '赤', 'AA', i, 1015, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
+    //     for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code, web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'ai', 'off', '赤', 'AA', i, 1016, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }    
+    // for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code, web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'aj', 'off', '赤', 'AA', i, 1017, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
+    //       for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code, web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'ak', 'off', '赤', 'AA', i, 1018, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
+    //   for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code,web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'b', 'off', '赤', 'AA', i, 1019, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
+    //   for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code,web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'C', 'off', '赤', 'AA', i, 1020, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
+    //   for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code,web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'd', 'off', '赤', 'AA', i, 1021, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
+    //   for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code,web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'e', 'off', '赤', 'AA', i, 1022, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
+    //   for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code,web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'f', 'off', '赤', 'AA', i, 1023, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
+    //   for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code,web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'g', 'off', '赤', 'AA', i, 1024, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
+    //   for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code,web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'h', 'off', '赤', 'AA', i, 1025, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
+    //   for (var i = 0; i < 4000; i++) {
+    //     tx.executeSql('INSERT INTO survey_data (identify_code,web_edit_mode, color, word, number, survey_detail_id, survey_data_tree_type, tree_measured_value, need_rope, need_wire, need_cut_middle, need_cut_branch,  is_danger_tree, is_delete, created_date, created_by, modified_by, modified_date, not_need_cut_middle, name, note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [i + 'i', 'off', '赤', 'AA', i, 1026, 'ひのき', 50, true, true, true, true, true, false, new Date(),1, 1,new Date(), true, '', '']);
+    //   }
 }
 
 //Callback function when the transaction is failed.

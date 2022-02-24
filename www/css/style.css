@@ -72,6 +72,10 @@ a.btn-link-circle {
   white-space: nowrap;
 }
 
+.toast {
+  background-color: #26a69a !important;
+}
+
 /* iPhone */
 @media screen and (max-width: 767px) {
   a.btn-ten-key-font-size {

@@ -338,6 +338,7 @@ async function synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArra
     dataType: 'JSON',
     scriptCharset: 'utf-8',
     async: false,
+    timeout: 600000,
     headers: {
       'Authorization': obj.token
     }

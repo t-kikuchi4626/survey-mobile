@@ -45,7 +45,7 @@ function fetchSurveyDataAllNoSurveyDetail() {
 function fetchSurveyDataBySurveyDetailId(surveyDetailId) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = ? order by created_date desc limit 2', [surveyDetailId, 'false'], function (ignored, resultSet) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = ? order by id desc limit 2', [surveyDetailId, 'false'], function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
@@ -56,13 +56,14 @@ function fetchSurveyDataBySurveyDetailId(surveyDetailId) {
 
 /**
  * 所在地IDをもとに伐採木データ取得（１件新しいもの）
+ * @param 伐採木データID
  * @param 所在地ID
  * @return 伐採木
  */
-function fetchSurveyNewDataBySurveyId(id) {
+function fetchSurveyNewDataBySurveyId(id, surveyDetailId) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT  ROW_NUMBER() OVER(ORDER BY created_date ASC) num,* FROM survey_data WHERE id >= ? AND is_delete = ? order by created_date desc limit 2', [id, 'false'], function (ignored, resultSet) {
+            transaction.executeSql('SELECT  ROW_NUMBER() OVER(ORDER BY id ASC) num,* FROM survey_data WHERE id >= ? AND survey_detail_id = ? AND is_delete = ? order by id desc limit 2', [id, surveyDetailId, 'false'], function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
@@ -73,13 +74,15 @@ function fetchSurveyNewDataBySurveyId(id) {
 
 /**
  * 所在地IDをもとに伐採木データ取得（１件新しいもの）(行指定)
+ * @param 伐採木データID
+ * @param 行数
  * @param 所在地ID
  * @return 伐採木
  */
-function fetchSurveyNewDataBySurveyIdByrowNum(id, rowNum) {
+function fetchSurveyNewDataBySurveyIdByrowNum(id, rowNum, surveyDetailId) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM survey_data WHERE id >= ? AND is_delete = ? order by created_date desc limit ? offset ?', [id, 'false', rowNum + 2, rowNum - 1], function (ignored, resultSet) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE id >= ? AND survey_detail_id = ? AND is_delete = ? order by id desc limit ? offset ?', [id, surveyDetailId, 'false', rowNum + 2, rowNum - 1], function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
@@ -97,7 +100,7 @@ function fetchSurveyNewDataBySurveyIdByrowNum(id, rowNum) {
 function fetchSurveyDataBySurveyId(id) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM survey_data WHERE id = ? AND is_delete = ? order by created_date desc limit 1', [id, 'false'], function (ignored, resultSet) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE id = ? AND is_delete = ? order by id desc limit 1', [id, 'false'], function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
@@ -108,12 +111,13 @@ function fetchSurveyDataBySurveyId(id) {
 
 /**
   * 所在地IDをもとに伐採木データ取得（１件古いもの）
+  * @param 伐採木データID
   * @param 所在地ID
   */
-function fetchSurveyOldDataBySurveyId(id) {
+function fetchSurveyOldDataBySurveyId(id, surveyDetailId) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM survey_data WHERE id <= ? AND is_delete = ? order by created_date desc limit 2', [id, 'false'], function (ignored, resultSet) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE id <= ? AND survey_detail_id = ? AND is_delete = ? order by id desc limit 2', [id, surveyDetailId, 'false'], function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
@@ -527,7 +531,7 @@ function fetchNotDeleteSurveyDataCount(surveyDetailId) {
 function fetchSurveyDataHistoryList(surveyDetailId, skip) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' ORDER BY created_date ASC LIMIT 50 OFFSET ?', [surveyDetailId, skip], async function (ignored, resultSet) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' ORDER BY id DESC LIMIT 50 OFFSET ?', [surveyDetailId, skip], async function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
@@ -543,7 +547,7 @@ function fetchSurveyDataHistoryList(surveyDetailId, skip) {
 function fetchAllSurveyDataHistoryList(surveyDetailId) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' ORDER BY id DESC', [surveyDetailId], async function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);

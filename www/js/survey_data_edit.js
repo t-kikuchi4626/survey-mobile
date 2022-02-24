@@ -66,9 +66,9 @@ async function initializeForm(surveyDetailId) {
     surveyDetailItemParent.append(texts);
     //履歴2件ずつページングで表示
     var surveyHistoryItem = $('#history-list-contents');
-    var surveyDetailList = await fetchSurveyDataBySurveyDetailId(surveyDetailId);
+    var surveyDataList = await fetchSurveyDataBySurveyDetailId(surveyDetailId);
     var texts = "";
-    surveyDetailList.rows.length == 0 ?
+    surveyDataList.rows.length == 0 ?
         (v => {
             texts += '<div class="row">';
             texts += '<p>データが存在しません。</p>'
@@ -78,14 +78,14 @@ async function initializeForm(surveyDetailId) {
             texts += '</div>';
         })() :
         (v => {
-            for (var i = 0; i < surveyDetailList.rows.length; i++) {
-                texts = setSurveyHistoryData(texts, surveyDetailList.rows.item(i), i);
+            for (var i = 0; i < surveyDataList.rows.length; i++) {
+                texts = setSurveyHistoryData(texts, surveyDataList.rows.item(i), i);
             }
         })();
     surveyHistoryItem.append(texts);
     //初期表示
-    if (surveyDetailList.rows.item(0) != undefined) {
-        setSurveyData(surveyDetailList.rows.item(0));
+    if (surveyDataList.rows.item(0) != undefined) {
+        setSurveyData(surveyDataList.rows.item(0));
     }
 }
 
@@ -516,20 +516,20 @@ function setTreeTypeInModal(surveyData) {
 async function newHistoryData(newId) {
     var texts = "";
     var tbTexts = "";
-    var surveyDetailList = await fetchSurveyNewDataBySurveyId(newId);
+    var surveyDataList = await fetchSurveyNewDataBySurveyId(newId, surveyDetailId);
     var surveyHistoryItem = $('#history-list-contents');
     var historyTrItem = $('#history-list-data');
     //一番古いIDが同じIDならばアラートを出力する
-    if (surveyDetailList.rows.length == 1) {
+    if (surveyDataList.rows.length == 1) {
         alert('今表示している履歴データより最新の履歴データはありませんでした！');
     } else {
         tbTexts = '<table id="history-list-contents" style="width:100%;table-layout:fixed;">';
-        for (var i = 0; i < surveyDetailList.rows.length; i++) {
-            var rowNum = surveyDetailList.rows.item(i).num;
+        for (var i = 0; i < surveyDataList.rows.length; i++) {
+            var rowNum = surveyDataList.rows.item(i).num;
         }
-        var surveyDetailNewList = await fetchSurveyNewDataBySurveyIdByrowNum(newId, rowNum);
-        for (var i = 0; i < surveyDetailNewList.rows.length; i++) {
-            texts = setSurveyHistoryData(texts, surveyDetailNewList.rows.item(i), i);
+        var surveyDataNewList = await fetchSurveyNewDataBySurveyIdByrowNum(newId, rowNum, surveyDetailId);
+        for (var i = 0; i < surveyDataNewList.rows.length; i++) {
+            texts = setSurveyHistoryData(texts, surveyDataNewList.rows.item(i), i);
         }
         tbTexts = tbTexts + texts;
         tbTexts = tbTexts + '</table>'
@@ -544,16 +544,16 @@ async function newHistoryData(newId) {
 async function oldHistoryData(oldId) {
     var texts = "";
     var tbTexts = "";
-    var surveyDetailList = await fetchSurveyOldDataBySurveyId(oldId);
+    var surveyDataList = await fetchSurveyOldDataBySurveyId(oldId, surveyDetailId);
     var surveyHistoryItem = $('#history-list-contents');
     var historyTrItem = $('#history-list-data');
     //一番古いIDが同じIDならばアラートを出力する
-    if (surveyDetailList.rows.length == 1) {
+    if (surveyDataList.rows.length == 1) {
         alert('今表示している履歴データより過去の履歴データはありませんでした！');
     } else {
         tbTexts = '<table id="history-list-contents" style="width:100%;table-layout:fixed;">';
-        for (var i = 0; i < surveyDetailList.rows.length; i++) {
-            texts = setSurveyHistoryData(texts, surveyDetailList.rows.item(i), i);
+        for (var i = 0; i < surveyDataList.rows.length; i++) {
+            texts = setSurveyHistoryData(texts, surveyDataList.rows.item(i), i);
         }
         tbTexts = tbTexts + texts;
         tbTexts = tbTexts + '</table>'
@@ -673,7 +673,7 @@ function validate() {
     }
     //No(枝番)の数字チェック
     if (result) {
-        if (!$('#branch-number').val().match(/^\d+$/)) {
+        if ($('#branch-number').val() != '' && !$('#branch-number').val().match(/^\d+$/)) {
             alert("申し訳ございません。\r\n枝番は半角数字のみ有効です。半角数字のみ入力してください。");
             result = false;
         }
