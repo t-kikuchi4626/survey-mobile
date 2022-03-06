@@ -22,6 +22,29 @@ function fetchSurveyDataAll(surveyDetailIdList, offset) {
 }
 
 /**
+ * 伐採木データを1000件ずつ取得
+ * @return 伐採木
+ * @return offset
+ */
+ function fetchSurveyDataAllForWebEditMode(surveyDetailIdList, offset) {
+    // IDの数だけプレースホルダを増やす
+    var placeholderTmp = '';
+    for (var i = 0; i < surveyDetailIdList.length; i++) {
+        placeholderTmp += '?, ';
+    }
+    var placeholder = placeholderTmp.slice(0, -2);
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql(`SELECT * FROM survey_data WHERE survey_detail_id IN (${placeholder})  ORDER BY id ASC limit 1000 offset ${offset}`, surveyDetailIdList, function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    });
+}
+
+/**
  * 伐採木データ取得
  * @return 伐採木
  */
@@ -302,25 +325,6 @@ function updateSurveyDataOfSynchronize(transaction, surveyData) {
         resolve();
     });
 }
-
-//どこからも呼び出しがないため、下記コメントアウト
-//
-// // 伐採木データ同期処理済みフラグを更新（同期処理）
-// function updateSurveyDataIsSynchronize(surveyDataIdList) {
-//     return new Promise(function (resolve, reject) {
-//         database.transaction(function (transaction) {
-//             var sql = 'UPDATE survey_data SET ' +
-//                 'modified_by = ?, ' +
-//                 'modified_date = DATETIME(\'now\', \'localtime\') ' +
-//                 'WHERE id in (' + surveyDataIdList + ')';
-//             transaction.executeSql(sql, [fetchUserId()], async function (ignored, resultSet) {
-//                 resolve(resultSet);
-//             }, function (error, transaction) {
-//                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
-//             });
-//         });
-//     });
-// }
 
 // 伐採木削除（同期処理）
 function deleteSurveyDataByDetailId(transaction, surveyDetailIdList) {

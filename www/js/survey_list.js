@@ -84,6 +84,12 @@ async function showSurveyList() {
  * 同期処理実行ボタン押下時
  */
 async function synchronize() {
+  const result = navigator.onLine;
+  if (!result) {
+    alert('申し訳ございません。現在オフラインです。オンラインになっていることを確かめてから、再度お試しください。');
+    return;
+  }
+
   if (surveyCompanyId == null) {
     var error = '同期処理実行権限エラー';
     $('#error').text(error);
@@ -105,6 +111,13 @@ async function synchronize() {
  * Web編集モード切り替えボタン押下時
  */
 async function switchWebEditMode() {
+
+  const result = navigator.onLine;
+  if (!result) {
+    alert('申し訳ございません。現在オフラインです。オンラインになっていることを確かめてから、再度お試しください。');
+    return;
+  }
+
   if (surveyCompanyId == null) {
     $('#modalLocation').modal('close');
     var error = '同期処理実行権限エラー';
@@ -113,6 +126,7 @@ async function switchWebEditMode() {
     $('#synchronizeError').modal('open');
     return;
   }
+
   const selectedWebEditMode = $('input[name="web-edit-mode"]:checked').val();
   const webEditMode = await fetchWebEditModeByCompanyId(surveyCompanyId);
   if (webEditMode.rows.length > 0 && webEditMode.rows.item(0).web_edit_mode === selectedWebEditMode) {
@@ -154,48 +168,25 @@ async function createWebEditMode(webEditMode) {
  * Web編集モードON→OFFへ変更した場合、クラウド側のデータをmobileへ反映する
  */
 async function generateWebEditModeOffData() {
+
   $('#modalLocation').modal('open');
+  const uuid = device.uuid;
 
   let surveyArray = [];
   let surveyDetailArray = [];
-  let surveyAreaArray = [];
-  let surveyAreaIdList = [];
-  let surveyDataIdList = [];
+  let surveyIdList = [];
+  let surveyDetailIdList = [];
 
-  var surveyList = await fetchSurveyIdAndModifiedDate(surveyCompanyId);
+  var surveyList = await fetchSurveyIdCompanyId(surveyCompanyId);
   if (surveyList.rows.length > 0) {
-
-    let surveyIdList = [];
-    let surveyDetailIdList = [];
-
     [surveyArray, surveyIdList] = await fetchForSynchronizeSurvey(surveyList);
     [surveyDetailArray, surveyDetailIdList] = await fetchForSynchronizeSurveyDetail(surveyIdList);
-    surveyAreaArray = await fetchForSynchronizeSurveyArea(surveyDetailIdList);
-    surveyAreaIdList = await surveyAreaArray.map(function (element) { return element['identify_code']; });
-
-    // 伐採木IDデータを4000件ずつサーバへリクエストする
-    if (surveyDetailIdList.length > 0) {
-      let offset = 0;
-      while (true) {
-        let surveyDataList = await fetchSurveyDataAll(surveyDetailIdList, offset);
-        for (var i = 0; i < surveyDataList.rows.length; i++) {
-          surveyDataIdList.push(surveyDataList.rows.item(i).identify_code);
-        }
-        if (surveyDataList.rows.length == 0 && offset == 0) {
-          await webEditModeOffProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaIdList, surveyDataIdList);
-          break;
-        } else if (surveyDataList.rows.length == 0 && offset != 0) {
-          break;
-        } else {
-          await webEditModeOffProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaIdList, surveyDataIdList);
-          offset = offset + 4000;
-        }
-      }
-    }
-  } else {
-    await webEditModeOffProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaIdList, surveyDataIdList);
+    await webEditModeOffProcess(surveyCompanyId, surveyArray, surveyDetailArray, uuid);
   }
+
 }
+
+let timerId;
 
 /**
  * Web編集モードOff実行
@@ -205,17 +196,15 @@ async function generateWebEditModeOffData() {
  * @param surveyAreaIdList 小径木IDデータ
  * @param surveyDataIdList 伐採木IDデータ
  */
-async function webEditModeOffProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaIdList, surveyDataIdList) {
+async function webEditModeOffProcess(surveyCompanyId, surveyArray, surveyDetailArray, uuid) {
   var item = localStorage.getItem(KEY);
   var obj = JSON.parse(item);
   var JSONdata = {
     surveyCompanyId: surveyCompanyId,
+    uuid: uuid,
     survey: surveyArray,
-    surveyDetail: surveyDetailArray,
-    surveyAreaIdList: surveyAreaIdList,
-    surveyDataIdList: surveyDataIdList
+    surveyDetail: surveyDetailArray
   };
-
   $.ajax({
     type: 'post',
     url: path + 'synchronize/change-web-edit-mode-off',
@@ -223,37 +212,75 @@ async function webEditModeOffProcess(surveyCompanyId, surveyArray, surveyDetailA
     contentType: 'application/json',
     dataType: 'JSON',
     scriptCharset: 'utf-8',
-    async: false,
+    timeout: 0,
     headers: {
       'Authorization': obj.token
     }
   })
-    .done(async (data) => {
+  .done(async (data) => {
 
-      var jsonData = JSON.stringify(data);
-      var responseData = JSON.parse(jsonData);
+    var jsonData = JSON.stringify(data);
+    var responseData = JSON.parse(jsonData);
+    let webEditModeResult = await insertWebEditModeResult();
+    timerId = setInterval(function() {updateWebToMobile(responseData.id, webEditModeResult.insertId)}, 5000);
 
-      await synchronizeWebToMobile(responseData.synchronizeToMobile);
+  })
+  .fail(async (jqXHR, textStatus, errorThrown) => {
+    var jsonData = JSON.stringify(jqXHR);
+    var responseData = JSON.parse(jsonData);
+    var item = localStorage.getItem(KEY);
+    var obj = JSON.parse(item);
+    if (obj.user != null) {
+      surveyCompanyId = obj.user.survey_company_id;
+    }
+    errorProcess(responseData, surveyCompanyId);
+  });
 
-      $('#modalLocation').modal({ close: true });
-      $('#web-edit-mode-off').modal('open');
+}
 
-      // web編集モードが「ON」の場合、mobileの画面をロックする
+let updateWebToMobile = function(id, webEditModeResultId) {
+  var item = localStorage.getItem(KEY);
+  var obj = JSON.parse(item);
+  $.ajax({
+    type: 'post',
+    url: path + 'synchronize/fetch-web-survey-data',
+    data: JSON.stringify({id: id}),
+    contentType: 'application/json',
+    dataType: 'JSON',
+    scriptCharset: 'utf-8',
+    timeout: 0,
+    headers: {
+      'Authorization': obj.token
+    }
+  })
+  .done(async (data) => {
+
+    var jsonData = JSON.stringify(data);
+    var responseData = JSON.parse(jsonData);
+
+    if (responseData.status === 'done') {
+      let fetchWebEditModeResult = await fetchWebEditModeResultById(webEditModeResultId);
+      if (fetchWebEditModeResult.rows.item(0).status === 'done') {
+        clearInterval(timerId);
+        return;
+      }
+      await updateWebEditModeResult(webEditModeResultId);
+      clearInterval(timerId);
+      // web編集モードが「OFF」の場合、mobileのロックを解除する
       await createWebEditMode('off');
       await controlEditScreen();
+      await synchronizeWebToMobile(responseData.synchronizeToMobile);
+      $('#modalLocation').modal('close');
+    }
 
-    })
-    .fail(async (jqXHR, textStatus, errorThrown) => {
-      var jsonData = JSON.stringify(jqXHR);
-      var responseData = JSON.parse(jsonData);
-      var item = localStorage.getItem(KEY);
-      var obj = JSON.parse(item);
-      if (obj.user != null) {
-        surveyCompanyId = obj.user.survey_company_id;
-      }
-      errorProcess(responseData, surveyCompanyId);
-    })
-}
+  })
+  .fail(async (jqXHR, textStatus, errorThrown) => {
+    var jsonData = JSON.stringify(jqXHR);
+    var responseData = JSON.parse(jsonData);
+    var item = localStorage.getItem(KEY);
+    var obj = JSON.parse(item);
+  })
+};
 
 /**
 * 同期処理データの作成
@@ -273,7 +300,7 @@ async function generateSynchronizeData(isWebEditMode) {
   var surveyAreaArray = [];
   let surveyDataArray = [];
 
-  var surveyList = await fetchSurveyIdAndModifiedDate(surveyCompanyId);
+  var surveyList = await fetchSurveyIdCompanyId(surveyCompanyId);
   if (surveyList.rows.length > 0) {
 
     let surveyIdList = [];
@@ -323,6 +350,7 @@ async function synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArra
   var obj = JSON.parse(item);
   var JSONdata = {
     userId: fetchUserId(),
+    uuid: device.uuid,
     surveyCompanyId: surveyCompanyId,
     survey: surveyArray,
     surveyDetail: surveyDetailArray,
@@ -337,8 +365,7 @@ async function synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArra
     contentType: 'application/json',
     dataType: 'JSON',
     scriptCharset: 'utf-8',
-    async: false,
-    timeout: 600000,
+    timeout: 0,
     headers: {
       'Authorization': obj.token
     }
@@ -380,6 +407,13 @@ async function synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArra
  * 同期結果を確認するボタン押下時
  */
 async function confirmSynchronize() {
+
+  const result = navigator.onLine;
+  if (!result) {
+    alert('申し訳ございません。現在オフラインです。オンラインになっていることを確かめてから、再度お試しください。');
+    return;
+  }
+
   $('#synchronize-request').modal({ close: true });
   if (surveyCompanyId == null) {
     $('#modalLocation').modal('close');
@@ -409,14 +443,7 @@ async function requestSynchronizeResult(surveyCompanyId) {
     $('#synchronizeError').modal('open');
     return;
   }
-  if (latestSynchronizeResult.rows.item(0).status === STATUS.error) {
-    var error = '前回の同期結果がエラー';
-    $('#modalLocation').modal('close');
-    $('#error').text(error);
-    $('#errorMessage').text('前回の同期結果がエラーです。申し訳ございませんが、再度「同期処理を開始する」ボタンを押下後に、本ボタンで確認してください。');
-    $('#synchronizeError').modal('open');
-    return;
-  }
+
   let latestSynchronizeResultId = latestSynchronizeResult.rows.item(0).id;
   if (latestSynchronizeResult.rows.length > 0) {
     synchronizeResultDetailList = await fetchAllSynchronizeResultDetail(latestSynchronizeResult.rows.item(0).id);
@@ -442,7 +469,7 @@ async function requestSynchronizeResult(surveyCompanyId) {
     contentType: 'application/json',
     dataType: 'JSON',
     scriptCharset: 'utf-8',
-    async: false,
+    timeout: 0,
     headers: {
       'Authorization': obj.token
     }
@@ -468,8 +495,8 @@ async function requestSynchronizeResult(surveyCompanyId) {
         $('#synchronizeError').modal('open');
       } else {
         for (var i = 0; i < responseData.synchronizeWebToMobile.length; i++) {
-          let ResponseDataTmp = responseData.synchronizeWebToMobile[i];
-          await synchronizeWebToMobile(JSON.parse(ResponseDataTmp.synchronizeToMobile));
+          let responseDataTmp = responseData.synchronizeWebToMobile[i];
+          await synchronizeWebToMobile(responseDataTmp.synchronizeToMobile);
         }
         $('#synchronize-request').modal('open');
       }
@@ -614,10 +641,6 @@ async function errorProcess(responseData, surveyCompanyId) {
   if (responseData.status == 401) {
     message = '申し訳ございません。セッションタイムアウトエラーが発生しました。再度ログインしてから処理を実行してください。';
     error = 'セッションタイムアウトエラー';
-  } else if (responseData.status == 0) {
-    //API接続なし //NW接続なし
-    message = 'ネットワークエラーが発生しました。ネットワークに接続されていることを確認し、もう一度「データを同期する」ボタンをクリックしてください。確認後も同一の現象が発生する場合は、管理者へお問合せください。';
-    error = 'サーバ接続エラー';
   } else {
     message = '同期処理が失敗しました。もう一度処理を実行してください。実行後も同一の現象が発生する場合は、管理者へお問合せください。';
     error = responseData.responseJSON.message;

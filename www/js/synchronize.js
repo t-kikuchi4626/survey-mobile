@@ -2,7 +2,8 @@
  * 同期処理結果をローカルDBへ反映する
  * @param {*} data 
  */
-async function synchronizeWebToMobile(data) {
+ async function synchronizeWebToMobile(synchronizeToMobile) {
+    let data = JSON.parse(synchronizeToMobile);
     var surveyList = await convertSurveyList(data.insertSurveyList);
     var updateSurveyList = await convertSurveyList(data.updateSurveyList);
     var surveyDetailList = await convertSurveyDetailList(data.insertSurveyDetailList);
@@ -85,30 +86,35 @@ async function synchronizeWebToMobile(data) {
                 await deleteSurveyDataByDetailId(transaction, data.deleteSurveyDetailList);
                 await deleteSurveyAreaByDetailId(transaction, data.deleteSurveyDetailList);
             }
-            // 伐採木データ更新
-            if (updateSurveyDataList != null) {
-                for (var i = 0; i < updateSurveyDataList.length; i++) {
-                    await updateSurveyDataOfSynchronize(transaction, updateSurveyDataList[i]);
-                }
-            }
+            // 伐採木データ削除処理（調査業務が未完了の場合のみ）
+            await deleteSurveyDataIsDetele(transaction, surveyDetailIdIsSurveyIsStatusTrue);
+            // 小径木データ削除処理（調査業務が未完了の場合のみ）
+            await deleteSurveyAreaIsDetele(transaction, surveyDetailIdIsSurveyIsStatusTrue);
+
             // 伐採木データを削除
             if (deleteSurveyDataList != null) {
                 await deleteSurveyDataByIdentifyCodes(transaction, deleteSurveyDataList);
             }
+
+            // 小径木データを削除
+            if (deleteSurveyAreaList != null) {
+                await deleteSurveyAreaByIdentifyCodes(transaction, deleteSurveyAreaList);
+            }
+
             // 小径木データ更新
             if (updateSurveyAreaList != null) {
                 for (var i = 0; i < updateSurveyAreaList.length; i++) {
                     await updateSurveyAreaOfSynchronize(transaction, updateSurveyAreaList[i]);
                 }
             }
-            // 小径木データを削除
-            if (deleteSurveyAreaList != null) {
-                await deleteSurveyAreaByIdentifyCodes(transaction, deleteSurveyAreaList);
+
+            // 伐採木データ更新
+            if (updateSurveyDataList != null) {
+                for (var i = 0; i < updateSurveyDataList.length; i++) {
+                    await updateSurveyDataOfSynchronize(transaction, updateSurveyDataList[i]);
+                }
             }
-            // 伐採木データ削除処理（調査業務が未完了の場合のみ）
-            await deleteSurveyDataIsDetele(transaction, surveyDetailIdIsSurveyIsStatusTrue);
-            // 小径木データ削除処理（調査業務が未完了の場合のみ）
-            await deleteSurveyAreaIsDetele(transaction, surveyDetailIdIsSurveyIsStatusTrue);
+
             resolve();
         }, function (error, transaction) {
             $('#error').text('DB接続中にエラーが発生しました。管理者へお問い合わせください。');
@@ -231,7 +237,6 @@ function convertSurveyDataList(list) {
  * @param {*} list
  */
 function convertDeleteList(list) {
-    console.log(list.length)
     var deleteList = [];
     list.forEach(function (target) {
         if (target['isDelete'] === true) {

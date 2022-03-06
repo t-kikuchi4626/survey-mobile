@@ -32,10 +32,10 @@ function fetchSurveyById(id) {
 }
 
 /**
- * 調査業務取得（IDと更新日付）
+ * 企業IDをもとに調査業務取得
  * @return 調査業務
  */
-function fetchSurveyIdAndModifiedDate(surveyCompanyId) {
+function fetchSurveyIdCompanyId(surveyCompanyId) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT id, modified_date FROM survey WHERE survey_company_id = ?', [surveyCompanyId], function (ignored, resultSet) {
