@@ -619,7 +619,17 @@ async function createEditSurveyData() {
         $("#error").get(0).play();
         return;
     }
+    //画面をロックする
+    $('.input-area').prop("disabled", true);
+    $('.enter').addClass('edit-link');
+    $('.create-button').addClass('edit-link');
+
     await createSurveyData();
+
+    //画面ロックを解除する
+    $('.input-area').prop("disabled", false);
+    $('.enter').removeClass('edit-link');
+    $('.create-button').removeClass('edit-link');
 }
 
 /**
@@ -630,7 +640,17 @@ async function createEditSurveyDataInModal() {
         $("#error").get(0).play();
         return;
     }
+    //画面をロックする
+    $('.input-area').prop("disabled", true);
+    $('.enter').addClass('edit-link');
+    $('.create-button').addClass('edit-link');
+
     await createSurveyDataInModal();
+
+    //画面ロックを解除する
+    $('.input-area').prop("disabled", false);
+    $('.enter').removeClass('edit-link');
+    $('.create-button').removeClass('edit-link');
 };
 
 
