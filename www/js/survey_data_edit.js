@@ -356,8 +356,8 @@ function setSurveyData(surveyData) {
     $('#name-modal').val(surveyData.name);
     $('#name').text(surveyData.name);
     // 備考
-    $('#note-modal').val(surveyData.note);
-    $('#note').text(surveyData.note);
+    $('#note-modal').val("");
+    $('#note').text("");
     // No
     $('#color').val(surveyData.color);
     $('#word').val(surveyData.word);
