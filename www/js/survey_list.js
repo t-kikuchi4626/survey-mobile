@@ -1,4 +1,5 @@
 var instance = null;
+let timerId;
 
 document.addEventListener("deviceready", async function () {
   var item = localStorage.getItem(KEY);
@@ -7,7 +8,6 @@ document.addEventListener("deviceready", async function () {
     surveyCompanyId = obj.user.survey_company_id;
   }
   showSurveyList();
-  // applySynchronizeResult();
   $('.modal').modal();
   instance = M.Modal.getInstance('#synchronizeError');
 
@@ -186,8 +186,6 @@ async function generateWebEditModeOffData() {
 
 }
 
-let timerId;
-
 /**
  * Web編集モードOff実行
  * @param surveyCompanyId 調査会社ID
@@ -270,6 +268,7 @@ let updateWebToMobile = function(id, webEditModeResultId) {
       await createWebEditMode('off');
       await controlEditScreen();
       await synchronizeWebToMobile(responseData.synchronizeToMobile);
+      location.reload();
       $('#modalLocation').modal('close');
     }
 
@@ -502,7 +501,7 @@ async function requestSynchronizeResult(surveyCompanyId) {
       }
       $('#modalLocation').modal('close');
       // 同期処理結果を画面表示
-      await showSurveyList();
+      location.reload();
     })
     .fail(async (jqXHR, textStatus, errorThrown) => {
       var jsonData = JSON.stringify(jqXHR);

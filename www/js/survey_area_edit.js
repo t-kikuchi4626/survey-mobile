@@ -76,7 +76,7 @@ function setInitTargetSurveyArea() {
     // 補償面積（100）
     $('#target-area-value-ten').val("");
     // 集積あり/4cm未満
-    $('#need-collect-is-not-four-measured').prop("checked", true);
+    $('#need-collect-is-four-measured').prop("checked", true);
     // 胸高直径
     $('#tree-measured-value').val("3");
 }

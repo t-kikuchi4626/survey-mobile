@@ -747,3 +747,8 @@ select.browser-default {
   /* 枠線 */
   border: solid 1px #e1e8ef; 
 }
+
+[data-placeholder]:empty:before {
+  color: #AAA;
+  content: attr(data-placeholder);
+}

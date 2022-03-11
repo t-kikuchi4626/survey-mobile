@@ -356,8 +356,8 @@ function setSurveyData(surveyData) {
     $('#name-modal').val(surveyData.name);
     $('#name').text(surveyData.name);
     // 備考
-    $('#note-modal').val(surveyData.note);
-    $('#note').text(surveyData.note);
+    $('#note-modal').val("");
+    $('#note').text("");
     // No
     $('#color').val(surveyData.color);
     $('#word').val(surveyData.word);
@@ -619,7 +619,17 @@ async function createEditSurveyData() {
         $("#error").get(0).play();
         return;
     }
+    //画面をロックする
+    $('.input-area').prop("disabled", true);
+    $('.enter').addClass('edit-link');
+    $('.create-button').addClass('edit-link');
+
     await createSurveyData();
+
+    //画面ロックを解除する
+    $('.input-area').prop("disabled", false);
+    $('.enter').removeClass('edit-link');
+    $('.create-button').removeClass('edit-link');
 }
 
 /**
@@ -630,7 +640,17 @@ async function createEditSurveyDataInModal() {
         $("#error").get(0).play();
         return;
     }
+    //画面をロックする
+    $('.input-area').prop("disabled", true);
+    $('.enter').addClass('edit-link');
+    $('.create-button').addClass('edit-link');
+
     await createSurveyDataInModal();
+
+    //画面ロックを解除する
+    $('.input-area').prop("disabled", false);
+    $('.enter').removeClass('edit-link');
+    $('.create-button').removeClass('edit-link');
 };
 
 
@@ -661,20 +681,20 @@ function validate() {
     var result = true;
     // Noチェック
     if ($('#survey-data-no').text() === '' || $('#number').val() === '') {
-        alert("申し訳ございません。\r\n連番の入力は必須です。連番を入力してください。");
+        alert("申し訳ございません。\r\nナンバリングの連番の入力は必須です。ナンバリングの連番を入力してください。");
         result = false;
     }
     // No（連番）の数字チェック
     if (result) {
         if (!$('#number').val().match(/^\d+$/)) {
-            alert("申し訳ございません。\r\n連番は半角数字のみ有効です。半角数字のみ入力してください。");
+            alert("申し訳ございません。\r\nナンバリングの連番は半角数字のみ有効です。半角数字のみ入力してください。");
             result = false;
         }
     }
     //No(枝番)の数字チェック
     if (result) {
         if ($('#branch-number').val() != '' && !$('#branch-number').val().match(/^\d+$/)) {
-            alert("申し訳ございません。\r\n枝番は半角数字のみ有効です。半角数字のみ入力してください。");
+            alert("申し訳ございません。\r\nナンバリングの枝番は半角数字のみ有効です。半角数字のみ入力してください。");
             result = false;
         }
     }
@@ -715,13 +735,13 @@ function validateInModal() {
     var result = true;
     // Noチェック
     if ($('#modal-survey-data-no').text() === '' || $('#modal-number').val() === '') {
-        alert("申し訳ございません。\r\n連番の入力は必須です。連番を入力してください。");
+        alert("申し訳ございません。\r\nナンバリングの連番の入力は必須です。ナンバリングの連番を入力してください。");
         result = false;
     }
     // Noの数字チェック
     if (result) {
         if (!$('#modal-number').val().match(/^\d+$/)) {
-            alert("申し訳ございません。\r\n連番は半角数字のみ有効です。半角数字のみ入力してください。");
+            alert("申し訳ございません。\r\nナンバリングの連番は半角数字のみ有効です。半角数字のみ入力してください。");
             result = false;
         }
     }
@@ -843,7 +863,7 @@ async function createSurveyDataInModal() {
         //モーダル内を最後にセットする
         var surveyDetailList = await fetchSurveyDataBySurveyDetailId(surveyDetailId);
         setSurveyData(surveyDetailList.rows.item(0));
-        setSurveyDataInModal(surveyDetailList.rows.item(0));
+        // setSurveyDataInModal(surveyDetailList.rows.item(0));
         //画面の履歴を初期化
         await initialHistoryArea();
     }
