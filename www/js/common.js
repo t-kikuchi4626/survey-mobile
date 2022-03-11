@@ -6,8 +6,8 @@ var appPass = '#t2IOj4rVl2lQ%_$7)7pXeoGE/Jg#0&0-/$X-Suojg)!21RCLel#4Q%322BtS148'
 // var path = 'https://develop-survey.japaneast.cloudapp.azure.com:8443/';
 // var path = 'http://172.21.144.1:8443/';
 // var path = 'http://192.168.3.140:8443/';
-//var path = 'https://nw-tohoku-epco-tree-survey-app.com:8443/';
-var path = 'http://192.168.3.140:8443/';
+var path = 'https://nw-tohoku-epco-tree-survey-app.com:8443/';
+// var path = 'http://192.168.3.140:8443/';
 
 var surveyCompanyId = null;
 
@@ -34,6 +34,13 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     instances = M.Sidenav.init(elems, options);
 });
+
+document.addEventListener('deviceready', onDeviceReady, false);
+function onDeviceReady() {
+    cordova.getAppVersion.getVersionNumber(function (versionNum) {
+    $('#version').text(`Ver.${versionNum}`);
+    });
+}
 
 document.addEventListener("deviceready", function () {
     database = window.sqlitePlugin.openDatabase({ name: 'logging.db', location: 'default' });

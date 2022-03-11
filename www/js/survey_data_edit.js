@@ -1031,6 +1031,8 @@ function changeKeyPad() {
  * 直径入力欄をテンキーかテーブル形式か変換する(モーダル内)
  */
 function changeKeyPadInModal() {
+    $('#modal-survey-data-mesured-value').text('');
+    $('#modal-survey-data-mesured-value').val('');
     if ($('#modal-key-pad-type').val() === "table-keypad") {
         $('#modal-table-keypad').hide();
         $('#modal-numeric-keypad').show();
