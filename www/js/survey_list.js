@@ -182,6 +182,9 @@ async function generateWebEditModeOffData() {
     [surveyArray, surveyIdList] = await fetchForSynchronizeSurvey(surveyList);
     [surveyDetailArray, surveyDetailIdList] = await fetchForSynchronizeSurveyDetail(surveyIdList);
     await webEditModeOffProcess(surveyCompanyId, surveyArray, surveyDetailArray, uuid);
+  } else {
+    await webEditModeOffProcess(surveyCompanyId, [], [], uuid);
+ 
   }
 
 }
@@ -327,6 +330,8 @@ async function generateSynchronizeData(isWebEditMode) {
           offset = offset + 4000;
         }
       }
+    } else {
+      await synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaArray, surveyDataArray, (!isWebEditMode) ? synchronizeResult.insertId : 0, isWebEditMode);
     }
   } else {
     await synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaArray, surveyDataArray, (!isWebEditMode) ? synchronizeResult.insertId : 0, isWebEditMode);

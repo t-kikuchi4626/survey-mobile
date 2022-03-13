@@ -255,13 +255,11 @@ function deleteSurveyDetailBySurveyId(transaction, surveyIdList) {
             placeholderTmp += '?, ';
         })
         var placeholder = placeholderTmp.slice(0, -2);
-        var result = new Promise(function (resolve, reject) {
-            transaction.executeSql(generateSurveyDetailDeleteBySurveySql(placeholder), surveyIdList, function (ignored, resultSet) {
-                resolve(resultSet);
-            }, function (error, transaction) {
-                errorHandler(transaction);
-                reject(false);
-            });
+        transaction.executeSql(generateSurveyDetailDeleteBySurveySql(placeholder), surveyIdList, function (ignored, resultSet) {
+            resolve();
+        }, function (error, transaction) {
+            errorHandler(transaction);
+            reject(false);
         });
         resolve();
     });

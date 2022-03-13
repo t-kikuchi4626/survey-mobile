@@ -86,10 +86,6 @@
                 await deleteSurveyDataByDetailId(transaction, data.deleteSurveyDetailList);
                 await deleteSurveyAreaByDetailId(transaction, data.deleteSurveyDetailList);
             }
-            // 伐採木データ削除処理（調査業務が未完了の場合のみ）
-            await deleteSurveyDataIsDetele(transaction, surveyDetailIdIsSurveyIsStatusTrue);
-            // 小径木データ削除処理（調査業務が未完了の場合のみ）
-            await deleteSurveyAreaIsDetele(transaction, surveyDetailIdIsSurveyIsStatusTrue);
 
             // 伐採木データを削除
             if (deleteSurveyDataList != null) {
@@ -317,7 +313,7 @@ async function fetchsurveyDeatilIdIfIsNotShow(isShowFalseList) {
 async function fetchSurveyDetailIdBySurveyStatusIsTrue(updateSurveyList) {
     var surveyDetailIdIsSurveyIsStatusTrue = [];
     var statusIsTrueList = [];
-    // 調査業務更新データのうち、状態が「完了」のデータを取得
+    // 調査業務更新データのうち、状態が「非表示」のデータを取得
     if (updateSurveyList.length > 0) {
         for (var i = 0; i < updateSurveyList.length; i++) {
             if (updateSurveyList[i].status == true) {

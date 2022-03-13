@@ -171,7 +171,6 @@ function insertSurveyData(param) {
             'need_rope, ' +
             'need_wire, ' +
             'need_cut_middle, ' +
-            'not_need_cut_middle, ' +
             'is_danger_tree, ' +
             'need_cut_branch, ' +
             'note, ' +
@@ -181,7 +180,7 @@ function insertSurveyData(param) {
             'created_by, ' +
             'modified_date,' +
             'created_date)' +
-            'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'), DATETIME(\'now\', \'localtime\'))';
+            'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'), DATETIME(\'now\', \'localtime\'))';
         database.transaction(function (transaction) {
             transaction.executeSql(sql, param, async function (ignored, resultSet) {
                 resolve(resultSet);
@@ -317,7 +316,7 @@ function updateSurveyDataOfSynchronize(transaction, surveyData) {
     return new Promise(function (resolve, reject) {
         var sql = generateSurveyDataByIdentifyCodeSQL();
         transaction.executeSql(sql, surveyData, function (transaction) {
-            resolve();
+            resolve(surveyData);
         }, function (error, transaction) {
             errorHandler(transaction);
             reject(false);
@@ -609,22 +608,6 @@ function fetchNeedCutMiddle(surveyDetailId) {
 }
 
 /**
- * 所在地IDをもとに中断切りロープなしのデータを取得
- * @param 所在地ID 
- */
-function fetchNotNeedCutMiddle(surveyDetailId) {
-    return new Promise(function (resolve) {
-        database.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' AND not_need_cut_middle = \'true\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
-                resolve(resultSet);
-            }, function (error) {
-                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
-            });
-        });
-    });
-}
-
-/**
  * 所在地IDをもとに危険木のデータを取得
  * @param 所在地ID 
  */
@@ -694,7 +677,6 @@ function updateSurveyDataByIdInModal(param) {
             'need_rope = ?, ' +
             'need_wire = ?, ' +
             'need_cut_middle = ?, ' +
-            'not_need_cut_middle = ?, ' +
             'is_danger_tree = ?, ' +
             'need_cut_branch = ?, ' +
             'note = ?, ' +
@@ -725,7 +707,6 @@ function updateSurveyDataById(param) {
         'need_rope = ?, ' +
         'need_wire = ?, ' +
         'need_cut_middle = ?, ' +
-        'not_need_cut_middle = ?, ' +
         'is_danger_tree = ?, ' +
         'need_cut_branch = ?, ' +
         'need_cut_divide = ?, ' +
@@ -757,10 +738,7 @@ function generateSurveyDataByIdentifyCodeSQL() {
         'need_rope = ?, ' +
         'need_wire = ?, ' +
         'need_cut_middle = ?, ' +
-        'not_need_cut_middle = ?, ' +
         'need_cut_branch = ?, ' +
-        // 'need_cut_divide = ?, ' +
-        // 'need_collect = ?, ' +
         'is_danger_tree = ?, ' +
         'note = ?, ' +
         'name = ?, ' +

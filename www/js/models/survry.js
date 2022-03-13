@@ -90,6 +90,7 @@ function updateSurvey(transaction, survey) {
  */
 function deleteSurvey(transaction, surveyIdList) {
     return new Promise(function (resolve, reject) {
+
         // 削除IDの数だけプレースホルダを増やす
         var placeholderTmp = '';
         // 削除IDの数だけプレースホルダを増やす
@@ -99,7 +100,7 @@ function deleteSurvey(transaction, surveyIdList) {
         })
         var placeholder = placeholderTmp.slice(0, -2);
         transaction.executeSql(generateSurveyDeleteSql(placeholder), surveyIdList, function (ignored, resultSet) {
-            resolve(resultSet);
+            resolve();
         }, function (error, transaction) {
             errorHandler(transaction);
             reject(false);

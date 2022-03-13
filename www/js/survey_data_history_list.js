@@ -81,9 +81,6 @@ async function setSurveyDataNote() {
     var needCutMiddleList = await fetchNeedCutMiddle(surveyDetailId);
     $('#need-cut-middle-count').text(needCutMiddleList.rows.length);
 
-    // var notNeedCutMiddleList = await fetchNotNeedCutMiddle(surveyDetailId);
-    // $('#not-need-cut-middle-count').text(notNeedCutMiddleList.rows.length);
-
     var isDangerTreeList = await fetchIsDangerTree(surveyDetailId);
     $('#is-danger-tree-count').text(isDangerTreeList.rows.length);
 
@@ -147,7 +144,6 @@ function setSurveyDataInfoList(surveyData) {
         'needRope': surveyData.need_rope,
         'needWire': surveyData.need_wire,
         'needCutMiddle': surveyData.need_cut_middle,
-        'notNeedCutMiddle': surveyData.not_need_cut_middle,
         'isDengerTree': surveyData.is_danger_tree,
         'needCutBranch': surveyData.need_cut_branch,
         'note': surveyData.note,

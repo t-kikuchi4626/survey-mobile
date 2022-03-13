@@ -132,6 +132,9 @@ function setSurveyHistoryData(texts, surveyData, countRows) {
         texts += `<span style="margin-right: 0.5rem;">樹種データなし</span>`
 
     texts += `<span style="margin-right: 0.5rem;">${surveyData.tree_measured_value}cm</span>`
+    if (surveyData.need_none === 'true') {
+        needText += `なし, `;
+    };
 
     if (surveyData.need_rope === 'true') {
         needText += `ロ有, `;
@@ -230,12 +233,9 @@ function initializeModalData() {
     // 伐採ワイヤー
     $('#modal-survey-data-need-wire').addClass("not-select");
     $('input[name="modal-survey-data-need-wire"]').val(false);
-    //中断切ロープ有
+    //中断切
     $('#modal-survey-data-need-cut-middle').addClass("not-select");
     $('input[name="modal-survey-data-need-cut-middle"]').val(false);
-    // 中断切ロープ無
-    $('#modal-survey-data-not-need-cut-middle').addClass("not-select");
-    $('input[name="modal-survey-data-not-need-cut-middle"]').val(false);
     // 危険木
     $('#modal-survey-data-is-danger-tree').addClass("not-select");
     $('input[name="modal-survey-data-is-danger-tree"]').val(false);
@@ -297,7 +297,7 @@ function setSurveyDataInModal(surveyData) {
         $('input[name="modal-survey-data-need-wire"]').val(false);
     }
 
-    // 中断切ロープ有
+    // 中断切
     if (surveyData.need_cut_middle === 'true') {
         $('#modal-survey-data-need-cut-middle').removeClass('not-select');
         $('input[name="modal-survey-data-need-cut-middle"]').val(true);
@@ -306,14 +306,6 @@ function setSurveyDataInModal(surveyData) {
         $('input[name="modal-survey-data-need-cut-middle"]').val(false);
     }
 
-    // 中断切ロープ無
-    if (surveyData.not_need_cut_middle === 'true') {
-        $('#modal-survey-data-not-need-cut-middle').removeClass('not-select');
-        $('input[name="modal-survey-data-not-need-cut-middle"]').val(true);
-    } else {
-        $('#modal-survey-data-not-need-cut-middle').addClass('not-select');
-        $('input[name="modal-survey-data-not-need-cut-middle"]').val(false);
-    }
     // 危険木
     if (surveyData.is_danger_tree === 'true') {
         $('#modal-survey-data-is-danger-tree').removeClass('not-select');
@@ -397,7 +389,7 @@ function setSurveyData(surveyData) {
         $("#survey-data-need-wire").addClass('not-select');
         $('input[name="survey-data-need-wire"]').val(false);
     }
-    // 中断切ロープ有
+    // 中断切
     if (surveyData.need_cut_middle === 'true') {
         $("#survey-data-need-cut-middle").removeClass('not-select');
         $('input[name="survey-data-need-cut-middle"]').val(true);
@@ -405,14 +397,7 @@ function setSurveyData(surveyData) {
         $("#survey-data-need-cut-middle").addClass('not-select');
         $('input[name="survey-data-need-cut-middle"]').val(false);
     }
-    // 中断切ロープ無
-    if (surveyData.not_need_cut_middle === 'true') {
-        $("#survey-data-not-need-cut-middle").removeClass('not-select');
-        $('input[name="survey-data-not-need-cut-middle"]').val(true);
-    } else {
-        $("#survey-data-not-need-cut-middle").addClass('not-select');
-        $('input[name="survey-data-not-need-cut-middle"]').val(false);
-    }
+
     // 危険木
     if (surveyData.is_danger_tree === 'true') {
         $("#survey-data-is-danger-tree").removeClass('not-select');
@@ -779,8 +764,6 @@ function validateInModal() {
  * 伐採木データ作成
  */
 async function createSurveyData() {
-    //inputの値はString型になってしまうので、String型からBooleanに変換する
-    var needCutMiddle = JSON.parse($('input[name="survey-data-need-cut-middle"]').val().toLowerCase());
 
     var param = [
         surveyDetailId,
@@ -797,7 +780,6 @@ async function createSurveyData() {
         $('input[name="survey-data-need-rope"]').val(),
         $('input[name="survey-data-need-wire"]').val(),
         $('input[name="survey-data-need-cut-middle"]').val(),
-        String(!needCutMiddle),
         $('input[name="survey-data-is-danger-tree"]').val(),
         $('input[name="survey-data-need-cut-branch"]').val(),
         $('#note-modal').val(),
@@ -826,8 +808,6 @@ async function createSurveyData() {
  * 伐採木データ作成(モーダル)
  */
 async function createSurveyDataInModal() {
-    //inputの値はString型になってしまうので、String型からBooleanに変換する
-    var needCutMiddle = JSON.parse($('input[name="modal-survey-data-need-cut-middle"]').val().toLowerCase());
 
     var id = $('#modal-id').val();
     var param = [
@@ -842,7 +822,6 @@ async function createSurveyDataInModal() {
         $('input[name="modal-survey-data-need-rope"]').val(),
         $('input[name="modal-survey-data-need-wire"]').val(),
         $('input[name="modal-survey-data-need-cut-middle"]').val(),
-        String(!needCutMiddle),
         $('input[name="modal-survey-data-is-danger-tree"]').val(),
         $('input[name="modal-survey-data-need-cut-branch"]').val(),
         $('#modal-note-modal').val(),
