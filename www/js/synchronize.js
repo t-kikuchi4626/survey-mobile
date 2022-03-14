@@ -32,6 +32,13 @@
             insertSurveyDetailList.push(surveyDetailList[i]);
         }
     }
+    // 伐採木データ更新
+    if (updateSurveyDataList != null) {
+        for (var i = 0; i < updateSurveyDataList.length; i++) {
+            await updateSurveyDataOfSynchronize(updateSurveyDataList[i]);
+        }
+    }
+
     return new Promise(async function (resolve, reject) {
         database.transaction(async function (transaction) {
             // 調査業務登録
@@ -104,12 +111,12 @@
                 }
             }
 
-            // 伐採木データ更新
-            if (updateSurveyDataList != null) {
-                for (var i = 0; i < updateSurveyDataList.length; i++) {
-                    await updateSurveyDataOfSynchronize(transaction, updateSurveyDataList[i]);
-                }
-            }
+            // // 伐採木データ更新
+            // if (updateSurveyDataList != null) {
+            //     for (var i = 0; i < updateSurveyDataList.length; i++) {
+            //         await updateSurveyDataOfSynchronize(transaction, updateSurveyDataList[i]);
+            //     }
+            // }
 
             resolve();
         }, function (error, transaction) {
@@ -118,6 +125,7 @@
             $('#synchronizeError').modal('open');
             reject(transaction);
         });
+
     });
 };
 
@@ -211,10 +219,7 @@ function convertSurveyDataList(list) {
             surveyData['needRope'],
             surveyData['needWire'],
             surveyData['needCutMiddle'],
-            surveyData['notNeedCutMiddle'],
             surveyData['needCutBranch'],
-            //surveyData['needCutDivide'],
-            //surveyData['needCollect'],
             surveyData['isDangerTree'],
             surveyData['note'],
             surveyData['name'],

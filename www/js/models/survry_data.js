@@ -312,16 +312,20 @@ function deleteSurveyDataById(id) {
 };
 
 // 伐採木データを更新（同期処理）
-function updateSurveyDataOfSynchronize(transaction, surveyData) {
+function updateSurveyDataOfSynchronize(surveyData) {
     return new Promise(function (resolve, reject) {
-        var sql = generateSurveyDataByIdentifyCodeSQL();
-        transaction.executeSql(sql, surveyData, function (transaction) {
-            resolve(surveyData);
-        }, function (error, transaction) {
-            errorHandler(transaction);
-            reject(false);
+        database.transaction(function (transaction) {
+            var sql = generateSurveyDataByIdentifyCodeSQL();
+            console.log(surveyData);
+            transaction.executeSql(sql, surveyData, function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+                // errorHandler(transaction);
+                // reject(false);
+            });
+            // resolve();
         });
-        resolve();
     });
 }
 
