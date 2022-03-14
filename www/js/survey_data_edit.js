@@ -35,8 +35,8 @@ document.addEventListener("deviceready", async function () {
 
     //樹種ごとの一覧表作成
     var surveyDataList = await fetchSurveyDataList(surveyDetailId);
-    var treeCountArray = await fetchTreeTypeCount(surveyDataList, surveyDetailId);
-    setTreeCount(treeCountArray);
+    var [treeCountArray, freeTreeTypesCount] = await fetchTreeTypeCount(surveyDataList, surveyDetailId);
+    setTreeCount(treeCountArray, freeTreeTypesCount);
 
     //画面データの初期化
     initializeForm(surveyDetailId);
@@ -796,8 +796,8 @@ async function createSurveyData() {
         //画面を初期化
         //樹種ごとの一覧表作成
         var surveyDataList = await fetchSurveyDataList(surveyDetailId);
-        var treeCountArray = await fetchTreeTypeCount(surveyDataList, surveyDetailId);
-        setTreeCount(treeCountArray);
+        var [treeCountArray, freeTreeTypesCount] = await fetchTreeTypeCount(surveyDataList, surveyDetailId);
+        setTreeCount(treeCountArray, freeTreeTypesCount);
         //画面の履歴を初期化
         initializeForm(surveyDetailId);
         await initialHistoryArea();
@@ -836,8 +836,8 @@ async function createSurveyDataInModal() {
 
         //樹種ごとの一覧表作成
         var surveyDataList = await fetchSurveyDataList(surveyDetailId);
-        var treeCountArray = await fetchTreeTypeCount(surveyDataList, surveyDetailId);
-        setTreeCount(treeCountArray);
+        var [treeCountArray, freeTreeTypesCount] = await fetchTreeTypeCount(surveyDataList, surveyDetailId);
+        setTreeCount(treeCountArray, freeTreeTypesCount);
 
         //モーダル内を最後にセットする
         var surveyDetailList = await fetchSurveyDataBySurveyDetailId(surveyDetailId);
@@ -863,12 +863,20 @@ $(".enter").on('touchstart', function () {
 
 async function fetchTreeTypeCount(surveyDataList, surveyDetailId) {
     var treeTypesCount = {};
+    var freeTreeTypesCount = {};
+    var sortTree = "杉,松,ひのき,天然生林";
+    var arrayTreeTypes = sortTree.split(',');
     for (var i = 0; i < surveyDataList.rows.length; i++) {
         var surveyData = surveyDataList.rows.item(i);
         var count = await fetchTypeMeasuredValueByTreeType(surveyDetailId, surveyData.survey_data_tree_type);
-        treeTypesCount[surveyData.survey_data_tree_type] = count.rows.item(0).count;
+        const index = arrayTreeTypes.indexOf(surveyData.survey_data_tree_type);
+        if (index >= 0) {
+            treeTypesCount[index] = count.rows.item(0).count;
+        } else {
+            freeTreeTypesCount[surveyData.survey_data_tree_type] = count.rows.item(0).count;
+        }
     }
-    return treeTypesCount;
+    return [treeTypesCount, freeTreeTypesCount];
 }
 
 /**

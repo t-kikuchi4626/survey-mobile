@@ -46,16 +46,41 @@ document.addEventListener("deviceready", async function () {
  * @param 伐採木データリスト
  */
 function setTableHeader(surveyDataList) {
-    var texts = '<tr class="border-style">';
-    texts += '<th class="border-style">直径</th>';
+    var treeTypesCount = {};
+    var freeTreeTypesCount = {};
+    var sortTree = "杉,松,ひのき,天然生林";
+    var arrayTreeTypes = sortTree.split(',');
+
     for (var i = 0; i < surveyDataList.rows.length; i++) {
         var surveyData = surveyDataList.rows.item(i);
-        texts += '<th class="border-style">' + surveyData.survey_data_tree_type + '</th>';
-        totalInfo[surveyData.survey_data_tree_type] = 0;
+        const index = arrayTreeTypes.indexOf(surveyData.survey_data_tree_type);
+        if (index >= 0) {
+            treeTypesCount[index] = "樹種";
+        } else {
+            freeTreeTypesCount[surveyData.survey_data_tree_type] = "樹種";
+        }
     }
+
+    //並び替え
+    Object.keys(treeTypesCount).sort((function (a, b) { return a - b }));
+    Object.keys(freeTreeTypesCount).sort((function (a, b) { return a.localeCompare(b, 'ja') }));
+
+    var texts = '<tr class="border-style">';
+    texts += '<th class="border-style">直径</th>';
+    Object.keys(treeTypesCount).forEach(function (value) {
+        texts += '<th class="border-style">' + arrayTreeTypes[value] + '</th>';
+        totalInfo[arrayTreeTypes[value]] = 0;
+    });
+
+    Object.keys(freeTreeTypesCount).forEach(function (value) {
+        texts += '<th class="border-style">' + value + '</th>';
+        totalInfo[value] = 0;
+    });
+
     texts += '</tr>';
     return texts;
 }
+
 
 /**
  * テーブルデータ情報の設定（直径10～19）
