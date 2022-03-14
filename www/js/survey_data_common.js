@@ -82,7 +82,6 @@ function inputTreeTypeInModal(id, val) {
 function setTreeTypeButton(treeTypes, specialTree, input) {
     if (treeTypes) {
         var arrayTreeTypes = treeTypes.split(',');
-        arrayTreeTypes.sort();
         for (let i in arrayTreeTypes) {
             var html = `<a id="${arrayTreeTypes[i]}" href="javascript:inputTreeType('#${input}', '${arrayTreeTypes[i]}')" class="tree-select-btn waves-effect waves-light btn normal-button enter mobile-btn tree-btn not-select">${arrayTreeTypes[i]}</a>`;
             $('#tree-type-list').append(html);
@@ -125,31 +124,20 @@ function setTreeTypeButtonInModal(treeTypes, specialTree, input) {
  * 樹種ごとのカウントをテーブル形式で表示
  * @param 連想配列（樹種、カウント数）
  */
-function setTreeCount(treeCountArray) {
+function setTreeCount(treeCountArray, freeTreeTypesCount) {
+    var sortTree = "杉,松,ひのき,天然生林";
+    var arrayTreeTypes = sortTree.split(',');
     $('#tree-type-list-count-header').empty();
     $('#tree-type-list-count-value').empty();
-    Object.keys(treeCountArray).sort();
-    // Object.keys(treeCountArray).sort(function (a, b) {
-    //     if (treeTypeValue.includes(a) === true || treeTypeValue.includes(b) === true) {
-    //         return 1
-    //     } else if (treeTypeValue.includes(a) === false && specialTree.includes(a) === true
-    //         || treeTypeValue.includes(b) === false && specialTree.includes(b) === true) {
-    //         return 0;
-    //     } else {
-    //         return -1;
-    //     }
-    // });
-    Object.keys(treeCountArray).sort(function (a, b) {
-        if (a !== b) {
-            if (treeTypeValue.includes(a)) return -1;
-            return a > b ? 1 : -1
-        }
-    });
-
-    Object.keys(treeCountArray).sort(a => a.key).includes(treeTypeValue)
+    Object.keys(treeCountArray).sort((function (a, b) { return a - b }));
+    Object.keys(freeTreeTypesCount).sort((function (a, b) { return a.localeCompare(b, 'ja') }));
     Object.keys(treeCountArray).forEach(function (value) {
-        var html = `<th>${value}</th>`;
+        var html = `<th>${arrayTreeTypes[value]}</th>`;
         $('#tree-type-list-count-header').append(html);
+    });
+    Object.keys(freeTreeTypesCount).forEach(function (value) {
+        var htmlFreeTree = `<th>${value}</th>`;
+        $('#tree-type-list-count-header').append(htmlFreeTree);
     });
     $('#tree-type-list-count-header').append('<th>合計</th>');
     var counts = 0;
@@ -158,6 +146,13 @@ function setTreeCount(treeCountArray) {
         $('#tree-type-list-count-value').append(td);
         counts = counts + treeCountArray[value];
     });
+
+    Object.keys(freeTreeTypesCount).forEach(function (value) {
+        var tdFreeTree = `<td>${freeTreeTypesCount[value]}本</td>`;
+        $('#tree-type-list-count-value').append(tdFreeTree);
+        counts = counts + freeTreeTypesCount[value];
+    });
+
     $('#tree-type-list-count-value').append('<td>' + counts + '本</td>');
 }
 
