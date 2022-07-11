@@ -179,8 +179,9 @@ function insertSurveyData(param) {
             'modified_by, ' +
             'created_by, ' +
             'modified_date,' +
-            'created_date)' +
-            'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'), DATETIME(\'now\', \'localtime\'))';
+            'created_date,' +
+            'mobile_id)' +
+            'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'), DATETIME(\'now\', \'localtime\'),?)';
         database.transaction(function (transaction) {
             transaction.executeSql(sql, param, async function (ignored, resultSet) {
                 resolve(resultSet);
@@ -316,7 +317,6 @@ function updateSurveyDataOfSynchronize(surveyData) {
     return new Promise(function (resolve, reject) {
         database.transaction(function (transaction) {
             var sql = generateSurveyDataByIdentifyCodeSQL();
-            console.log(surveyData);
             transaction.executeSql(sql, surveyData, function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
@@ -749,4 +749,20 @@ function generateSurveyDataByIdentifyCodeSQL() {
         'modified_by = ?, ' +
         'modified_date = ? ' +
         'WHERE identify_code = ? ';
+}
+
+/**
+ * mobile側で登録された地権者データに紐づく伐採木のデータを取得
+ * @return 所在地情報のデータ件数
+ */
+ function fetchSurveyDataBySurveyDetailIdIsNull() {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id IS NULL', [], function (ignored, resultSet) {
+                resolve(resultSet);
+            });
+        }, function (error) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+        });
+    });
 }

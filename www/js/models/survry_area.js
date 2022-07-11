@@ -78,8 +78,9 @@ function insertSurveyArea(param) {
         'modified_by, ' +
         'created_by, ' +
         'modified_date,' +
-        'created_date)' +
-        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'),DATETIME(\'now\', \'localtime\'))';
+        'created_date,' +
+        'mobile_id)' +
+        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, DATETIME(\'now\', \'localtime\'),DATETIME(\'now\', \'localtime\'),?)';
 
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
@@ -299,4 +300,21 @@ function generateSurveyAreaByIdentifyCodeSQL() {
         'modified_by = ?, ' +
         'modified_date = ? ' +
         'WHERE identify_code = ? ';
+}
+
+
+/**
+ * mobile側で登録された地権者データに紐づく伐採木のデータを取得
+ * @return 所在地情報のデータ件数
+ */
+ function fetchSurveyAreaBySurveyDetailIdIsNull() {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_area WHERE survey_detail_id IS NULL', [], function (ignored, resultSet) {
+                resolve(resultSet);
+            });
+        }, function (error) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+        });
+    });
 }

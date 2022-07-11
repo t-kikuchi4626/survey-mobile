@@ -1,0 +1,180 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+
+  <link rel="stylesheet" href="../components/loader.css">
+  <link rel="stylesheet" href="../components/materialize/dist/css/materialize.min.css">
+  <link rel="stylesheet" href="../css/iconfont/material-icons.css">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+  <nav class="header">
+    <div class="nav-wrapper"> <a href="#" class="brand-logo center"> <i
+          class="material-icons title-icon">nature_people</i>kiko-rin</a>
+      <ul>
+        <li>
+          <a id="pageBack">
+            <i class="material-icons">arrow_back_ios</i>
+          </a>
+        </li>
+      </ul>
+      <ul class="right">
+        <li>
+          <a class="waves-effect waves-light sidenav-trigger" href="#" data-target="side-out">
+            <i class="material-icons right">menu</i>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Sidenav -->
+  <ul id="side-out" class="sidenav">
+    <li id="contact-list-link"></li>
+    <li><a class="waves-effect waves-light modal-trigger" href="#modal1"><i
+          class="material-icons">exit_to_app</i>ログアウト</a></li>
+  </ul>
+
+  <!-- Modal Structure -->
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <p>ログアウトします。よろしいでしょうか？</p>
+    </div>
+    <div class="modal-footer">
+      <a href="javascript:logout();" class="modal-close waves-effect waves-green btn normal-button">ログアウトする</a>
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">閉じる</a>
+    </div>
+  </div>
+
+  <div style="background:rgba(0,0,0,0.8); color: white;" class="center web-edit-message">
+    <span class="ml-4" style="margin: 10px;display: inline-block;">Webで編集中のため、登録・更新処理はできません。</span>
+  </div>
+
+  <div class="container">
+
+    <div class="row bottom-0">
+      <div id="survey-area" class="col s12">
+        <form>
+          <div class="row bottom-0">
+            <div class="input-field col s9 bottom-0">
+              <small class="active black-text">線路名</small>
+              <input id="lineName" name="lineName" type="text" class="lineName input-area mobile-input" maxlength="30">
+            </div>
+          </div>
+          <div class="row bottom-0">
+            <div class="input-field col s2 bottom-0">
+              <small class="active black-text">支持物 No</small>
+              <input id="stealTowerStart" name="stealTowerStart" type="text"
+                class="stealTowerStart input-area mobile-input" maxlength="10">
+            </div>
+            <div class="input-field col s1 bottom-0"><span>～</span></div>
+            <div class="input-field col s2 bottom-0">
+              <small class="active black-text">No.</small>
+              <input id="stealTowerEnd" name="stealTowerEnd" type="text" class="stealTowerEnd input-area mobile-input"
+                maxlength="10">
+            </div>
+          </div>
+          <div class="row bottom-0">
+            <div class="input-field col s12 bottom-0">
+              <small class="active black-text">所在地 <span style="color: #ef5350;">*</span></small>
+              <input id="surveyAddress" name="surveyAddress" type="text" class="surveyAddress input-area mobile-input"
+                maxlength="200">
+            </div>
+          </div>
+          <div class="row bottom-0">
+            <div class="input-field col s5 bottom-0">
+              <small class="active black-text">所有者氏名</small>
+              <input id="areaOwnerName" name="areaOwnerName" type="text" class="areaOwnerName input-area mobile-input"
+                maxlength="800">
+            </div>
+          </div>
+          <div class="row bottom-0">
+            <div class="input-field col s12 bottom-0">
+              <small class="active black-text">所有者住所</small>
+              <input id="areaOwnerAddress" name="areaOwnerAddress" type="text"
+                class="areaOwnerAddress input-area mobile-input" maxlength="200">
+            </div>
+          </div>
+          <div class="row bottom-0">
+            <div class="input-field col s5 bottom-0">
+              <small class="active black-text">所有者電話番号</small>
+              <input id="areaOwnerTel" name="areaOwnerTel" type="number" class="areaOwnerTel input-area mobile-input"
+                maxlength="20">
+            </div>
+          </div>
+          <div class="row bottom-0">
+            <div class="input-field col s5 bottom-0">
+              <small class="active black-text">立会人氏名</small>
+              <input id="surveyWitnessName" name="surveyWitnessName" type="text"
+                class="surveyWitnessName input-area mobile-input" maxlength="800">
+            </div>
+          </div>
+          <div class="row bottom-0">
+            <div class="input-field col s12 bottom-0">
+              <small class="active black-text">立会人住所</small>
+              <input id="surveyWitnessAddress" name="surveyWitnessAddress" type="text"
+                class="surveyWitnessAddress input-area mobile-input" maxlength="200">
+            </div>
+          </div>
+          <div class="row bottom-0">
+            <div class="input-field col s5 bottom-0">
+              <small class="active black-text">立会人電話番号</small>
+              <input id="surveyWitnessTel" name="surveyWitnessTel" type="number"
+                class="surveyWitnessTel input-area mobile-input" maxlength="20">
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s6 bottom-0 mobile-select">
+              <small for="areaClassification" class="active">地目</small>
+              <select id="areaClassification" name="areaClassification" class="browser-default mobile-input">
+                <option value="">地目を選択してください</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s6 bottom-0 mobile-select">
+              <small for="priceType" class="active">単価種別</small>
+              <select id="priceType" name="priceType" class="browser-default mobile-input">
+                <option value="" selected>単価種別を選択してください</option>
+              </select>
+            </div>
+          </div>
+        </form>
+        <div class="row">
+          <div class="col s12">
+            <p style="text-align: right;">
+              <a onclick="javascript:createSurveyDetail();"
+                class="waves-effect waves-light btn-large blue-grey red enter">登録</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../components/jquery/dist/jquery.min.js"></script>
+  <script src="../components/loader.js"></script>
+  <script src="../js/common.js"></script>
+  <script src="../js/survey_list.js"></script>
+  <script src="../js/synchronize.js"></script>
+  <script src="../js/survey_detail_create.js"></script>
+  <script src="../js/models/survry.js"></script>
+  <script src="../js/models/survry_detail.js"></script>
+  <script src="../js/models/survry_data.js"></script>
+  <script src="../js/models/survry_area.js"></script>
+  <script src="../js/models/synchronizeResult.js"></script>
+  <script src="../js/models/synchronizeResultDetail.js"></script>
+  <script src="../js/models/web_edit_mode.js"></script>
+  <script src="../js/models/web_edit_mode_result.js"></script>
+  <script src="../js/models/code_master.js"></script>
+
+</body>
+
+</html>

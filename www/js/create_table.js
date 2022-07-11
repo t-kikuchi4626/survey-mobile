@@ -14,6 +14,7 @@ function executeQuery(tx) {
     // tx.executeSql('DROP TABLE synchronize_result');
     // tx.executeSql('DROP TABLE synchronize_result_detail');
     // tx.executeSql('DROP TABLE web_edit_mode');
+    // tx.executeSql('DROP TABLE code_master');
     tx.executeSql(createSurveyTable);
     tx.executeSql(createSurveySetailTable);
     tx.executeSql(createSurveyAreaTable);
@@ -22,6 +23,7 @@ function executeQuery(tx) {
     tx.executeSql(createsSnchronizeResultDetailTable);
     tx.executeSql(createsWebEditModeTable);
     tx.executeSql(createsWebEditModeResultTable);
+    tx.executeSql(createCodeMasterTable);
     alterTable(tx, "survey_data", "survey_company_id", "INTEGER");
 }
 
@@ -89,7 +91,13 @@ var createSurveySetailTable = 'CREATE TABLE IF NOT EXISTS survey_detail ' +
     'created_by INTEGER, ' +
     'created_date TIMESTAMP, ' +
     'modified_by INTEGER, ' +
-    'modified_date TIMESTAMP)';
+    'modified_date TIMESTAMP, ' + 
+    'price_type TEXT, ' +
+    'price_sub_type TEXT, ' +
+    'all_need_cut_divide BOOLEAN, ' +
+    'all_need_collect BOOLEAN, ' + 
+    'order_number INTEGER, ' +
+    'mobile_id INTEGER)';
 
 var createSurveyAreaTable = 'CREATE TABLE IF NOT EXISTS survey_area ' +
     '(id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
@@ -110,7 +118,8 @@ var createSurveyAreaTable = 'CREATE TABLE IF NOT EXISTS survey_area ' +
     'created_by INTEGER, ' +
     'created_date TIMESTAMP, ' +
     'modified_by INTEGER, ' +
-    'modified_date TIMESTAMP)';
+    'modified_date TIMESTAMP, ' +
+    'mobile_id INTEGER)';
 
 var createSurveyDataTable = 'CREATE TABLE IF NOT EXISTS survey_data ' +
     '(id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
@@ -139,7 +148,8 @@ var createSurveyDataTable = 'CREATE TABLE IF NOT EXISTS survey_data ' +
     'created_by INTEGER, ' +
     'created_date TIMESTAMP, ' +
     'modified_by INTEGER, ' +
-    'modified_date TIMESTAMP)';
+    'modified_date TIMESTAMP, ' + 
+    'mobile_id INTEGER)';
 
 var createsSnchronizeResultTable = 'CREATE TABLE IF NOT EXISTS synchronize_result ' +
     '(id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
@@ -170,3 +180,16 @@ var createsWebEditModeResultTable = 'CREATE TABLE IF NOT EXISTS web_edit_mode_re
     'status TEXT)';
 
 var alterSurveyTable = 'ALTER TABLE survey ADD COLUMN company_id INTEGER';
+
+var createCodeMasterTable = 'CREATE TABLE IF NOT EXISTS code_master ' +
+    '(id INTEGER, ' +
+    'category INTEGER, ' +
+    'category_code INTEGER,' +
+    'label TEXT, ' +
+    'value INTEGER, ' +
+    'order_number INTEGER, ' +
+    'is_active BOOLEAN, ' +
+    'created_by INTEGER, ' +
+    'created_date TIMESTAMP, ' +
+    'modified_by INTEGER, ' +
+    'modified_date TIMESTAMP)';

@@ -2,6 +2,8 @@
 var surveyId = null;
 // 所在地ID
 var surveyDetailId = null;
+
+var surveyDetailMobileId = null;
 // 対象ID
 var targetId = null;
 // 端末番号
@@ -15,6 +17,7 @@ document.addEventListener("deviceready", async function () {
     var param = location.search.substring(1).split("&");
     surveyId = param[0];
     surveyDetailId = param[1];
+    surveyDetailMobileId = param[2]
     uuid = device.uuid;
 
     // 所在地一覧遷移タグ作成
@@ -164,7 +167,7 @@ async function createEditSurveyArea() {
         } else {
             // 登録項目
             param = [
-                surveyDetailId,
+                surveyDetailId === 'null' ? null : surveyDetailId,
                 generateIdentifyCode(uuid),
                 surveyCompanyId,
                 $('#survey-area-tree-type').val(),
@@ -180,6 +183,7 @@ async function createEditSurveyArea() {
                 'off',
                 fetchUserId(),
                 fetchUserId(),
+                surveyDetailId === 'null' ? surveyDetailMobileId : surveyDetailId,
             ];
             result = await insertSurveyArea(param);
         }

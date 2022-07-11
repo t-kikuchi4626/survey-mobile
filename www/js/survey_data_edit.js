@@ -2,6 +2,8 @@
 var surveyId = null;
 // 所在地ID
 var surveyDetailId = null;
+
+var surveyDetailMobileId = null;
 // uuid
 var uuid = "";
 var id = null;
@@ -13,6 +15,7 @@ document.addEventListener("deviceready", async function () {
     uuid = device.uuid;
     surveyId = param[0];
     surveyDetailId = param[1];
+    surveyDetailMobileId = param[2];
 
     //更新用に値を保持する
     $("#modal-survey-detail-id").val(surveyDetailId);
@@ -766,7 +769,7 @@ function validateInModal() {
 async function createSurveyData() {
 
     var param = [
-        surveyDetailId,
+        surveyDetailId === 'null' ? null : surveyDetailId,
         generateIdentifyCode(uuid),
         surveyCompanyId,
         $('#name-modal').val(),
@@ -786,7 +789,8 @@ async function createSurveyData() {
         false,
         'off',
         fetchUserId(),
-        fetchUserId()
+        fetchUserId(),
+        surveyDetailId === 'null' ? surveyDetailMobileId : surveyDetailId,
     ];
     var result = await insertSurveyData(param);
     if (result !== null) {

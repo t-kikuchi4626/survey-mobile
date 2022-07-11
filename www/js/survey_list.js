@@ -184,7 +184,7 @@ async function generateWebEditModeOffData() {
     await webEditModeOffProcess(surveyCompanyId, surveyArray, surveyDetailArray, uuid);
   } else {
     await webEditModeOffProcess(surveyCompanyId, [], [], uuid);
- 
+
   }
 
 }
@@ -218,24 +218,24 @@ async function webEditModeOffProcess(surveyCompanyId, surveyArray, surveyDetailA
       'Authorization': obj.token
     }
   })
-  .done(async (data) => {
+    .done(async (data) => {
 
-    var jsonData = JSON.stringify(data);
-    var responseData = JSON.parse(jsonData);
-    let webEditModeResult = await insertWebEditModeResult();
-    timerId = setInterval(function() {updateWebToMobile(responseData.id, webEditModeResult.insertId)}, 5000);
+      var jsonData = JSON.stringify(data);
+      var responseData = JSON.parse(jsonData);
+      let webEditModeResult = await insertWebEditModeResult();
+      timerId = setInterval(function() {updateWebToMobile(responseData.id, webEditModeResult.insertId)}, 5000);
 
-  })
-  .fail(async (jqXHR, textStatus, errorThrown) => {
-    var jsonData = JSON.stringify(jqXHR);
-    var responseData = JSON.parse(jsonData);
-    var item = localStorage.getItem(KEY);
-    var obj = JSON.parse(item);
-    if (obj.user != null) {
-      surveyCompanyId = obj.user.survey_company_id;
-    }
-    errorProcess(responseData, surveyCompanyId);
-  });
+    })
+    .fail(async (jqXHR, textStatus, errorThrown) => {
+      var jsonData = JSON.stringify(jqXHR);
+      var responseData = JSON.parse(jsonData);
+      var item = localStorage.getItem(KEY);
+      var obj = JSON.parse(item);
+      if (obj.user != null) {
+        surveyCompanyId = obj.user.survey_company_id;
+      }
+      errorProcess(responseData, surveyCompanyId);
+    });
 
 }
 
@@ -254,34 +254,34 @@ let updateWebToMobile = function(id, webEditModeResultId) {
       'Authorization': obj.token
     }
   })
-  .done(async (data) => {
+    .done(async (data) => {
 
-    var jsonData = JSON.stringify(data);
-    var responseData = JSON.parse(jsonData);
+      var jsonData = JSON.stringify(data);
+      var responseData = JSON.parse(jsonData);
 
-    if (responseData.status === 'done') {
-      let fetchWebEditModeResult = await fetchWebEditModeResultById(webEditModeResultId);
-      if (fetchWebEditModeResult.rows.item(0).status === 'done') {
+      if (responseData.status === 'done') {
+        let fetchWebEditModeResult = await fetchWebEditModeResultById(webEditModeResultId);
+        if (fetchWebEditModeResult.rows.item(0).status === 'done') {
+          clearInterval(timerId);
+          return;
+        }
+        await updateWebEditModeResult(webEditModeResultId);
         clearInterval(timerId);
-        return;
+        // web編集モードが「OFF」の場合、mobileのロックを解除する
+        await createWebEditMode('off');
+        await controlEditScreen();
+        await synchronizeWebToMobile(responseData.synchronizeToMobile);
+        location.reload();
+        $('#modalLocation').modal('close');
       }
-      await updateWebEditModeResult(webEditModeResultId);
-      clearInterval(timerId);
-      // web編集モードが「OFF」の場合、mobileのロックを解除する
-      await createWebEditMode('off');
-      await controlEditScreen();
-      await synchronizeWebToMobile(responseData.synchronizeToMobile);
-      location.reload();
-      $('#modalLocation').modal('close');
-    }
 
-  })
-  .fail(async (jqXHR, textStatus, errorThrown) => {
-    var jsonData = JSON.stringify(jqXHR);
-    var responseData = JSON.parse(jsonData);
-    var item = localStorage.getItem(KEY);
-    var obj = JSON.parse(item);
-  })
+    })
+    .fail(async (jqXHR, textStatus, errorThrown) => {
+      var jsonData = JSON.stringify(jqXHR);
+      var responseData = JSON.parse(jsonData);
+      var item = localStorage.getItem(KEY);
+      var obj = JSON.parse(item);
+    })
 };
 
 /**
@@ -349,6 +349,13 @@ async function generateSynchronizeData(isWebEditMode) {
  * @param isWebEditMode Web編集モードか否か
  */
 async function synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArray, surveyAreaArray, surveyDataArray, synchronizeResultInsertId, isWebEditMode) {
+  let surveyDetailIsNullList = await fetchSurveyDetailByIdIsNull()
+  let insertSurveyDataIsNullList = await fetchSurveyDataBySurveyDetailIdIsNull()
+  let insertSurveyAreaIsNullList = await fetchSurveyAreaBySurveyDetailIdIsNull()
+
+  let insertSurveyDetail = generateInsertSurveyDetailList(surveyDetailIsNullList)
+  let insertSurveyData = generateInsertSurveyDataList(insertSurveyDataIsNullList)
+  let insertSurveyArea = generateInsertSurveyAreaList(insertSurveyAreaIsNullList)
 
   var item = localStorage.getItem(KEY);
   var obj = JSON.parse(item);
@@ -359,7 +366,10 @@ async function synchronizeProcess(surveyCompanyId, surveyArray, surveyDetailArra
     survey: surveyArray,
     surveyDetail: surveyDetailArray,
     surveyArea: surveyAreaArray,
-    surveyData: surveyDataArray
+    surveyData: surveyDataArray,
+    insertSurveyDetail: insertSurveyDetail,
+    insertSurveyData: insertSurveyData,
+    insertSurveyArea: insertSurveyArea
   };
 
   $.ajax({
@@ -679,4 +689,111 @@ function applyErrorModal(error, message) {
  */
 function openWebEditModal() {
   $('#webEditModal').modal('open');
+}
+
+function generateInsertSurveyDetailList(surveyDetailIsNullList) {
+  let insertSurveyDetail = []
+  if (surveyDetailIsNullList === undefined) {
+    return insertSurveyDetail
+  }
+  for (let rowCount = 0; rowCount < surveyDetailIsNullList.rows.length; rowCount++) {
+    insertSurveyDetail.push({
+      surveyId: surveyDetailIsNullList.rows.item(rowCount).survey_id,
+      surveyAddress: surveyDetailIsNullList.rows.item(rowCount).survey_address,
+      lineName: surveyDetailIsNullList.rows.item(rowCount).line_name,
+      stealTowerStart: surveyDetailIsNullList.rows.item(rowCount).steal_tower_start,
+      stealTowerEnd: surveyDetailIsNullList.rows.item(rowCount).steal_tower_end,
+      areaOwnerName: surveyDetailIsNullList.rows.item(rowCount).area_owner_name,
+      areaOwnerAddress: surveyDetailIsNullList.rows.item(rowCount).area_owner_address,
+      areaOwnerTel: surveyDetailIsNullList.rows.item(rowCount).area_owner_tel,
+      surveyWitnessName: surveyDetailIsNullList.rows.item(rowCount).survey_witness_name,
+      surveyWitnessAddress: surveyDetailIsNullList.rows.item(rowCount).survey_witness_address,
+      surveyWitnessTel: surveyDetailIsNullList.rows.item(rowCount).survey_witness_tel,
+      areaClassification: surveyDetailIsNullList.rows.item(rowCount).area_classification,
+      priceType: surveyDetailIsNullList.rows.item(rowCount).price_type,
+      priceSubType: surveyDetailIsNullList.rows.item(rowCount).price_sub_type,
+      createdBy: surveyDetailIsNullList.rows.item(rowCount).created_by,
+      createdDate: surveyDetailIsNullList.rows.item(rowCount).created_date,
+      modifiedBy: surveyDetailIsNullList.rows.item(rowCount).modified_by,
+      modifiedDate: surveyDetailIsNullList.rows.item(rowCount).modified_date,
+      allNeedCutDivide: surveyDetailIsNullList.rows.item(rowCount).all_need_cut_divide,
+      allNeedCollect: surveyDetailIsNullList.rows.item(rowCount).all_need_cllect,
+      orderNumber: surveyDetailIsNullList.rows.item(rowCount).order_number,
+      mobileId: surveyDetailIsNullList.rows.item(rowCount).mobile_id,
+    });
+  }
+  return insertSurveyDetail
+}
+
+function generateInsertSurveyDataList(insertSurveyDataIsNullList) {
+  let insertSurveyData = []
+  if (insertSurveyDataIsNullList === undefined) {
+    return insertSurveyData
+  }
+  for (let rowCount = 0; rowCount < insertSurveyDataIsNullList.rows.length; rowCount++) {
+    insertSurveyData.push({
+      identify_code: insertSurveyDataIsNullList.rows.item(rowCount).identify_code,
+      name: insertSurveyDataIsNullList.rows.item(rowCount).name,
+      color: insertSurveyDataIsNullList.rows.item(rowCount).color,
+      word: insertSurveyDataIsNullList.rows.item(rowCount).word,
+      number: insertSurveyDataIsNullList.rows.item(rowCount).number,
+      branch_number: insertSurveyDataIsNullList.rows.item(rowCount).branch_number,
+      survey_detail_number: insertSurveyDataIsNullList.rows.item(rowCount).survey_detail_number,
+      survey_detail_id: insertSurveyDataIsNullList.rows.item(rowCount).survey_detail_id,
+      survey_data_tree_type: insertSurveyDataIsNullList.rows.item(rowCount).survey_data_tree_type,
+      tree_measured_value: insertSurveyDataIsNullList.rows.item(rowCount).tree_measured_value,
+      need_rope: insertSurveyDataIsNullList.rows.item(rowCount).need_rope,
+      need_wire: insertSurveyDataIsNullList.rows.item(rowCount).need_wire,
+      need_cut_middle: insertSurveyDataIsNullList.rows.item(rowCount).need_cut_middle,
+      need_cut_branch: insertSurveyDataIsNullList.rows.item(rowCount).need_cut_branch,
+      need_none: insertSurveyDataIsNullList.rows.item(rowCount).need_none,
+      need_cut_divide: insertSurveyDataIsNullList.rows.item(rowCount).need_cut_divide,
+      need_collect: insertSurveyDataIsNullList.rows.item(rowCount).need_collect,
+      is_danger_tree: insertSurveyDataIsNullList.rows.item(rowCount).is_danger_tree,
+      latitude: insertSurveyDataIsNullList.rows.item(rowCount).latitude,
+      longitude: insertSurveyDataIsNullList.rows.item(rowCount).longitude,
+      note: insertSurveyDataIsNullList.rows.item(rowCount).note,
+      web_edit_mode: insertSurveyDataIsNullList.rows.item(rowCount).web_edit_mode,
+      is_delete: insertSurveyDataIsNullList.rows.item(rowCount).is_delete,
+      created_by: insertSurveyDataIsNullList.rows.item(rowCount).created_by,
+      created_date: insertSurveyDataIsNullList.rows.item(rowCount).created_date,
+      modified_by: insertSurveyDataIsNullList.rows.item(rowCount).modified_by,
+      modified_date: insertSurveyDataIsNullList.rows.item(rowCount).modified_date,
+      mobile_id: insertSurveyDataIsNullList.rows.item(rowCount).mobile_id,
+    })
+  }
+
+  return insertSurveyData
+}
+
+function generateInsertSurveyAreaList(insertSurveyAreaIsNullList) {
+
+  let insertSurveyArea = []
+  if (insertSurveyAreaIsNullList === undefined) {
+    return insertSurveyArea
+  }
+  for (let rowCount = 0; rowCount < insertSurveyAreaIsNullList.rows.length; rowCount++) {
+    insertSurveyArea.push({
+      identify_code: insertSurveyAreaIsNullList.rows.item(rowCount).identify_code,
+      tree_type: insertSurveyAreaIsNullList.rows.item(rowCount).tree_type,
+      trimming_area_value: insertSurveyAreaIsNullList.rows.item(rowCount).trimming_area_value,
+      trimming_tree_area_value: insertSurveyAreaIsNullList.rows.item(rowCount).trimming_tree_area_value,
+      trimming_tree_count: insertSurveyAreaIsNullList.rows.item(rowCount).trimming_tree_count,
+      target_area_value: insertSurveyAreaIsNullList.rows.item(rowCount).target_area_value,
+      target_area_value_ten: insertSurveyAreaIsNullList.rows.item(rowCount).target_area_value_ten,
+      tree_measured_value: insertSurveyAreaIsNullList.rows.item(rowCount).tree_measured_value,
+      need_collect: insertSurveyAreaIsNullList.rows.item(rowCount).need_collect,
+      created_by: insertSurveyAreaIsNullList.rows.item(rowCount).created_by,
+      created_date: insertSurveyAreaIsNullList.rows.item(rowCount).created_date,
+      modified_by: insertSurveyAreaIsNullList.rows.item(rowCount).modified_by,
+      modified_date: insertSurveyAreaIsNullList.rows.item(rowCount).modified_date,
+      survey_detail_id: insertSurveyAreaIsNullList.rows.item(rowCount).survey_detail_id,
+      is_four_measured: insertSurveyAreaIsNullList.rows.item(rowCount).is_four_measured,
+      web_edit_mode: insertSurveyAreaIsNullList.rows.item(rowCount).web_edit_mode,
+      is_delete: insertSurveyAreaIsNullList.rows.item(rowCount).is_delete,
+      mobile_id: insertSurveyAreaIsNullList.rows.item(rowCount).mobile_id,
+    })
+  }
+
+  return insertSurveyArea
 }

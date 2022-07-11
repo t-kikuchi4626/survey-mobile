@@ -15,7 +15,9 @@
     var deleteSurveyDataList = await convertDeleteList(data.surveyDataList);
     var updateSurveyAreaList = await convertSurveyAreaList(data.surveyAreaList);
     var deleteSurveyAreaList = await convertDeleteList(data.surveyAreaList);
-
+    var updateMobileInsertSurveyAreaList = await convertMobileSurveyAreaList(data.mobileUpdateSurveyArea);
+    var updateMobileInsertSurveyDataList = await convertMobileSurveyDataList(data.mobileUpdateSurveyData);
+   
     // 既に登録済みの場合は登録対象外
     let insertSurveyList = [];
     let insertSurveyDetailList = [];
@@ -76,9 +78,13 @@
             }
             // 調査明細データ新規登録
             if (insertSurveyDetailList != null) {
+                let surveyDetailIdIsNullList =[]
                 for (var i = 0; i < insertSurveyDetailList.length; i++) {
                     await insertSurveyDetail(transaction, insertSurveyDetailList[i]);
+                    surveyDetailIdIsNullList.push(insertSurveyDetailList[i][2])
                 }
+                surveyDetailIdIsNullList = Array.from(new Set(surveyDetailIdIsNullList))
+                await deleteSurveyDetailBySurveyDetailIdIsNull(transaction, surveyDetailIdIsNullList);
             }
             // 調査明細データ更新
             if (updateSurveyDetailList != null) {
@@ -111,12 +117,18 @@
                 }
             }
 
-            // // 伐採木データ更新
-            // if (updateSurveyDataList != null) {
-            //     for (var i = 0; i < updateSurveyDataList.length; i++) {
-            //         await updateSurveyDataOfSynchronize(transaction, updateSurveyDataList[i]);
-            //     }
-            // }
+            if (updateMobileInsertSurveyAreaList != null) {
+                for (var i = 0; i < updateMobileInsertSurveyAreaList.length; i++) {
+                    await updateSurveyAreaOfSynchronize(transaction, updateMobileInsertSurveyAreaList[i]);
+                }
+            }
+
+            // 伐採木データ更新
+            if (updateMobileInsertSurveyDataList != null) {
+                for (var i = 0; i < updateMobileInsertSurveyDataList.length; i++) {
+                    await updateSurveyDataOfSynchronize(transaction, updateMobileInsertSurveyDataList[i]);
+                }
+            }
 
             resolve();
         }, function (error, transaction) {
@@ -189,7 +201,12 @@ function convertSurveyDetailList(surveyDetailData) {
             surveyDetail['createdBy'],
             surveyDetail['createdDate'],
             surveyDetail['modifiedBy'],
-            surveyDetail['modifiedDate']
+            surveyDetail['modifiedDate'],
+            surveyDetail['priceType'],
+            surveyDetail['priceSubType'],
+            surveyDetail['allNeedCutDivide'],
+            surveyDetail['allNeedCollect'],
+            surveyDetail['orderNumber'],
         ]
 
         surveyDetailList.push(param)
@@ -234,6 +251,41 @@ function convertSurveyDataList(list) {
 }
 
 /**
+ * 伐採木データ登録用に変換
+ * @param {*} list
+ */
+ function convertMobileSurveyDataList(list) {
+    var surveyDataList = [];
+    list.forEach(function (surveyData) {
+        if (surveyData['isDelete'] === 'true') {
+            return;
+        }
+        var param = [
+            surveyData[0]['color'],
+            surveyData[0]['word'],
+            surveyData[0]['number'],
+            surveyData[0]['branch_number'],
+            surveyData[0]['tree_type'],
+            surveyData[0]['tree_measured_value'],
+            surveyData[0]['need_none'],
+            surveyData[0]['need_rope'],
+            surveyData[0]['need_wire'],
+            surveyData[0]['need_cut_middle'],
+            surveyData[0]['need_cut_branch'],
+            surveyData[0]['is_dangerTree'],
+            surveyData[0]['note'],
+            surveyData[0]['name'],
+            surveyData[0]['modified_by'],
+            surveyData[0]['modified_date'],
+            surveyData[0]['identify_code'],
+        ]
+        surveyDataList.push(param)
+    });
+
+    return surveyDataList;
+}
+
+/**
  * 削除対象のデータを取得
  * @param {*} list
  */
@@ -266,6 +318,33 @@ function convertSurveyAreaList(list) {
             surveyArea['modifiedBy'],
             surveyArea['modifiedDate'],
             surveyArea['identifyCode'],
+        ]
+        surveyAreaList.push(param)
+    });
+
+    return surveyAreaList;
+}
+
+/**
+ * 小径木データ登録用に変換(survey_detail_idがnullで登録されたデータのみ)
+ * @param {*} list
+ */
+ function convertMobileSurveyAreaList(list) {
+    var surveyAreaList = [];
+    list.forEach(function (surveyArea) {
+        var param = [
+            surveyArea[0]['survey_detail_id'],
+            surveyArea[0]['tree_type'],
+            surveyArea[0]['trimming_area_value'],
+            surveyArea[0]['trimming_tree_area_value'],
+            surveyArea[0]['trimming_tree_count'],
+            surveyArea[0]['target_area_value'],
+            surveyArea[0]['target_area_value_ten'],
+            surveyArea[0]['need_collect'],
+            surveyArea[0]['is_fourMeasured'],
+            surveyArea[0]['modified_by'],
+            surveyArea[0]['modified_date'],
+            surveyArea[0]['identify_code'],
         ]
         surveyAreaList.push(param)
     });

@@ -11,7 +11,7 @@ function fetchSurveyDetailIdAndModifiedDate(surveyIdList) {
     var placeholder = placeholderTmp.slice(0, -2);
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT id, modified_date FROM survey_detail WHERE survey_id IN (' + placeholder + ')', surveyIdList, function (ignored, resultSet) {
+            transaction.executeSql('SELECT id, modified_date FROM survey_detail WHERE id IS NOT NULL AND survey_id IN (' + placeholder + ')', surveyIdList, function (ignored, resultSet) {
                 resolve(resultSet);
             });
         }, function (error) {
@@ -246,6 +246,26 @@ function deleteSurveyDetailById(transaction, surveyDetailIdList) {
     });
 }
 
+// 調査明細IDがNULLのデータを削除（同期処理）
+function deleteSurveyDetailBySurveyDetailIdIsNull(transaction, surveyIdList) {
+    return new Promise(function (resolve, reject) {
+        // 削除IDの数だけプレースホルダを増やす
+        var placeholderTmp = '';
+        surveyIdList.forEach(function (surveyId) {
+            placeholderTmp += '?, ';
+        })
+        var placeholder = placeholderTmp.slice(0, -2);
+        transaction.executeSql(generateSurveyDetailDeleteBySurveyDetailIdIsNull(placeholder), surveyIdList, function (ignored, resultSet) {
+            resolve();
+        }, function (error, transaction) {
+            errorHandler(transaction);
+            reject(false);
+        });
+        resolve();
+    });
+}
+
+
 // 調査明細データ削除（同期処理_業務データ非表示）
 function deleteSurveyDetailBySurveyId(transaction, surveyIdList) {
     return new Promise(function (resolve, reject) {
@@ -317,4 +337,85 @@ function generateSurveyDetailDeleteSql(placeholder) {
 
 function generateSurveyDetailDeleteBySurveySql(placeholder) {
     return 'DELETE FROM survey_detail WHERE survey_id IN (' + placeholder + ') ';
+}
+
+function generateSurveyDetailDeleteBySurveyDetailIdIsNull(placeholder) {
+    return 'DELETE FROM survey_detail WHERE survey_id IN (' + placeholder + ') AND id IS NULL';
+}
+
+/**
+ * 所在地情報の登録
+ * @param 登録データ
+ * @return 登録データ
+ */
+ function insertSurveyDetailByMobile(param) {
+    var sql = 'INSERT INTO survey_detail (' +
+        'survey_id, ' +
+        'survey_address, ' +
+        'line_name, ' +
+        'steal_tower_start, ' +
+        'steal_tower_end, ' +
+        'area_owner_name, ' +
+        'area_owner_address, ' +
+        'area_owner_tel, ' +
+        'survey_witness_name, ' +
+        'survey_witness_address, ' +
+        'survey_witness_tel, ' +
+        'area_classification, ' +
+        'created_by , ' +
+        'created_date, ' +
+        'modified_by,' +
+        'modified_date, ' +
+        'detail_number, ' +
+        'price_type, ' +
+        'price_sub_type, ' +
+        'all_need_cut_divide, ' +
+        'all_need_collect, ' +
+        'order_number,' +
+        'mobile_id)' +
+        'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,DATETIME(\'now\', \'localtime\'),?,DATETIME(\'now\', \'localtime\'),?,?,?,?,?,?,?)';
+
+    
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql(sql, param, async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    })
+}
+
+
+/**
+ * 所在地情報のデータ件数を取得
+ * @return 所在地情報のデータ件数
+ */
+ function fetchSurveyDetailLength() {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT COUNT(*) AS length FROM survey_detail', [], function (ignored, resultSet) {
+                resolve(resultSet);
+            });
+        }, function (error) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+        });
+    });
+}
+
+/**
+ * 所在地情報のデータ件数を取得
+ * @return 所在地情報のデータ件数
+ */
+ function fetchSurveyDetailByIdIsNull() {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_detail WHERE id IS NULL', [], function (ignored, resultSet) {
+                resolve(resultSet);
+            });
+        }, function (error) {
+            alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+        });
+    });
 }
