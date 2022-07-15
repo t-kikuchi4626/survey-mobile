@@ -46,10 +46,14 @@ async function initView() {
     setTreeTypeButton(treeTypeValue, specialTree, "survey-area-tree-type");
 
     // 用材本数取得
-    var surveyDataCount = await fetchNotDeleteSurveyDataCount(surveyDetailId);
+    var surveyDataCount = isNull(surveyDetailId) ? 
+                            await fetchNotDeleteSurveyDataCountBySurveyDetailMobileId(surveyDetailMobileId):
+                            await fetchNotDeleteSurveyDataCount(surveyDetailId);
     $('#trimming-tree-count').val(surveyDataCount);
     // 小径木データ取得
-    var surveyAreaList = await fetchSurveyAreaBySurveyDetailId(surveyDetailId);
+    var surveyAreaList = isNull(surveyDetailId) ? 
+                            await fetchSurveyAreaBysurveyDetailMobileId(surveyDetailMobileId) : 
+                            await fetchSurveyAreaBySurveyDetailId(surveyDetailId);
     if (surveyAreaList.rows.length > 0) {
         // 小径木データ設定
         targetId = surveyAreaList.rows.item(0).id;
@@ -140,7 +144,9 @@ async function createEditSurveyArea() {
     var result = null;
     var surveyAreaId = null;
 
-    var surveyAreaList = await fetchSurveyAreaBySurveyDetailId(surveyDetailId);
+    var surveyAreaList = isNull(surveyDetailId) ? 
+                            await fetchSurveyAreaBysurveyDetailMobileId(surveyDetailMobileId):
+                            await fetchSurveyAreaBySurveyDetailId(surveyDetailId);
     if (surveyAreaList.rows.length > 0) {
         surveyAreaId = surveyAreaList.rows.item(0).id;
     }

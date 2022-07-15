@@ -26,7 +26,7 @@ document.addEventListener("deviceready", async function () {
     surveyDetailListLink.append(detailListLinkText);
 
     // サイドナビゲーションリンク作成
-    createSidenavLink(surveyId, surveyDetailId);
+    createSidenavLink(surveyId, surveyDetailId, surveyDetailMobileId);
     createContactSidenavLink(contactFunction[2], surveyId, surveyDetailId);
 
     //樹種ボタンの設定
@@ -69,7 +69,10 @@ async function initializeForm(surveyDetailId) {
     surveyDetailItemParent.append(texts);
     //履歴2件ずつページングで表示
     var surveyHistoryItem = $('#history-list-contents');
-    var surveyDataList = await fetchSurveyDataBySurveyDetailId(surveyDetailId);
+    var surveyDataList = isNull(surveyDetailId)?
+                            await fetchSurveyDataBySurveyDetailMobileId(surveyDetailMobileId) :
+                            await fetchSurveyDataBySurveyDetailId(surveyDetailId);
+
     var texts = "";
     surveyDataList.rows.length == 0 ?
         (v => {
@@ -504,7 +507,9 @@ function setTreeTypeInModal(surveyData) {
 async function newHistoryData(newId) {
     var texts = "";
     var tbTexts = "";
-    var surveyDataList = await fetchSurveyNewDataBySurveyId(newId, surveyDetailId);
+    var surveyDataList = isNull(surveyDetailId) ?  
+        await fetchSurveyNewDataBySurveyDetailMobileId(newId, surveyDetailMobileId) :
+        await fetchSurveyNewDataBySurveyId(newId, surveyDetailId);
     var surveyHistoryItem = $('#history-list-contents');
     var historyTrItem = $('#history-list-data');
     //一番古いIDが同じIDならばアラートを出力する
@@ -515,7 +520,9 @@ async function newHistoryData(newId) {
         for (var i = 0; i < surveyDataList.rows.length; i++) {
             var rowNum = surveyDataList.rows.item(i).num;
         }
-        var surveyDataNewList = await fetchSurveyNewDataBySurveyIdByrowNum(newId, rowNum, surveyDetailId);
+        var surveyDataNewList = isNull(surveyDetailId) ?
+            await fetchSurveyNewDataBySurveyDetailMobileIdByrowNum(newId, rowNum, surveyDetailMobileId) :
+            await fetchSurveyNewDataBySurveyIdByrowNum(newId, rowNum, surveyDetailId);
         for (var i = 0; i < surveyDataNewList.rows.length; i++) {
             texts = setSurveyHistoryData(texts, surveyDataNewList.rows.item(i), i);
         }
@@ -532,7 +539,10 @@ async function newHistoryData(newId) {
 async function oldHistoryData(oldId) {
     var texts = "";
     var tbTexts = "";
-    var surveyDataList = await fetchSurveyOldDataBySurveyId(oldId, surveyDetailId);
+    var surveyDataList = isNull(surveyDetailId) ?
+        await fetchSurveyOldDataBySurveyDetailMobileId(oldId, surveyDetailMobileId) :
+        await fetchSurveyOldDataBySurveyId(oldId, surveyDetailId);
+
     var surveyHistoryItem = $('#history-list-contents');
     var historyTrItem = $('#history-list-data');
     //一番古いIDが同じIDならばアラートを出力する
@@ -589,7 +599,8 @@ async function initialHistoryArea() {
     var surveyHistoryItem = $('#history-list-contents');
     var historyTrItem = $('#history-list-data');
     tbTexts = '<table id="history-list-contents" style="width:100%;table-layout:fixed;">';
-    var surveyDetailNewList = await fetchSurveyDataBySurveyDetailId(surveyDetailId);
+    var surveyDetailNewList = isNull(surveyDetailId) ? await fetchSurveyDataBySurveyDetailMobileId(surveyDetailMobileId) :
+        await fetchSurveyDataBySurveyDetailId(surveyDetailId);
     for (var i = 0; i < surveyDetailNewList.rows.length; i++) {
         texts = setSurveyHistoryData(texts, surveyDetailNewList.rows.item(i), i);
     }
@@ -799,8 +810,11 @@ async function createSurveyData() {
         M.toast({ html: '登録しました！', displayLength: 2000 });
         //画面を初期化
         //樹種ごとの一覧表作成
-        var surveyDataList = await fetchSurveyDataList(surveyDetailId);
-        var [treeCountArray, freeTreeTypesCount] = await fetchTreeTypeCount(surveyDataList, surveyDetailId);
+        var surveyDataList = isNull(surveyDetailId) ?
+            await fetchSurveyDataBySurveyDetailMobileId(surveyDetailMobileId) :
+            await fetchSurveyDataBySurveyDetailId(surveyDetailId);
+
+        var [treeCountArray, freeTreeTypesCount] = await fetchTreeTypeCount(surveyDataList, surveyDetailId === 'null' ? surveyDetailMobileId : surveyDetailId);
         setTreeCount(treeCountArray, freeTreeTypesCount);
         //画面の履歴を初期化
         initializeForm(surveyDetailId);
@@ -856,9 +870,17 @@ async function createSurveyDataInModal() {
  * 伐採木データ本数更新
  */
 async function editSurveyTrimmingTreeCount() {
-    var surveyDataCount = await fetchNotDeleteSurveyDataCount(surveyDetailId);
-    updateSurveyDataTrimmingTreeCount(surveyDataCount, surveyDetailId);
+    var surveyDataCount = isNull(surveyDetailId) ?
+        await fetchNotDeleteSurveyDataCountBySurveyDetailMobileId(surveyDetailMobileId) :
+        await fetchNotDeleteSurveyDataCount(surveyDetailId);
+
+    if(isNull(surveyDetailId)) {
+        await updateSurveyDataTrimmingTreeCountBySurveyDetailMobileId(surveyDataCount, surveyDetailMobileId)
+        return surveyDataCount;
+    }
+    await updateSurveyDataTrimmingTreeCount(surveyDataCount, surveyDetailId)
     return surveyDataCount;
+    
 }
 
 $(".enter").on('touchstart', function () {
@@ -872,7 +894,9 @@ async function fetchTreeTypeCount(surveyDataList, surveyDetailId) {
     var arrayTreeTypes = sortTree.split(',');
     for (var i = 0; i < surveyDataList.rows.length; i++) {
         var surveyData = surveyDataList.rows.item(i);
-        var count = await fetchTypeMeasuredValueByTreeType(surveyDetailId, surveyData.survey_data_tree_type);
+        var count = isNull(surveyDetailId) ?
+                        await fetchTypeMeasuredValueByTreeTypeAndSurveyDetailMobileId(surveyDetailMobileId, surveyData.survey_data_tree_type):
+                        await fetchTypeMeasuredValueByTreeType(surveyDetailId, surveyData.survey_data_tree_type);
         const index = arrayTreeTypes.indexOf(surveyData.survey_data_tree_type);
         if (index >= 0) {
             treeTypesCount[index] = count.rows.item(0).count;

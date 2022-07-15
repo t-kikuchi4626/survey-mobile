@@ -61,7 +61,7 @@ function setSurveyDetail(texts, surveyDetail) {
     texts += '<div class="card horizontal">';
     texts += '<div class="card-stacked">';
     texts += '<div class="card-content">';
-    texts += '<input type="hidden" id="survey-detail-id" name="surveyDetailId" value="' + surveyDetail.id + '">';
+    texts += '<input type="hidden" id="survey-detail-id" name="surveyDetailId" value="' + (surveyDetail.id === null ? surveyDetail.mobile_id : surveyDetail.id) + '">';
     texts += '<div class="col s12 m8">';
     texts += '所在地No：' + convertSpace(surveyDetail.detail_number);
     texts += '<br>';

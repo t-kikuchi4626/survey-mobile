@@ -7,7 +7,7 @@ var path = 'https://nw-tohoku-epco-tree-survey-app.com:8443/';
 // var path = 'http://172.21.144.1:8443/';
 // var path = 'http://192.168.3.140:8443/';
 // var path = 'https://nw-tohoku-epco-tree-survey-app.com:8443/';
-// var path = 'http://172.18.41.85:8443/';
+// var path = 'http://172.18.41.196:8443/';
 
 var surveyCompanyId = null;
 
@@ -246,4 +246,13 @@ async function controlEditScreen() {
         $('.web-edit-mode').prop("disabled", false);
         $('.web-edit-message').hide();
     }
+}
+
+/**
+* 指定した値がnullかどうかチェックをします。
+* @param  {object}  val チェックする値。
+* @return {boolean} undefined, null, "" なら true
+*/
+function isNull(val) {
+    return val === undefined || val === null || val === "null";
 }

@@ -55,6 +55,23 @@ function fetchSurveyAreaBySurveyDetailId(surveyDetailId) {
 }
 
 /**
+ * 端末所在地IDをもとに小径木データ取得
+ * @param 端末所在地ID
+ * @return 小径木
+ */
+ function fetchSurveyAreaBysurveyDetailMobileId(surveyDetailMobileId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_area WHERE mobile_id = ? AND is_delete = ? order by id asc', [surveyDetailMobileId, 'false'], function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            });
+        });
+    });
+}
+
+/**
  * 小径木の登録
  * @param 登録データ
  * @return 登録データ
@@ -246,6 +263,26 @@ function updateSurveyDataTrimmingTreeCount(count, surveyDetailId) {
                 'modified_date = DATETIME(\'now\', \'localtime\') ' +
                 'WHERE survey_detail_id = ?';
             transaction.executeSql(sql, [count, fetchUserId(), surveyDetailId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    });
+}
+
+/**
+ * 端末所在地IDをもとに用材本数更新
+ */
+ function updateSurveyDataTrimmingTreeCountBySurveyDetailMobileId(count, surveyDetailMobileId) {
+    return new Promise(function (resolve, reject) {
+        database.transaction(function (transaction) {
+            var sql = 'UPDATE survey_area SET ' +
+                'trimming_tree_count = ?, ' +
+                'modified_by = ?, ' +
+                'modified_date = DATETIME(\'now\', \'localtime\') ' +
+                'WHERE mobile_id = ?';
+            transaction.executeSql(sql, [count, fetchUserId(), surveyDetailMobileId], async function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);

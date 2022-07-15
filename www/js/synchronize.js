@@ -202,11 +202,6 @@ function convertSurveyDetailList(surveyDetailData) {
             surveyDetail['createdDate'],
             surveyDetail['modifiedBy'],
             surveyDetail['modifiedDate'],
-            surveyDetail['priceType'],
-            surveyDetail['priceSubType'],
-            surveyDetail['allNeedCutDivide'],
-            surveyDetail['allNeedCollect'],
-            surveyDetail['orderNumber'],
         ]
 
         surveyDetailList.push(param)
@@ -243,6 +238,7 @@ function convertSurveyDataList(list) {
             surveyData['modifiedBy'],
             surveyData['modifiedDate'],
             surveyData['identifyCode'],
+            surveyData['surveyDetailId'],
         ]
         surveyDataList.push(param)
     });
@@ -318,6 +314,7 @@ function convertSurveyAreaList(list) {
             surveyArea['modifiedBy'],
             surveyArea['modifiedDate'],
             surveyArea['identifyCode'],
+            surveyArea['surveyDetailId']
         ]
         surveyAreaList.push(param)
     });
@@ -415,4 +412,31 @@ async function fetchSurveyDetailIdBySurveyStatusIsTrue(updateSurveyList) {
     }
 
     return surveyDetailIdIsSurveyIsStatusTrue;
+}
+
+/**
+ * コードマスタ―を登録用に変換
+ * @param {*} codeMasterData
+ */
+ function convertCodeMaster(codeMasterData) {
+    var codeMasterList = [];
+
+    codeMasterData.forEach(function (codeMaster) {
+        var param = [
+            codeMaster['id'],
+            codeMaster['category'],
+            codeMaster['category_code'],
+            codeMaster['label'],
+            codeMaster['value'],
+            codeMaster['order_number'],
+            codeMaster['is_activate'],
+            codeMaster['created_by'],
+            codeMaster['created_date'],
+            codeMaster['modified_by'],
+            codeMaster['modified_date']
+        ]
+        codeMasterList.push(param)
+    });
+
+    return codeMasterList;
 }

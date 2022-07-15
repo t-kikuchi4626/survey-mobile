@@ -76,6 +76,23 @@ function fetchSurveyDataBySurveyDetailId(surveyDetailId) {
         });
     });
 }
+/**
+ * 端末所在地IDをもとに伐採木データ取得
+ * @param 端末所在地ID
+ * @return 伐採木
+ */
+ function fetchSurveyDataBySurveyDetailMobileId(surveyDetailMobileId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE mobile_id = ? AND is_delete = ? order by id desc limit 2', [surveyDetailMobileId, 'false'], function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    });
+}
+
 
 /**
  * 所在地IDをもとに伐採木データ取得（１件新しいもの）
@@ -87,6 +104,24 @@ function fetchSurveyNewDataBySurveyId(id, surveyDetailId) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT  ROW_NUMBER() OVER(ORDER BY id ASC) num,* FROM survey_data WHERE id >= ? AND survey_detail_id = ? AND is_delete = ? order by id desc limit 2', [id, surveyDetailId, 'false'], function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    });
+}
+
+/**
+ * 所在地IDをもとに伐採木データ取得（１件新しいもの）
+ * @param 伐採木データID
+ * @param 所在地ID
+ * @return 伐採木
+ */
+ function fetchSurveyNewDataBySurveyDetailMobileId(id, surveyDetailMobileId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT  ROW_NUMBER() OVER(ORDER BY id ASC) num,* FROM survey_data WHERE id >= ? AND mobile_id = ? AND is_delete = ? order by id desc limit 2', [id, surveyDetailMobileId, 'false'], function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
@@ -114,6 +149,24 @@ function fetchSurveyNewDataBySurveyIdByrowNum(id, rowNum, surveyDetailId) {
     });
 }
 
+/**
+ * 所在地IDをもとに伐採木データ取得（１件新しいもの）(行指定)
+ * @param 伐採木データID
+ * @param 行数
+ * @param 所在地ID
+ * @return 伐採木
+ */
+ function fetchSurveyNewDataBySurveyDetailMobileIdByrowNum(id, rowNum, surveyDetailMobileId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE id >= ? AND mobile_id = ? AND is_delete = ? order by id desc limit ? offset ?', [id, surveyDetailMobileId, 'false', rowNum + 2, rowNum - 1], function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    });
+}
 
 /**
  * 所在地IDをもとに伐採木データ取得（１件）
@@ -141,6 +194,23 @@ function fetchSurveyOldDataBySurveyId(id, surveyDetailId) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey_data WHERE id <= ? AND survey_detail_id = ? AND is_delete = ? order by id desc limit 2', [id, surveyDetailId, 'false'], function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    });
+}
+
+/**
+  * 端末所在地IDをもとに伐採木データ取得（１件古いもの）
+  * @param 伐採木データID
+  * @param 所在地ID
+  */
+ function fetchSurveyOldDataBySurveyDetailMobileId(id, surveyDetailMobileId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE id <= ? AND mobile_id = ? AND is_delete = ? order by id desc limit 2', [id, surveyDetailMobileId, 'false'], function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
@@ -414,7 +484,24 @@ function generateSurveyDataDeleteSql(placeholder) {
 function fetchSurveyDataList(surveyDetailId) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT survey_detail_id, survey_data_tree_type FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' GROUP BY survey_data_tree_type', [surveyDetailId], async function (ignored, resultSet) {
+            transaction.executeSql('SELECT survey_detail_id, mobile_id, survey_data_tree_type FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' GROUP BY survey_data_tree_type', [surveyDetailId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    });
+}
+
+/**
+ * 端末所在地IDをもとに伐採木データ取得
+ * @param 所在地ID
+ * @return 伐採木データ
+ */
+ function fetchSurveyDataListBySurveyDetailMobileId(surveyDetailMobileId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT survey_detail_id, mobile_id, survey_data_tree_type FROM survey_data WHERE mobile_id = ? AND is_delete = \'false\' GROUP BY survey_data_tree_type', [surveyDetailMobileId], async function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
@@ -444,6 +531,27 @@ function fetchBeforeTerrTypeMeasuredValue(surveyDetailId, treeType, measuredValu
 }
 
 /**
+ * 所在地ID，樹種をもとに指定した直径以下の件数取得
+ * @param 所在地ID
+ * @param 樹種
+ * @param 直径
+ * @param 条件
+ * @return 件数
+ */
+ function fetchBeforeTerrTypeMeasuredValueBySurveyDetailMobileId(surveyDetailMobileId, treeType, measuredValue) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT COUNT(*) AS count FROM survey_data WHERE mobile_id = ? AND survey_data_tree_type = ? AND tree_measured_value <= ? AND is_delete = \'false\'', [surveyDetailMobileId, treeType, measuredValue], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    });
+}
+
+
+/**
  * 所在地ID，樹種をもとに指定した最小直径～最大直径の件数取得
  * @param 所在地ID
  * @param 樹種
@@ -464,6 +572,26 @@ function fetchBeforeAndAfterTerrTypeMeasuredValue(surveyDetailId, treeType, minM
 }
 
 /**
+ * 所在地ID，樹種をもとに指定した最小直径～最大直径の件数取得
+ * @param 所在地ID
+ * @param 樹種
+ * @param 最小直径
+ * @param 最大直径
+ * @return 件数
+ */
+ function fetchBeforeAndAfterTerrTypeMeasuredValueBySurveyDetailMobileId(surveyDetailMobileId, treeType, minMeasuredValue, maxMeasuredValue) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT COUNT(*) AS count FROM survey_data WHERE mobile_id = ? AND survey_data_tree_type = ? AND tree_measured_value > ? AND tree_measured_value <= ? AND is_delete = \'false\'', [surveyDetailMobileId, treeType, minMeasuredValue, maxMeasuredValue], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    });
+}
+
+/**
  * 所在地ID，樹種をもとに指定した直径を超過した件数取得
  * @param 所在地ID
  * @param 樹種
@@ -475,6 +603,26 @@ function fetchAfterTerrTypeMeasuredValue(surveyDetailId, treeType, measuredValue
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT COUNT(*) AS count FROM survey_data WHERE survey_detail_id = ? AND survey_data_tree_type = ? AND tree_measured_value > ? AND is_delete = \'false\'', [surveyDetailId, treeType, measuredValue], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    });
+}
+
+/**
+ * 所在地ID，樹種をもとに指定した直径を超過した件数取得
+ * @param 所在地ID
+ * @param 樹種
+ * @param 直径
+ * @param 条件
+ * @return 件数
+ */
+ function fetchAfterTerrTypeMeasuredValueBySurveyDetailMobileId(surveyDetailMobileId, treeType, measuredValue) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT COUNT(*) AS count FROM survey_data WHERE mobile_id = ? AND survey_data_tree_type = ? AND tree_measured_value > ? AND is_delete = \'false\'', [surveyDetailMobileId, treeType, measuredValue], async function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
@@ -531,6 +679,38 @@ function fetchNotDeleteSurveyDataCount(surveyDetailId) {
 }
 
 /**
+ * 端末所在地IDをもとに削除されていない伐採木の登録件数を取得
+ * @param 端末所在地ID
+ */
+ function fetchNotDeleteSurveyDataCountBySurveyDetailMobileId(surveyDetailMobileId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT COUNT(*) AS count FROM survey_data WHERE mobile_id = ? AND is_delete = \'false\'', [surveyDetailMobileId], async function (ignored, resultSet) {
+                resolve(resultSet.rows.item(0).count);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    });
+}
+ 
+/**
+ * 端末所在地IDをもとに削除されていない伐採木の登録件数を取得
+ * @param 所在地ID
+ */
+ function fetchNotDeleteSurveyDataCountBySurveyDetailMobileId(surveyDetailMobileId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT COUNT(*) AS count FROM survey_data WHERE mobile_id = ? AND is_delete = \'false\'', [surveyDetailMobileId], async function (ignored, resultSet) {
+                resolve(resultSet.rows.item(0).count);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    });
+}
+
+/**
  * 所在地IDをもとにIDが伐採木データ取得（ページング付き）
  * @param 所在地ID 
  * @param skip
@@ -539,6 +719,23 @@ function fetchSurveyDataHistoryList(surveyDetailId, skip) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' ORDER BY id DESC LIMIT 50 OFFSET ?', [surveyDetailId, skip], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    });
+}
+
+/**
+ * 端末所在地IDをもとにIDが伐採木データ取得（ページング付き）
+ * @param 所在地ID 
+ * @param skip
+ */
+ function fetchSurveyDataHistoryListBySurveyDetailMobileId(surveyDetailMobileId, skip) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE mobile_id = ? AND is_delete = \'false\' ORDER BY id DESC LIMIT 50 OFFSET ?', [surveyDetailMobileId, skip], async function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
@@ -564,6 +761,22 @@ function fetchAllSurveyDataHistoryList(surveyDetailId) {
 }
 
 /**
+ * 端末所在地IDをもとにIDが伐採木データ取得
+ * @param 所在地ID 
+ */
+ function fetchAllSurveyDataHistoryListBySurveyDetailMobileId(surveyDetailMobileId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE mobile_id = ? AND is_delete = \'false\' ORDER BY id DESC', [surveyDetailMobileId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    });
+}
+
+/**
  * 所在地IDをもとに伐採ロープありのデータを取得
  * @param 所在地ID 
  */
@@ -571,6 +784,22 @@ function fetchNeedRope(surveyDetailId) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' AND need_rope = \'true\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    });
+}
+
+/**
+ * 端末所在地IDをもとに伐採ロープありのデータを取得
+ * @param 端末所在地ID
+ */
+ function fetchNeedRopeBySurveyDetailMobileId(surveyDetailMobileId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE mobile_id = ? AND is_delete = \'false\' AND need_rope = \'true\' ORDER BY created_date ASC', [surveyDetailMobileId], async function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error, transaction) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
@@ -596,6 +825,22 @@ function fetchNeedWire(surveyDetailId) {
 }
 
 /**
+ * 端末所在地IDをもとに伐採ワイヤーありのデータを取得
+ * @param 端末所在地ID
+ */
+ function fetchNeedWireBySurveyDetailMobileId(surveyDetailMobileId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE mobile_id = ? AND is_delete = \'false\' AND need_wire = \'true\' ORDER BY created_date ASC', [surveyDetailMobileId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    });
+}
+
+/**
  * 所在地IDをもとに中断切りロープありのデータを取得
  * @param 所在地ID 
  */
@@ -612,13 +857,29 @@ function fetchNeedCutMiddle(surveyDetailId) {
 }
 
 /**
- * 所在地IDをもとに危険木のデータを取得
- * @param 所在地ID 
+ * 端末所在地IDをもとに中断切りロープありのデータを取得
+ * @param 端末所在地ID
  */
-function fetchIsDangerTree(surveyDetailId) {
+ function fetchNeedCutMiddleBySurveyDetailMobileId(surveyDetailMobileId) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM survey_data WHERE survey_detail_id = ? AND is_delete = \'false\' AND is_danger_tree = \'true\' ORDER BY created_date ASC', [surveyDetailId], async function (ignored, resultSet) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE mobile_id = ? AND is_delete = \'false\' AND need_cut_middle = \'true\' ORDER BY created_date ASC', [surveyDetailMobileId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
+        });
+    });
+}
+
+/**
+ * 端末所在地IDをもとに危険木のデータを取得
+ * @param 端末所在地ID
+ */
+function fetchIsDangerTreeBySurveyDetailMobileId(surveyDetailMobileId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE mobile_id = ? AND is_delete = \'false\' AND is_danger_tree = \'true\' ORDER BY created_date ASC', [surveyDetailMobileId], async function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
@@ -643,6 +904,23 @@ function fetchNeedCutBranch(surveyDetailId) {
     });
 }
 
+/**
+ * 端末所在地IDをもとに枝払いありのデータを取得
+ * @param 端末所在地ID 
+ */
+ function fetchNeedCutBranchBySurveyMobileId(surveyDetailMobileId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE mobile_id = ? AND is_delete = \'false\' AND need_cut_branch = \'true\' ORDER BY created_date ASC', [surveyDetailMobileId], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + JSON.stringify(error));
+            });
+        });
+    });
+}
+
+
 
 /**
  * 所在地IDと樹種をもとに件数を取得
@@ -654,6 +932,24 @@ function fetchTypeMeasuredValueByTreeType(surveyDetailId, treeType) {
     return new Promise(function (resolve) {
         database.transaction(function (transaction) {
             transaction.executeSql('SELECT COUNT(*) AS count FROM survey_data WHERE survey_detail_id = ? AND survey_data_tree_type = ? AND is_delete = \'false\'', [surveyDetailId, treeType], async function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            });
+        });
+    });
+}
+
+/**
+ * 端末所在地IDと樹種をもとに件数を取得
+ * @param 所在地ID
+ * @param 樹種
+ * @return 件数
+ */
+ function fetchTypeMeasuredValueByTreeTypeAndSurveyDetailMobileId(surveyDetailMobileId, treeType) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT COUNT(*) AS count FROM survey_data WHERE mobile_id = ? AND survey_data_tree_type = ? AND is_delete = \'false\'', [surveyDetailMobileId, treeType], async function (ignored, resultSet) {
                 resolve(resultSet);
             }, function (error) {
                 alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
@@ -763,6 +1059,22 @@ function generateSurveyDataByIdentifyCodeSQL() {
             });
         }, function (error) {
             alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+        });
+    });
+}
+
+/**
+ * 端末所在地IDによる伐採木データ取得
+ * @return 伐採木
+ */
+ function fetchSurveyDetailBySurveyDetailMobileId(surveyDetailMobileId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_data WHERE mobile_id = ? order by id asc', [surveyDetailMobileId], function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+            });
         });
     });
 }

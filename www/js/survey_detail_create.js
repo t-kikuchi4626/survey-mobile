@@ -92,8 +92,7 @@ async function createSurveyDetail() {
         $('#surveyWitnessName').val(),
         $('#surveyWitnessAddress').val(),
         $('#surveyWitnessTel').val(),
-        // $('#areaClassification').val(),
-        1,
+        $('#areaClassification').val(),
         fetchUserId(),
         fetchUserId(),
         detailNumber,
@@ -102,7 +101,7 @@ async function createSurveyDetail() {
         true,
         true,
         surveyDetailList.rows.length === undefined ? 1 : surveyDetailList.rows.length + 1,
-        surveyDetailLength.rows.item(0).length
+        generateIdentifyCode()
     ];
     let result = insertSurveyDetailByMobile(param);
 

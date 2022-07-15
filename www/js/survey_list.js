@@ -501,6 +501,14 @@ async function requestSynchronizeResult(surveyCompanyId) {
         $('#modalLocation').modal('close');
         return alert("現在同期処理実行中です。しばらくしてから再度確認ボタンを押してください。");
       }
+      await deleteCodeMaster()
+      var codeMaster = await convertCodeMaster(responseData.areaClassificationList)
+
+      if (codeMaster != null) {
+        for (var count = 0; count < codeMaster.length; count++) {
+          await insertCodeMaster(codeMaster[count])
+        }
+      }
       let status = await updateSynchronizeResultDetail(responseData.synchronizeWebToMobile);
       let error = await updateSynchronizeResultStatus(status, latestSynchronizeResultId);
       await applySynchronizeResult();

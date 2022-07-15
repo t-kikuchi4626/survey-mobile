@@ -2,6 +2,8 @@
 var surveyId = null;
 // 所在地ID
 var surveyDetailId = null;
+// 端末所在地ID
+var surveyDetailMobileId = null;
 // IDリスト
 var idList = [];
 // データ情報リスト
@@ -19,6 +21,7 @@ document.addEventListener("deviceready", async function () {
     var param = location.search.substring(1).split("&");
     surveyId = param[0];
     surveyDetailId = param[1];
+    surveyDetailMobileId = param[2];
     await initialize();
     await controlEditScreen();
 });
@@ -28,9 +31,9 @@ document.addEventListener("deviceready", async function () {
  */
 async function initialize() {
     // 登録画面遷移タグ作成
-    createRegisterLink(surveyId, surveyDetailId);
+    createRegisterLink(surveyId, surveyDetailId, surveyDetailMobileId);
     // サイドナビゲーションリンク作成
-    createSidenavLink(surveyId, surveyDetailId);
+    createSidenavLink(surveyId, surveyDetailId, surveyDetailMobileId);
     createContactSidenavLink(contactFunction[3], surveyId, surveyDetailId);
     // 樹種ボタン取得
     var survey = await fetchSurveyById(surveyId);
@@ -52,16 +55,22 @@ async function setPage() {
     if (currentPage > 1) {
         skip = (50 * currentPage) - 50;
     }
-    var surveyDataHistoryList = await fetchSurveyDataHistoryList(surveyDetailId, skip);
+    var surveyDataHistoryList = isNull(surveyDetailId) ?
+                                    await fetchSurveyDataHistoryListBySurveyDetailMobileId(surveyDetailMobileId, skip):
+                                    await fetchSurveyDataHistoryList(surveyDetailId, skip);
     // 全履歴データのカウント取得
-    var allSurveyDataHistoryList = await fetchAllSurveyDataHistoryList(surveyDetailId);
+    var allSurveyDataHistoryList = isNull(surveyDetailId) ? 
+                                    await fetchAllSurveyDataHistoryListBySurveyDetailMobileId(surveyDetailMobileId) :
+                                    await fetchAllSurveyDataHistoryList(surveyDetailId);
     // ページング設定
     if (allSurveyDataHistoryList.rows.length > 0) {
         var pageCount = Math.ceil(allSurveyDataHistoryList.rows.length / 50);
         setPagination(pageCount);
     }
     // 伐採時の備考ごとの集計値設定
-    await setSurveyDataNote();
+    isNull(surveyDetailId) ? 
+            await setSurveyDataNoteBySurveyDetailMobileId():
+            await setSurveyDataNote();
 
     // 伐採木データ情報の設定
     setSurveyDataHistoryList(surveyDataHistoryList);
@@ -85,6 +94,26 @@ async function setSurveyDataNote() {
     $('#is-danger-tree-count').text(isDangerTreeList.rows.length);
 
     var needNeedCutBranchList = await fetchNeedCutBranch(surveyDetailId);
+    $('#need-cut-branch-count').text(needNeedCutBranchList.rows.length);
+}
+
+/**
+ * 伐採時の備考ごとに集計し、画面へ設定(所在地IDがNULLだった場合)
+ */
+ async function setSurveyDataNoteBySurveyDetailMobileId() {
+    var needRopeList = await fetchNeedRopeBySurveyDetailMobileId(surveyDetailMobileId);
+    $('#need-rope-count').text(needRopeList.rows.length);
+
+    var needWireList = await fetchNeedWireBySurveyDetailMobileId(surveyDetailMobileId);
+    $('#need-wire-count').text(needWireList.rows.length);
+
+    var needCutMiddleList = await fetchNeedCutMiddleBySurveyDetailMobileId(surveyDetailMobileId);
+    $('#need-cut-middle-count').text(needCutMiddleList.rows.length);
+
+    var isDangerTreeList = await fetchIsDangerTreeBySurveyDetailMobileId(surveyDetailMobileId);
+    $('#is-danger-tree-count').text(isDangerTreeList.rows.length);
+
+    var needNeedCutBranchList = await fetchNeedCutBranchBySurveyMobileId(surveyDetailMobileId);
     $('#need-cut-branch-count').text(needNeedCutBranchList.rows.length);
 }
 

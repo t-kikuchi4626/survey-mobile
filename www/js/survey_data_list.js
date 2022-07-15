@@ -6,15 +6,18 @@ document.addEventListener("deviceready", async function () {
     var param = location.search.substring(1).split("&");
     var surveyId = param[0];
     var surveyDetailId = param[1];
+    var surveyDetailMobileId = param[2];
 
     // 登録画面遷移タグ作成
-    createRegisterLink(surveyId, surveyDetailId);
+    createRegisterLink(surveyId, surveyDetailId, surveyDetailMobileId);
 
     // サイドナビゲーションリンク作成
     createSidenavLink(surveyId, surveyDetailId);
     createContactSidenavLink(contactFunction[4], surveyId, surveyDetailId);
 
-    var surveyDataList = await fetchSurveyDataList(surveyDetailId);
+    var surveyDataList = isNull(surveyDetailId) ? 
+                            await fetchSurveyDataListBySurveyDetailMobileId(surveyDetailMobileId):
+                            await fetchSurveyDataList(surveyDetailId);
     var texts = '';
 
     texts = setTableHeader(surveyDataList);
@@ -91,7 +94,9 @@ async function setTableDataTreeMeasuredValue9(surveyDataList) {
     texts += '<td class="border-style">～9</td>';
     for (var i = 0; i < surveyDataList.rows.length; i++) {
         var surveyData = surveyDataList.rows.item(i);
-        var treeMeasuredValue = await fetchBeforeTerrTypeMeasuredValue(surveyData.survey_detail_id, surveyData.survey_data_tree_type, 9);
+        var treeMeasuredValue = isNull(surveyData.survey_detail_id) ? 
+                                    await fetchBeforeTerrTypeMeasuredValueBySurveyDetailMobileId(surveyData.mobile_id, surveyData.survey_data_tree_type, 9):
+                                    await fetchBeforeTerrTypeMeasuredValue(surveyData.survey_detail_id, surveyData.survey_data_tree_type, 9);
         texts += '<td class="border-style">' + treeMeasuredValue.rows.item(0).count + '</td>';
         totalInfo[surveyData.survey_data_tree_type] += treeMeasuredValue.rows.item(0).count;
     }
@@ -108,7 +113,9 @@ async function setTableDataTreeMeasuredValue(surveyDataList, title, minValue, ma
     texts += '<td class="border-style">' + title + '</td>';
     for (var i = 0; i < surveyDataList.rows.length; i++) {
         var surveyData = surveyDataList.rows.item(i);
-        var treeMeasuredValue = await fetchBeforeAndAfterTerrTypeMeasuredValue(surveyData.survey_detail_id, surveyData.survey_data_tree_type, minValue, maxValue);
+        var treeMeasuredValue = isNull(surveyData.survey_detail_id) ? 
+                                    await fetchBeforeAndAfterTerrTypeMeasuredValueBySurveyDetailMobileId(surveyData.mobile_id, surveyData.survey_data_tree_type, minValue, maxValue):
+                                    await fetchBeforeAndAfterTerrTypeMeasuredValue(surveyData.survey_detail_id, surveyData.survey_data_tree_type, minValue, maxValue);
         texts += '<td class="border-style">' + treeMeasuredValue.rows.item(0).count + '</td>';
         totalInfo[surveyData.survey_data_tree_type] += treeMeasuredValue.rows.item(0).count;
     }
@@ -125,7 +132,9 @@ async function setTableDataTreeMeasuredValue60(surveyDataList) {
     texts += '<td class="border-style">60～</td>';
     for (var i = 0; i < surveyDataList.rows.length; i++) {
         var surveyData = surveyDataList.rows.item(i);
-        var treeMeasuredValue = await fetchAfterTerrTypeMeasuredValue(surveyData.survey_detail_id, surveyData.survey_data_tree_type, 59);
+        var treeMeasuredValue = isNull(surveyData.survey_detail_id) ?
+                                    await fetchAfterTerrTypeMeasuredValueBySurveyDetailMobileId(surveyData.mobile_id, surveyData.survey_data_tree_type, 59):
+                                    await fetchAfterTerrTypeMeasuredValue(surveyData.survey_detail_id, surveyData.survey_data_tree_type, 59);
         texts += '<td class="border-style">' + treeMeasuredValue.rows.item(0).count + '</td>';
         totalInfo[surveyData.survey_data_tree_type] += treeMeasuredValue.rows.item(0).count;
     }
