@@ -37,23 +37,27 @@ document.addEventListener("deviceready", async function () {
     setTreeTypeButtonInModal(treeTypeValue, specialTree, "modalSurveyDataTreeType");
 
     //樹種ごとの一覧表作成
-    var surveyDataList = await fetchSurveyDataList(surveyDetailId);
-    var [treeCountArray, freeTreeTypesCount] = await fetchTreeTypeCount(surveyDataList, surveyDetailId);
+    var surveyDataList = isNull(surveyDetailId) ?
+                await fetchSurveyDataListBySurveyDetailMobileId(surveyDetailMobileId):
+                await fetchSurveyDataList(surveyDetailId);
+    var [treeCountArray, freeTreeTypesCount] = await fetchTreeTypeCount(surveyDataList, surveyDetailId, surveyDetailMobileId);
     setTreeCount(treeCountArray, freeTreeTypesCount);
 
     //画面データの初期化
-    initializeForm(surveyDetailId);
+    initializeForm(surveyDetailId,surveyDetailMobileId);
     await controlEditScreen();
 });
 
 /**
  * 伐採木データ登録画面の初期化
  */
-async function initializeForm(surveyDetailId) {
+async function initializeForm(surveyDetailId,surveyDetailMobileId) {
     //地権者モーダル表示
     var surveyDetailItemParent = $('#area-ower-modal');
     var surveyDetailItem = $('#area-info');
-    var surveyDetailList = await fetchSurveyDetailById(surveyDetailId);
+    var surveyDetailList = isNull(surveyDetailId) ? 
+                            await fetchSurveyDetailBySurveyDetailId(surveyDetailMobileId):
+                            await fetchSurveyDetailById(surveyDetailId);
     var texts = '';
     if (surveyDetailList.rows.length === 0) {
         texts += '<div class="row">';
@@ -809,15 +813,15 @@ async function createSurveyData() {
         soundMessage(count);
         M.toast({ html: '登録しました！', displayLength: 2000 });
         //画面を初期化
-        //樹種ごとの一覧表作成
-        var surveyDataList = isNull(surveyDetailId) ?
-            await fetchSurveyDataBySurveyDetailMobileId(surveyDetailMobileId) :
-            await fetchSurveyDataBySurveyDetailId(surveyDetailId);
+    //樹種ごとの一覧表作成
+    var surveyDataList = isNull(surveyDetailId) ?
+                await fetchSurveyDataListBySurveyDetailMobileId(surveyDetailMobileId):
+                await fetchSurveyDataList(surveyDetailId);
 
-        var [treeCountArray, freeTreeTypesCount] = await fetchTreeTypeCount(surveyDataList, surveyDetailId === 'null' ? surveyDetailMobileId : surveyDetailId);
+        var [treeCountArray, freeTreeTypesCount] = await fetchTreeTypeCount(surveyDataList, surveyDetailId, surveyDetailMobileId);
         setTreeCount(treeCountArray, freeTreeTypesCount);
         //画面の履歴を初期化
-        initializeForm(surveyDetailId);
+        initializeForm(surveyDetailId,surveyDetailMobileId);
         await initialHistoryArea();
     }
 }
@@ -853,8 +857,10 @@ async function createSurveyDataInModal() {
         M.toast({ html: '更新しました！', displayLength: 2000 });
 
         //樹種ごとの一覧表作成
-        var surveyDataList = await fetchSurveyDataList(surveyDetailId);
-        var [treeCountArray, freeTreeTypesCount] = await fetchTreeTypeCount(surveyDataList, surveyDetailId);
+        var surveyDataList = isNull(surveyDetailId) ?
+                    await fetchSurveyDataListBySurveyDetailMobileId(surveyDetailMobileId):
+                    await fetchSurveyDataList(surveyDetailId);
+        var [treeCountArray, freeTreeTypesCount] = await fetchTreeTypeCount(surveyDataList, surveyDetailId, surveyDetailMobileId);
         setTreeCount(treeCountArray, freeTreeTypesCount);
 
         //モーダル内を最後にセットする
@@ -887,7 +893,7 @@ $(".enter").on('touchstart', function () {
     $("#input").get(0).play();
 });
 
-async function fetchTreeTypeCount(surveyDataList, surveyDetailId) {
+async function fetchTreeTypeCount(surveyDataList, surveyDetailId,surveyDetailMobileId) {
     var treeTypesCount = {};
     var freeTreeTypesCount = {};
     var sortTree = "杉,松,ひのき,天然生林";

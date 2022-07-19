@@ -12,7 +12,7 @@ document.addEventListener("deviceready", async function () {
     createRegisterLink(surveyId, surveyDetailId, surveyDetailMobileId);
 
     // サイドナビゲーションリンク作成
-    createSidenavLink(surveyId, surveyDetailId);
+    createSidenavLink(surveyId, surveyDetailId, surveyDetailMobileId);
     createContactSidenavLink(contactFunction[4], surveyId, surveyDetailId);
 
     var surveyDataList = isNull(surveyDetailId) ? 

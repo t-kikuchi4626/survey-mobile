@@ -270,6 +270,7 @@ let updateWebToMobile = function(id, webEditModeResultId) {
         // web編集モードが「OFF」の場合、mobileのロックを解除する
         await createWebEditMode('off');
         await controlEditScreen();
+        console.log(responseData.synchronizeToMobile)
         await synchronizeWebToMobile(responseData.synchronizeToMobile);
         location.reload();
         $('#modalLocation').modal('close');
@@ -497,18 +498,19 @@ async function requestSynchronizeResult(surveyCompanyId) {
       }
 
       var responseData = JSON.parse(jsonData);
+
       if (!isStatusFinish(responseData.synchronizeWebToMobile)) {
         $('#modalLocation').modal('close');
         return alert("現在同期処理実行中です。しばらくしてから再度確認ボタンを押してください。");
       }
-      await deleteCodeMaster()
-      var codeMaster = await convertCodeMaster(responseData.areaClassificationList)
+      // await deleteCodeMaster()
+      // var codeMaster = await convertCodeMaster(responseData.areaClassificationList)
 
-      if (codeMaster != null) {
-        for (var count = 0; count < codeMaster.length; count++) {
-          await insertCodeMaster(codeMaster[count])
-        }
-      }
+      // if (codeMaster != null) {
+      //   for (var count = 0; count < codeMaster.length; count++) {
+      //     await insertCodeMaster(codeMaster[count])
+      //   }
+      // }
       let status = await updateSynchronizeResultDetail(responseData.synchronizeWebToMobile);
       let error = await updateSynchronizeResultStatus(status, latestSynchronizeResultId);
       await applySynchronizeResult();
@@ -518,7 +520,10 @@ async function requestSynchronizeResult(surveyCompanyId) {
       } else {
         for (var i = 0; i < responseData.synchronizeWebToMobile.length; i++) {
           let responseDataTmp = responseData.synchronizeWebToMobile[i];
+          console.log( convertMobileSurveyDataList(JSON.parse(responseDataTmp.synchronizeToMobile).surveyDataList))
+          console.log( convertMobileSurveyDataList(JSON.parse(responseDataTmp.synchronizeToMobile).mobileUpdateSurveyData))
           await synchronizeWebToMobile(responseDataTmp.synchronizeToMobile);
+
         }
         $('#synchronize-request').modal('open');
       }

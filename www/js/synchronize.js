@@ -3,6 +3,8 @@
  * @param {*} data 
  */
  async function synchronizeWebToMobile(synchronizeToMobile) {
+    console.log("test2")
+    alert(2)
     let data = JSON.parse(synchronizeToMobile);
     var surveyList = await convertSurveyList(data.insertSurveyList);
     var updateSurveyList = await convertSurveyList(data.updateSurveyList);
@@ -126,7 +128,7 @@
             // 伐採木データ更新
             if (updateMobileInsertSurveyDataList != null) {
                 for (var i = 0; i < updateMobileInsertSurveyDataList.length; i++) {
-                    await updateSurveyDataOfSynchronize(transaction, updateMobileInsertSurveyDataList[i]);
+                    await updateSurveyDataOfSynchronizeMobile(transaction, updateMobileInsertSurveyDataList[i]);
                 }
             }
 
@@ -252,8 +254,11 @@ function convertSurveyDataList(list) {
  */
  function convertMobileSurveyDataList(list) {
     var surveyDataList = [];
+    if(list.length === 0){
+        return surveyDataList
+    }
     list.forEach(function (surveyData) {
-        if (surveyData['isDelete'] === 'true') {
+        if (surveyData['is_delete'] === 'true') {
             return;
         }
         var param = [
@@ -263,12 +268,13 @@ function convertSurveyDataList(list) {
             surveyData[0]['branch_number'],
             surveyData[0]['tree_type'],
             surveyData[0]['tree_measured_value'],
+            surveyData[0]['survey_detail_id'],
             surveyData[0]['need_none'],
             surveyData[0]['need_rope'],
             surveyData[0]['need_wire'],
             surveyData[0]['need_cut_middle'],
             surveyData[0]['need_cut_branch'],
-            surveyData[0]['is_dangerTree'],
+            surveyData[0]['is_danger_tree'],
             surveyData[0]['note'],
             surveyData[0]['name'],
             surveyData[0]['modified_by'],
@@ -328,9 +334,11 @@ function convertSurveyAreaList(list) {
  */
  function convertMobileSurveyAreaList(list) {
     var surveyAreaList = [];
+    if(list.length === 0){
+        return surveyAreaList
+    }
     list.forEach(function (surveyArea) {
         var param = [
-            surveyArea[0]['survey_detail_id'],
             surveyArea[0]['tree_type'],
             surveyArea[0]['trimming_area_value'],
             surveyArea[0]['trimming_tree_area_value'],
@@ -338,7 +346,7 @@ function convertSurveyAreaList(list) {
             surveyArea[0]['target_area_value'],
             surveyArea[0]['target_area_value_ten'],
             surveyArea[0]['need_collect'],
-            surveyArea[0]['is_fourMeasured'],
+            surveyArea[0]['is_four_measured'],
             surveyArea[0]['modified_by'],
             surveyArea[0]['modified_date'],
             surveyArea[0]['identify_code'],

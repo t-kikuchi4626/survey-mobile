@@ -399,6 +399,23 @@ function updateSurveyDataOfSynchronize(surveyData) {
     });
 }
 
+// 伐採木データを更新（同期処理）
+function updateSurveyDataOfSynchronizeMobile(surveyData) {
+    return new Promise(function (resolve, reject) {
+        database.transaction(function (transaction) {
+            var sql = generateMobileSurveyDataByIdentifyCodeSQL();
+            transaction.executeSql(sql, surveyData, function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error, transaction) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + transaction.message);
+                // errorHandler(transaction);
+                // reject(false);
+            });
+            // resolve();
+        });
+    });
+}
+
 // 伐採木削除（同期処理）
 function deleteSurveyDataByDetailId(transaction, surveyDetailIdList) {
     return new Promise(function (resolve, reject) {
@@ -1034,6 +1051,31 @@ function generateSurveyDataByIdentifyCodeSQL() {
         'branch_number = ?, ' +
         'survey_data_tree_type = ?, ' +
         'tree_measured_value = ?, ' +
+        'need_none = ?, ' +
+        'need_rope = ?, ' +
+        'need_wire = ?, ' +
+        'need_cut_middle = ?, ' +
+        'need_cut_branch = ?, ' +
+        'is_danger_tree = ?, ' +
+        'note = ?, ' +
+        'name = ?, ' +
+        'modified_by = ?, ' +
+        'modified_date = ? ' +
+        'WHERE identify_code = ? ';
+}
+
+/**
+ * identifyCodeをもとに伐採木を更新するSQL
+ */
+ function generateMobileSurveyDataByIdentifyCodeSQL() {
+    return 'UPDATE survey_data SET ' +
+        'color = ?, ' +
+        'word = ?, ' +
+        'number = ?, ' +
+        'branch_number = ?, ' +
+        'survey_data_tree_type = ?, ' +
+        'tree_measured_value = ?, ' +
+        'survey_detail_id = ?, ' +
         'need_none = ?, ' +
         'need_rope = ?, ' +
         'need_wire = ?, ' +

@@ -54,6 +54,23 @@ function fetchSurveyDetailById(id) {
 }
 
 /**
+ * 端末所在地IDをもとに所在地データ取得
+ * @param ID
+ * @return 所在地
+ */
+ function fetchSurveyDetailBySurveyDetailId(surveyDetailMobileId) {
+    return new Promise(function (resolve) {
+        database.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM survey_detail WHERE mobile_id = ?', [surveyDetailMobileId], function (ignored, resultSet) {
+                resolve(resultSet);
+            }, function (error) {
+                alert('DB接続中にエラーが発生しました。管理者へお問い合わせください。: ' + error.message);
+            });
+        });
+    });
+}
+
+/**
  * 調査業務IDをもとに所在地データ取得
  * @param 調査業務ID
  * @return 所在地

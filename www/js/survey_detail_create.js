@@ -46,7 +46,6 @@ const AREA_CLASSIFICATION_CATEGORY_CODE = 6
 document.addEventListener("deviceready", async function () {
     surveyId = location.search.substring(1)
     $('#pageBack').attr('href', './survey_detail_list.html?' + surveyId);
-    createContactSidenavLink(contactFunction[1], surveyId, "");
 
     let codeMasterList = await fetchCodeMasterByCategoryNumber(AREA_CLASSIFICATION_CATEGORY_CODE)
     for (let rowCount = 0; rowCount < codeMasterList.rows.length; rowCount++) {
